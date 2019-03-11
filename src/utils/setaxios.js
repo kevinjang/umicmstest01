@@ -4,7 +4,8 @@ const setAxios = () => {
     axios.interceptors.request.use(request => {
         console.log('request.headers["Access-Control-Allow-Origin"]', request.headers["Access-Control-Allow-Origin"]);
         // config//headers["Access-Control-Allow-Credentials","true"]
-        request.headers["Access-Control-Allow-Credentials"] = true;
+        // 启用此项后，上面的域名不能为'*'，必须指定具体的域名，否则浏览器会提示错误
+        // request.headers["Access-Control-Allow-Credentials"] = true;
         request.headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, OPTIONS, DELETE, PATCH";
         request.headers["Access-Control-Max-Age"] = 3600;
         request.headers["Access-Control-Allow-Headers"]
