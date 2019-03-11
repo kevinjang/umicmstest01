@@ -1,5 +1,6 @@
 import axios from 'axios'
 const qs = require('qs')
+const baseUrl = 'http://localhost:3000'
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
@@ -37,32 +38,8 @@ let validateUserInfo = async (info) => {
     }
 }
 
-// let validateUserLoginByAccount = async (info) => {
-//     console.log('info', info)
-//     // console.log('obj2',obj2)
+let getOUBaseInfoAll = async () =>{
+    return await axios.get(baseUrl+'/api/getOUBaseInfoAll')
+}
 
-//     const userInfo = {
-//         userName: info.username,// 'zhm',
-//         passWord: info.pw
-//     }
-
-//     const ui = qs.stringify(userInfo)
-
-//     return await axios.get('/api/ValidateUserInfoByAccount', {
-//         params: ui
-//     })
-// }
-
-// let validateUserLoginByMobile = async (info) => {
-//     const userInfo = {
-//         mobile: info.mobile,
-//         captcha: info.captcha
-//     }
-//     return await axios.get('/api/ValidateUserInfoByMobile',{
-//         params:qs.stringify(userInfo)
-//     })
-// }
-
-
-
-export { validateUserInfo }
+export { validateUserInfo, getOUBaseInfoAll }

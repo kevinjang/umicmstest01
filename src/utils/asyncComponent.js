@@ -46,13 +46,13 @@ export const asyncComponent = loadComponent =>(
             if(this.hasLoadedComponent()){
                 return;
             }
-            console.log('ac_this',this.props.match.url)
+            // console.log('ac_this',this.props.match.url)
 
             // console.log('loadComponent',loadComponent)
 
             loadComponent()
             .then(module=>{
-                console.log(module)
+                // console.log(module)
                 return module.default?module.default: module
             })
             .then(Component=>{
@@ -61,7 +61,7 @@ export const asyncComponent = loadComponent =>(
                 })
             })
             .catch(error=>{
-                console.log('error',error)
+                // console.log('error',error)
                 throw error
             })
 

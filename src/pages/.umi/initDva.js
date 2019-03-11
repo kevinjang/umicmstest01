@@ -14,6 +14,6 @@ app.use(createLoading());
   app.use(plugin);
 });
 
-app.model({ namespace: 'menus', ...(require('F:/Projects/Nodejs/git-kaikeba/umicmstest01/src/models/menus.js').default) });
-app.model({ namespace: 'tabs', ...(require('F:/Projects/Nodejs/git-kaikeba/umicmstest01/src/models/tabs.js').default) });
-app.model({ namespace: 'validatorRules', ...(require('F:/Projects/Nodejs/git-kaikeba/umicmstest01/src/models/validatorRules.js').default) });
+app.model({ namespace: 'menus', ...(require('E:/zhm/umicmstest01/src/models/menus.js').default) });
+app.model({ namespace: 'tabs', ...(require('E:/zhm/umicmstest01/src/models/tabs.js').default) });
+app.model({ namespace: 'validatorRules', ...(require('E:/zhm/umicmstest01/src/models/validatorRules.js').default) });

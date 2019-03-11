@@ -7,28 +7,6 @@ import { connect } from 'dva'
 import { Alert } from 'antd'
 import router from 'umi/router'
 
-// const userNameRules = [
-//     {
-//         required: true,
-//         message:'用户名必填'
-//     },
-//     {
-//         min:3,
-//         message: '用户名长度至少为3'
-//     },
-//     {
-//         max: 15,
-//         message: '用户名长度最长为15'
-//     }
-// ]
-
-// const pwRules = [
-//     {
-//         required: true,
-//         message: '请输入密码'
-//     }
-// ]
-
 @connect(
     state => ({rules: state.vrules})
 )

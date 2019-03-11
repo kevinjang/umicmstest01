@@ -7,6 +7,8 @@ import {asyncComponent} from '../utils/asyncComponent'
 // const {path} = require('path')
 import './MainFrame.css'
 
+import {setAxios} from '../utils/setaxios'
+
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
@@ -86,12 +88,13 @@ class KLayout extends React.Component {
     }
 
     componentDidMount() {
+        setAxios();
         // console.log('this.state.openTabs', this.state.openTabs)
     }
 
     loadTest = (e) => {
         const st = asyncComponent(()=>import(e))
-        console.log('st',st)
+        // console.log('st',st)
         return st
     }
 
