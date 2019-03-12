@@ -14,12 +14,21 @@ class DashBoard extends React.Component{
     }
     componentDidMount(){
         getOUBaseInfoAll().then(ds=>{
-            console.log('ds',ds)
+            // console.log('ds',ds)
 
-            // this.setState({
-            //     datasource,
-            //     columns
+            let dss = ds.data.datasource;
+
+            // dss.reduce(item=>{
+            //     // console.log('redice-{...item,key:item.Id}',{...item,key:item.Id})
+            //     return {...item,key:item.Id}
             // })
+
+            // console.log('dss',dss)
+
+            this.setState({
+                datasource: dss,
+                columns: ds.data.columns
+            })
         }).catch(err=>{
             console.log('err',err);
         })
@@ -28,7 +37,13 @@ class DashBoard extends React.Component{
     render(){
         return <div>
             <Card>
-                <Table datasource={this.state.datasource} columns={this.state.columns}>  
+                {/* {console.log(this.state.datasource)} */}
+                <Table 
+                    style={{overflowX:'scroll'}}
+                    dataSource={this.state.datasource} 
+                    columns={this.state.columns}
+                    position='bottom'
+                    filterDropdown>
 
                 </Table>
             </Card>

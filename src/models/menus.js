@@ -9,11 +9,13 @@ export default {
                 {
                     id: '4',
                     title: 'Option 4',
-                    icon: 'pie-chart'
+                    icon: 'pie-chart',
+                    nodeInfo: './dashboard/dashboard'
                 }, {
                     id: '5',
                     title: 'Option 5',
-                    icon: 'pie-chart'
+                    icon: 'pie-chart',
+                    nodeInfo: './treetest/treetest'
                 }
             ]
         },
@@ -25,11 +27,13 @@ export default {
                 {
                     id: '6',
                     title: 'Option 6',
-                    icon: 'weibo-square'
+                    icon: 'weibo-square',
+                    nodeInfo: './treetest/treetest'
                 }, {
                     id: '7',
                     title: 'Option 7',
-                    icon: 'pie-chart'
+                    icon: 'pie-chart',
+                    nodeInfo: './treetest/treetest'
                 }
             ]
         },

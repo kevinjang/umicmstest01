@@ -32,9 +32,12 @@ class KLayout extends React.Component {
 
     menuItemClick = (e) => {
         // console.log('menuItemClick', e)
+        const id = e.key.split('_')[0]
+        const blockUrl = e.key.split('_')[1]
+
         this.setState({
             // selectedTabKeys:[e.key]
-            activeTabKey: e.key
+            activeTabKey: id
         })
 
         // console.log('this.state.seletedTabKeys', this.state.seletedTabKeys)
@@ -47,10 +50,10 @@ class KLayout extends React.Component {
         })
 
         // console.log(allMenus)
-        const selectedExists = this.state.openTabs.find(item => item.id === e.key)
+        const selectedExists = this.state.openTabs.find(item => item.id === id)
         if (!selectedExists) {
-            const selectedTab = allMenus.find(item => item.id === e.key);
-            // console.log(selectedTab)
+            const selectedTab = allMenus.find(item => item.id === id);
+            console.log('selectedTab',selectedTab)
             this.setState({
                 openTabs: [...this.state.openTabs, selectedTab]
             })
@@ -119,7 +122,7 @@ class KLayout extends React.Component {
                             if (item.children)
                                 return <SubMenu key={item.id} title={<span><Icon type="mail" /><span>{item.title}</span></span>}>
                                     {item.children.map(cItem => {
-                                        return <Item key={cItem.id} onClick={this.menuItemClick}>
+                                        return <Item key={cItem.id+'_'+ cItem.nodeInfo} onClick={this.menuItemClick}>
                                             <Icon type={cItem.icon}></Icon>
                                             <span>{cItem.title}</span>
                                         </Item>
@@ -150,7 +153,7 @@ class KLayout extends React.Component {
                                             key={item.id}
                                             closable={true}>
                                             <Content>
-                                                <Route component={this.loadTest('./dashboard/dashboard')}></Route>
+                                                <Route component={this.loadTest(item.nodeInfo)}></Route>
                                             </Content>
                                             {/* {this.props.children} */}
                                         </TabPane>
