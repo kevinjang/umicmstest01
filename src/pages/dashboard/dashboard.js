@@ -24,12 +24,30 @@ class DashBoard extends React.Component{
                 return {...item,key:item.Id}
             })
 
-            console.log('dss',dss)
-            console.log('columns',ds.data.columns)
+            // console.log('dss',dss)
+            // console.log('columns',ds.data.columns)
+
+            let columns = ds.data.columns;
+            columns.reduce(item=>{
+                console.log('item.title',item.title)
+                if(item.title === 'GUID'){
+                    console.log('yes')
+                    return {
+                        ...item,
+                        render:(text, record, index)=>{
+                            console.log('text,record, index',text,record, index)
+                            return item;
+                        }
+                    }
+                }else{
+                    return item;
+                }
+                // return {...item,render:()=> item.title === 'GUID'? }
+            })
 
             this.setState({
                 datasource: dss,
-                columns: ds.data.columns
+                columns: columns
             })
         }).catch(err=>{
             console.log('err',err);
