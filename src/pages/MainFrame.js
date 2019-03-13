@@ -2,12 +2,14 @@ import React from 'react'
 import { Layout, Menu, Icon, Tabs } from 'antd'
 import { connect } from 'dva'
 import { Route } from 'react-router';
-import {asyncComponent} from '../utils/asyncComponent'
+import { asyncComponent } from '../utils/asyncComponent'
 // import path from 'path'
 // const {path} = require('path')
 import './MainFrame.css'
 
-import {setAxios} from '../utils/setaxios'
+import UserInfo from './user/userInfo'
+
+import { setAxios } from '../utils/setaxios'
 
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
@@ -53,7 +55,7 @@ class KLayout extends React.Component {
         const selectedExists = this.state.openTabs.find(item => item.id === id)
         if (!selectedExists) {
             const selectedTab = allMenus.find(item => item.id === id);
-            console.log('selectedTab',selectedTab)
+            console.log('selectedTab', selectedTab)
             this.setState({
                 openTabs: [...this.state.openTabs, selectedTab]
             })
@@ -96,7 +98,7 @@ class KLayout extends React.Component {
     }
 
     loadTest = (e) => {
-        const st = asyncComponent(()=>import(e))
+        const st = asyncComponent(() => import(e))
         // console.log('st',st)
         return st
     }
@@ -107,6 +109,7 @@ class KLayout extends React.Component {
             <Header style={{ color: 'white', fontSize: '32px' }}>
                 <Icon type="chrome" theme="filled" />
                 <span>导航</span>
+                <div style={{ float: 'right',marginTop:'-10px' }}> <UserInfo></UserInfo></div>
             </Header>
 
             <Layout>
@@ -122,7 +125,7 @@ class KLayout extends React.Component {
                             if (item.children)
                                 return <SubMenu key={item.id} title={<span><Icon type="mail" /><span>{item.title}</span></span>}>
                                     {item.children.map(cItem => {
-                                        return <Item key={cItem.id+'_'+ cItem.nodeInfo} onClick={this.menuItemClick}>
+                                        return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
                                             <Icon type={cItem.icon}></Icon>
                                             <span>{cItem.title}</span>
                                         </Item>
@@ -138,7 +141,7 @@ class KLayout extends React.Component {
                 </Sider>
                 <Layout>
                     <Content style={{ margin: '16px' }}>
-                        <div style={{ padding: "24px", background: "#fff" }}  
+                        <div style={{ padding: "24px", background: "#fff" }}
                             className="card-container">
                             {
                                 this.state.openTabs.length > 0 &&

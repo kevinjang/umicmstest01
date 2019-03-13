@@ -19,12 +19,13 @@ class DashBoard extends React.Component{
 
             let dss = ds.data.datasource;
 
-            // dss.reduce(item=>{
-            //     // console.log('redice-{...item,key:item.Id}',{...item,key:item.Id})
-            //     return {...item,key:item.Id}
-            // })
+            dss.reduce(item=>{
+                // console.log('redice-{...item,key:item.Id}',{...item,key:item.Id})
+                return {...item,key:item.Id}
+            })
 
-            // console.log('dss',dss)
+            console.log('dss',dss)
+            console.log('columns',ds.data.columns)
 
             this.setState({
                 datasource: dss,
