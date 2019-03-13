@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { getOUBaseInfoAll } from '../../utils/request'
 import { Card, Table } from 'antd';
+import './dashboard.css'
 // import { thisExpression } from '@babel/types';
 
 class DashBoard extends React.Component{
