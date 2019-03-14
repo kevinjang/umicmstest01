@@ -1,11 +1,11 @@
 .card-container > .ant-tabs-card > .ant-tabs-content {
     height: 120px;
-    margin-top: -16px;
+    /* margin-top: -16px; */
   }
   
   .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
     background: #fff;
-    padding: 16px;
+    /* padding: 16px; */
   }
   
   .card-container > .ant-tabs-card > .ant-tabs-bar {
@@ -20,4 +20,11 @@
   .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
     border-color: #fff;
     background: #fff;
+  }
+
+.ant-card-wider-padding .ant-card-body {
+    padding: 0px;
+}
+.ant-card-body {
+    padding: 0px;
   }

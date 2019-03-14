@@ -38,8 +38,15 @@ let validateUserInfo = async (info) => {
     }
 }
 
-let getOUBaseInfoAll = async () =>{
-    return await axios.get(baseUrl+'/api/getOUBaseInfoAll')
+let getOUBaseInfoAll = async ({parentid,pageSize, currentPage}) =>{
+
+    return await axios.get(baseUrl+'/api/getOUBaseInfoAll',{
+        params:{
+            parentid,
+            pageSize,
+            currentPage
+        }
+    })
 }
 
 export { validateUserInfo, getOUBaseInfoAll }

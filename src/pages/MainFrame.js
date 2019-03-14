@@ -37,10 +37,12 @@ class KLayout extends React.Component {
         const id = e.key.split('_')[0]
         const blockUrl = e.key.split('_')[1]
 
-        this.setState({
-            // selectedTabKeys:[e.key]
-            activeTabKey: id
-        })
+        // 此处防止反复点击同一菜单时页面闪烁
+        if (this.state.activeTabKey !== id)
+            this.setState({
+                // selectedTabKeys:[e.key]
+                activeTabKey: id
+            })
 
         // console.log('this.state.seletedTabKeys', this.state.seletedTabKeys)
         let allMenus = [].concat(...this.props.menus)
@@ -109,10 +111,10 @@ class KLayout extends React.Component {
             <Header style={{ color: 'white', fontSize: '32px' }}>
                 <Icon type="chrome" theme="filled" />
                 <span>导航</span>
-                <div style={{ float: 'right',marginTop:'-10px' }}> <UserInfo></UserInfo></div>
+                <div style={{ float: 'right', marginTop: '-10px' }}> <UserInfo></UserInfo></div>
             </Header>
 
-            <Layout>
+            <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
                 <Sider width={200} style={{ minHeight: '92.5vh', color: 'white', paddingTop: 16 }}>
                     <Menu
                         theme="dark"
@@ -140,9 +142,8 @@ class KLayout extends React.Component {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Content style={{ margin: '16px' }}>
-                        <div style={{ padding: "24px", background: "#fff" }}
-                            className="card-container">
+                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px" }}>
+                        <div style={{ padding: "5px", background: "#fff" }}>
                             {
                                 this.state.openTabs.length > 0 &&
                                 <Tabs

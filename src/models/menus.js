@@ -8,7 +8,7 @@ export default {
             children: [
                 {
                     id: '4',
-                    title: 'Option 4',
+                    title: 'Table数据展示',
                     icon: 'pie-chart',
                     nodeInfo: './dashboard/dashboard'
                 }, {
