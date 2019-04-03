@@ -28,7 +28,7 @@ class DashBoard extends React.Component {
     // componentWillUpdate
 
     loadDataForTable = ({ parentid, pageSize, currentPage }) => {
-        console.log('{ parentid, pageSize, currentPage }',{ parentid, pageSize, currentPage })
+        // console.log('{ parentid, pageSize, currentPage }',{ parentid, pageSize, currentPage })
         getOUBaseInfoAll({ parentid, pageSize, currentPage }).then(ds => {
 
             let dss = ds.data.datasource;

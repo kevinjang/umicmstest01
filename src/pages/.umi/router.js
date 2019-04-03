@@ -2,7 +2,7 @@ import React from 'react';
 import { Router as DefaultRouter, Route, Switch } from 'react-router-dom';
 import dynamic from 'umi/dynamic';
 import renderRoutes from 'umi/_renderRoutes';
-import RendererWrapper0 from 'E:/zhm/umicmstest01/src/pages/.umi/LocaleWrapper.jsx'
+import RendererWrapper0 from 'F:/Projects/Nodejs/git-kaikeba/umicmstest01/src/pages/.umi/LocaleWrapper.jsx'
 
 let Router = require('dva/router').routerRedux.ConnectedRouter;
 
@@ -26,12 +26,12 @@ let routes = [
         "exact": true
       },
       {
-        "component": () => React.createElement(require('E:/zhm/umicmstest01/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
+        "component": () => React.createElement(require('F:/Projects/Nodejs/git-kaikeba/umicmstest01/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
       }
     ]
   },
   {
-    "component": () => React.createElement(require('E:/zhm/umicmstest01/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
+    "component": () => React.createElement(require('F:/Projects/Nodejs/git-kaikeba/umicmstest01/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
   }
 ];
 window.g_routes = routes;

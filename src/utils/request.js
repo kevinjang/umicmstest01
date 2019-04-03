@@ -1,6 +1,7 @@
 import axios from 'axios'
 const qs = require('qs')
-const baseUrl = 'http://localhost:3000'
+// const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://localhost/TMPCC';
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
@@ -49,4 +50,10 @@ let getOUBaseInfoAll = async ({parentid,pageSize, currentPage}) =>{
     })
 }
 
-export { validateUserInfo, getOUBaseInfoAll }
+let getUserName = async () =>{
+    return await axios.get(baseUrl + '/Home/About',{
+
+    })
+}
+
+export { validateUserInfo, getOUBaseInfoAll,getUserName }
