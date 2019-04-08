@@ -5,8 +5,9 @@
 // }
 
 import React, { View } from 'react'
-import { Table, Card, Button, Popconfirm, DatePicker, Form } from 'antd';
+import { Table, Card, Button, Popconfirm, DatePicker, Form, Input } from 'antd';
 import 'antd/dist/antd.css'
+import './treetest.css'
 import extraInfo from './extraInfo'
 // import {getUserName} from '../../utils/request'
 
@@ -17,47 +18,52 @@ const { MonthPicker, RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD';
 const monthFormat = 'YYYY/MM';
 
-const dateFormatList = ['DD/MM/YYYY','DD/MM/YY']
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
+const FormItem = Form.Item;
+const EditableContext = React.createContext();
 
-const EditableContext  = React.createContext();
-
-const EditableRow = ({form, index, ...props})=>{
+const EditableRow = ({ form, index, ...props }) => (
     <EditableContext.Provider value={form}>
         <tr {...props}></tr>
     </EditableContext.Provider>
-}
+)
 
 const EditableFormRow = Form.create()(EditableRow);
 
-class EditableCell extends React.Component{
+class EditableCell extends React.Component {
     state = {
         editing: false
     }
-    
-    toggleEdit = ()=>{
+
+    toggleEdit = () => {
+        console.log('toggleEdit')
         const editing = !this.state.editing;
         this.setState({
             editing,
-        },()=>{
-            if(editing){
+        }, () => {
+            if (editing) {
                 this.input.focus();
             }
         })
     }
 
-    save = (e)=>{
+    save = (e) => {
         const { record, handleSave } = this.props;
-        this.form.validateFields((error,values)=>{
-            if(error && error[e.currentTarget.id]){
-                return ;
+        this.form.validateFields((error, values) => {
+            if (error && error[e.currentTarget.id]) {
+                return;
             }
+            // console.log('save-values',values)
+            // if(values.Remark2 && parseInt(values.Remark2) === NaN){
+            //     return;
+            // }
             this.toggleEdit();
-            handleSave({...record, ...values});
+            handleSave({ ...record, ...values });
         })
     }
 
-    render(){
-        const {editing} = this.state;
+    render() {
+        const { editing } = this.state;
         const {
             editable,
             dataIndex,
@@ -66,45 +72,45 @@ class EditableCell extends React.Component{
             index,
             handleSave,
             ...restProps
-          } = this.props;
-          return (
+        } = this.props;
+        return (
             <td {...restProps}>
-              {editable ? (
-                <EditableContext.Consumer>
-                  {(form) => {
-                    this.form = form;
-                    return (
-                      editing ? (
-                        <FormItem style={{ margin: 0 }}>
-                          {form.getFieldDecorator(dataIndex, {
-                            rules: [{
-                              required: true,
-                              message: `${title} is required.`,
-                            }],
-                            initialValue: record[dataIndex],
-                          })(
-                            <Input
-                              ref={node => (this.input = node)}
-                              onPressEnter={this.save}
-                              onBlur={this.save}
-                            />
-                          )}
-                        </FormItem>
-                      ) : (
-                        <div
-                          className="editable-cell-value-wrap"
-                          style={{ paddingRight: 24 }}
-                          onClick={this.toggleEdit}
-                        >
-                          {restProps.children}
-                        </div>
-                      )
-                    );
-                  }}
-                </EditableContext.Consumer>
-              ) : restProps.children}
+                {editable ? (
+                    <EditableContext.Consumer>
+                        {(form) => {
+                            this.form = form;
+                            return (
+                                editing ? (
+                                    <FormItem style={{ margin: 0 }}>
+                                        {form.getFieldDecorator(dataIndex, {
+                                            rules: [{
+                                                required: true,
+                                                message: `${title} is required.`,
+                                            }],
+                                            initialValue: record[dataIndex],
+                                        })(
+                                            <Input
+                                                ref={node => (this.input = node)}
+                                                onPressEnter={this.save}
+                                                onBlur={this.save}
+                                            />
+                                        )}
+                                    </FormItem>
+                                ) : (
+                                        <div
+                                            className="editable-cell-value-wrap"
+                                            style={{ paddingRight: 24, height: 30 }}
+                                            onClick={this.toggleEdit}
+                                        >
+                                            {restProps.children}
+                                        </div>
+                                    )
+                            );
+                        }}
+                    </EditableContext.Consumer>
+                ) : restProps.children}
             </td>
-          );
+        );
     }
 }
 
@@ -126,12 +132,12 @@ class TreeTest extends React.Component {
                     title: '日期',
                     dataIndex: 'ExpenseTime',
                     width: 200,
-                    render: (text,record,index)=>{
+                    render: (text, record, index) => {
                         let currDate = new Date();
-                        return <DatePicker 
-                                    defaultValue={moment(currDate,dateFormat)} 
-                                    format={dateFormat} 
-                                    onConfirm={(e)=>{console.log(e)}}>
+                        return <DatePicker
+                            defaultValue={moment(currDate, dateFormat)}
+                            format={dateFormat}
+                            onConfirm={(e) => { console.log(e) }}>
 
                         </DatePicker>
                     }
@@ -142,82 +148,95 @@ class TreeTest extends React.Component {
                     dataIndex: 'ExpenseAddress',
                     width: 100,
                     editable: true,
-                    render:(text,record,index)=>{
-                        return (<EditableCell>
+                    // render:(text,record,index)=>{
+                    //     return (<EditableCell>
 
-                        </EditableCell>)
-                    }
+                    //     </EditableCell>)
+                    // }
                 },
                 {
                     key: 'CabinType',
                     title: '舱位',
                     dataIndex: 'CabinType',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseTraffic',
                     title: '航空/铁路',
                     dataIndex: 'ExpenseTraffic',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseBoat',
                     title: '公路/水路',
                     dataIndex: 'ExpenseBoat',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseBaggage',
                     title: '出租车/网约车/市内公交',
                     dataIndex: 'ExpenseBaggage',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseHotel',
                     title: '住宿',
                     dataIndex: 'ExpenseHotel',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseHotelTaxCode',
                     title: '税率',
                     dataIndex: 'ExpenseHotelTaxCode',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseMeal',
                     title: '餐费',
                     dataIndex: 'ExpenseMeal',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseOther',
                     title: '其他',
                     dataIndex: 'ExpenseOther',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'ExpenseSum',
                     title: '费用金额合计',
                     dataIndex: 'ExpenseSum',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'InvoiceNo',
                     title: '电子发票号',
                     dataIndex: 'InvoiceNo',
+                    editable: true,
                     width: 100
                 },
                 {
                     key: 'Remark2',
                     title: '住宿天数',
                     dataIndex: 'Remark2',
-                    width: 100
+                    editable: true,
+                    width: 100,
+                    type: 'int'
                 },
                 {
                     key: 'ExpenseDescription',
                     title: '备注',
                     dataIndex: 'ExpenseDescription',
+                    editable: true,
                     width: 100
                 },
                 {
@@ -225,15 +244,15 @@ class TreeTest extends React.Component {
                     title: '操作',
                     dataIndex: 'remove',
                     width: 100,
-                    render:(text, record)=>{
-                        return this.state.dataSource.length>0?
+                    render: (text, record) => {
+                        return this.state.dataSource.length > 0 ?
                             (<Popconfirm title='确定删除当前行？'
-                                onConfirm={()=>{
+                                onConfirm={() => {
                                     this.handleDelete(record.key)
                                 }}>
                                 <a href='javascript:;'>删除</a>
-                            </Popconfirm>):
-                            (null);
+                            </Popconfirm>) :
+                            null;
                     },
                     fixed: 'right'
                 }
@@ -250,28 +269,28 @@ class TreeTest extends React.Component {
     isEditing = record => record.key === this.state.editingKey
 
     handleAdd = () => {
-        const {count, dataSource} = this.state
+        const { count, dataSource } = this.state
         const newData = {
-            RowNum: count+1,
+            RowNum: count + 1,
             ExpenseTime: '',
-            ExpenseAddress: '',
-            CabinType:'',
-            ExpenseTraffic: '',
-            ExpenseBoat: '',
-            ExpenseBaggage: '',
-            ExpenseHotel: '',
-            ExpenseHotelTaxCode: '',
-            ExpenseMeal: '',
-            ExpenseOther: '',
-            ExpenseSum: '',
-            InvoiceNo: '',
-            Remark2: '',
+            ExpenseAddress: 'xx',
+            CabinType: 'xx',
+            ExpenseTraffic: 'xx',
+            ExpenseBoat: 'xx',
+            ExpenseBaggage: 'xx',
+            ExpenseHotel: 'xx',
+            ExpenseHotelTaxCode: 'xx',
+            ExpenseMeal: 'xx',
+            ExpenseOther: 'xx',
+            ExpenseSum: 'xx',
+            InvoiceNo: 'xx',
+            Remark2: 'xx',
             ExpenseDescription: ''
         }
 
         this.setState({
             dataSource: [...dataSource, newData],
-            count: count+1
+            count: count + 1
         })
     }
 
@@ -282,17 +301,62 @@ class TreeTest extends React.Component {
         })
     }
 
+    handleSave = (row) => {
+        const newData = [...this.state.dataSource]
+        const index = newData.findIndex(item => row.RowNum === item.RowNum)
+        const item = newData[index]
+        newData.splice(index, 1, {
+            ...item, ...row
+        })
+
+        this.setState({
+            dataSource: newData
+        })
+    }
+
     render() {
+        const components = {
+            body: {
+                row: EditableFormRow,
+                cell: EditableCell
+            }
+        }
+        const columns = this.state.columns.map((col) => {
+            if (!col.editable) {
+                return col;
+            }
+
+            return {
+                ...col,
+                onCell:record=>({
+                    record,
+                    editable: col.editable,
+                    dataIndex: col.dataIndex,
+                    title: col.title,
+                    handleSave: this.handleSave
+                })
+            }
+
+            // return col;
+        })
         return <div>
             <Card title='目的地费用'
                 extra={<div style={{ color: 'red', fontWeight: 'bolder' }}>【电子发票号限定最长10位】</div>}
             >
                 <Table
+                    components={components}
                     scroll={{ x: '200%', y: 240 }}
                     dataSource={this.state.dataSource}
-                    columns={this.state.columns}
+                    columns={columns}
+                    rowClassName={() => 'editable-row'}
                     bordered={true}
-                    rowKey='RowNum'>
+                    rowKey='RowNum'
+                    // onRow={(record) => {
+                    //     return {
+                    //         onClick: this.toggleEdit
+                    //     }
+                    // }}
+                    >
 
                 </Table>
                 <div style={{ marginTop: '10px' }}>
