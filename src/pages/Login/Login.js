@@ -22,19 +22,9 @@ class Login1 extends React.Component {
         }
     }
     onLoginSubmit = (err, values) => {
-        // console.log('login submit', values);
-        // console.log('this.props.dispatch',this.props.dispatch)
-        // const ret = 
-        console.log(this.props.rules)
-
-        // console.log('validateUserLoginByAccount',validateUserLoginByAccount);
         const info = { ...values, tabType: this.state.activeTab }
         validateUserInfo(info).then((ret) => {
-            // console.log('ret',ret)
             const data = ret.data
-            // if(data.code === '0'){
-            //     msgType = ''
-            // }
 
             this.setState({
                 msg: data.message,
@@ -46,10 +36,6 @@ class Login1 extends React.Component {
         }).catch(err=>{
 
         });
-        // this.props.dispatch({
-
-        // })
-
     }
 
     onTabChange = (currentTab) => {
@@ -58,13 +44,6 @@ class Login1 extends React.Component {
             activeTab: currentTab
         })
     }
-
-    // componentWillMount() {
-    //     console.log('componentWillMount', this.props.rules)
-    // }
-    // componentDidMount() {
-    //     console.log('componentDidMount', this.props.rules)
-    // }
 
     getCaptcha = () => {
         console.log('get Captcha')

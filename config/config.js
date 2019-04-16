@@ -23,13 +23,12 @@ export default {
                 { path: '/', component: './Login/Login' },
                 {
                     path: '/mainframe', 
-                    component: './MainFrame',
-                    // routes:[
-                    //     {
-                    //         path:'/',
-                    //         component : ''
-                    //     }
-                    // ]
+                    // component: './MainFrame/MainFrame'
+                    component: './MainFrame'
+                },
+                {
+                    path: '/treetest',
+                    component: './treetest/treetest'
                 },
                 { component: './404' }
             ]

@@ -1,24 +1,11 @@
-// export default () => {
-//     return <div>
-//         tree test
-//     </div>
-// }
-
-import React, { View } from 'react'
-import { Table, Card, Button, Popconfirm, DatePicker, Form, Input } from 'antd';
+import React from 'react'
+import { Table, Card, Button, Popconfirm, DatePicker, Form, Input, Menu, Dropdown, Icon } from 'antd';
 import 'antd/dist/antd.css'
 import './treetest.css'
-import extraInfo from './extraInfo'
-// import {getUserName} from '../../utils/request'
 
 import moment from 'moment';
 
-const { MonthPicker, RangePicker } = DatePicker;
-
 const dateFormat = 'YYYY/MM/DD';
-const monthFormat = 'YYYY/MM';
-
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
@@ -31,18 +18,89 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
+    constructor(props) {
+        super(props)
+        this.CabinTypeCodes = [{
+            key: '0',
+            text: '--请选择--'
+        },
+        {
+            key: '1',
+            text: '无'
+        },
+        {
+            key: '2',
+            text: '火车，软卧'
+        },
+        {
+            key: '3',
+            text: '火车，硬卧'
+        },
+        {
+            key: '4',
+            text: '火车，硬座'
+        },
+        {
+            key: '5',
+            text: '火车，二等座'
+        },
+        {
+            key: '6',
+            text: '火车，一等座'
+        },
+        {
+            key: '7',
+            text: '火车，商务座'
+        },
+        {
+            key: '8',
+            text: '轮船，二等座'
+        },
+        {
+            key: '9',
+            text: '轮船，一等座'
+        },
+        {
+            key: '10',
+            text: '飞机，经济舱'
+        },
+        {
+            key: '11',
+            text: '飞机，商务舱'
+        },
+        {
+            key: '12',
+            text: '飞机，公务舱'
+        },
+        {
+            key: '13',
+            text: '飞机，头等舱'
+        }]
+        // let { record } = this.props;
+        this.menu = (<Menu onClick={(e, v) => {
+            
+            const { record } = arguments[0]
+            record.CabinType = e.key
+        }}>
+            {this.CabinTypeCodes.map((item, index) => {
+                return <Menu.Item key={item.key}>
+                    {item.text}
+                </Menu.Item>
+            })}
+        </Menu>)
+    }
     state = {
         editing: false
     }
 
     toggleEdit = () => {
-        console.log('toggleEdit')
         const editing = !this.state.editing;
         this.setState({
             editing,
         }, () => {
             if (editing) {
-                this.input.focus();
+                if (this.input)
+                    this.input.focus()
             }
         })
     }
@@ -53,10 +111,6 @@ class EditableCell extends React.Component {
             if (error && error[e.currentTarget.id]) {
                 return;
             }
-            // console.log('save-values',values)
-            // if(values.Remark2 && parseInt(values.Remark2) === NaN){
-            //     return;
-            // }
             this.toggleEdit();
             handleSave({ ...record, ...values });
         })
@@ -85,23 +139,30 @@ class EditableCell extends React.Component {
                                         {form.getFieldDecorator(dataIndex, {
                                             rules: [{
                                                 required: true,
-                                                message: `${title} is required.`,
+                                                message: `${title} 是必填项.`,
                                             }],
                                             initialValue: record[dataIndex],
                                         })(
-                                            <Input
-                                                ref={node => (this.input = node)}
-                                                onPressEnter={this.save}
-                                                onBlur={this.save}
-                                            />
+                                            (dataIndex === 'CabinType') ?
+                                                <Dropdown overlay={this.menu} onBlur={this.save}>
+                                                    <Button id={"record_drpBtn_" + index}>
+                                                        {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
+                                                        <Icon type='down'></Icon>
+                                                    </Button>
+                                                </Dropdown>
+                                                :
+                                                <Input
+                                                    ref={node => (this.input = node)}
+                                                    onPressEnter={this.save}
+                                                    onBlur={this.save}
+                                                />
                                         )}
                                     </FormItem>
                                 ) : (
                                         <div
                                             className="editable-cell-value-wrap"
                                             style={{ paddingRight: 24, height: 30 }}
-                                            onClick={this.toggleEdit}
-                                        >
+                                            onClick={this.toggleEdit}>
                                             {restProps.children}
                                         </div>
                                     )
@@ -117,9 +178,66 @@ class EditableCell extends React.Component {
 class TreeTest extends React.Component {
     constructor(props) {
         super(props)
+        this.currentRecord = null;
+
+        this.CabinTypeCodes = [{
+            key: '0',
+            text: '--请选择--'
+        },
+        {
+            key: '1',
+            text: '无'
+        },
+        {
+            key: '2',
+            text: '火车，软卧'
+        },
+        {
+            key: '3',
+            text: '火车，硬卧'
+        },
+        {
+            key: '4',
+            text: '火车，硬座'
+        },
+        {
+            key: '5',
+            text: '火车，二等座'
+        },
+        {
+            key: '6',
+            text: '火车，一等座'
+        },
+        {
+            key: '7',
+            text: '火车，商务座'
+        },
+        {
+            key: '8',
+            text: '轮船，二等座'
+        },
+        {
+            key: '9',
+            text: '轮船，一等座'
+        },
+        {
+            key: '10',
+            text: '飞机，经济舱'
+        },
+        {
+            key: '11',
+            text: '飞机，商务舱'
+        },
+        {
+            key: '12',
+            text: '飞机，公务舱'
+        },
+        {
+            key: '13',
+            text: '飞机，头等舱'
+        }]
         this.state = {
             username: 'hello u',
-            // tableDataSource: [],
             columns: [
                 {
                     key: 'RowNum',
@@ -148,18 +266,18 @@ class TreeTest extends React.Component {
                     dataIndex: 'ExpenseAddress',
                     width: 100,
                     editable: true,
-                    // render:(text,record,index)=>{
-                    //     return (<EditableCell>
-
-                    //     </EditableCell>)
-                    // }
                 },
                 {
                     key: 'CabinType',
                     title: '舱位',
                     dataIndex: 'CabinType',
                     editable: true,
-                    width: 100
+                    width: 100,
+                    render: (text, record, index) => {
+                        return <div>
+                            {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
+                        </div>
+                    }
                 },
                 {
                     key: 'ExpenseTraffic',
@@ -248,7 +366,7 @@ class TreeTest extends React.Component {
                         return this.state.dataSource.length > 0 ?
                             (<Popconfirm title='确定删除当前行？'
                                 onConfirm={() => {
-                                    this.handleDelete(record.key)
+                                    this.handleDelete(record.RowNum)
                                 }}>
                                 <a href='javascript:;'>删除</a>
                             </Popconfirm>) :
@@ -266,25 +384,25 @@ class TreeTest extends React.Component {
     componentDidMount() {
     }
 
-    isEditing = record => record.key === this.state.editingKey
+    isEditing = record => record.RowNum === this.state.editingKey
 
     handleAdd = () => {
         const { count, dataSource } = this.state
         const newData = {
             RowNum: count + 1,
             ExpenseTime: '',
-            ExpenseAddress: 'xx',
-            CabinType: 'xx',
-            ExpenseTraffic: 'xx',
-            ExpenseBoat: 'xx',
-            ExpenseBaggage: 'xx',
-            ExpenseHotel: 'xx',
-            ExpenseHotelTaxCode: 'xx',
-            ExpenseMeal: 'xx',
-            ExpenseOther: 'xx',
-            ExpenseSum: 'xx',
-            InvoiceNo: 'xx',
-            Remark2: 'xx',
+            ExpenseAddress: '',
+            CabinType: '0',
+            ExpenseTraffic: '',
+            ExpenseBoat: '',
+            ExpenseBaggage: '',
+            ExpenseHotel: '',
+            ExpenseHotelTaxCode: '',
+            ExpenseMeal: '',
+            ExpenseOther: '',
+            ExpenseSum: '',
+            InvoiceNo: '',
+            Remark2: '',
             ExpenseDescription: ''
         }
 
@@ -295,9 +413,15 @@ class TreeTest extends React.Component {
     }
 
     handleDelete = (key) => {
-        const dataSource = [...this.state.dataSource]
+        const dataSource = [...this.state.dataSource].filter(item => item.RowNum !== key).map((item, index) => {
+            return {
+                ...item,
+                RowNum: index + 1,
+            }
+        })
         this.setState({
-            dataSource: dataSource.filter(item => item.key !== key)
+            dataSource,//: dataSource.filter(item => item.RowNum !== key)
+            count: dataSource.length
         })
     }
 
@@ -328,7 +452,7 @@ class TreeTest extends React.Component {
 
             return {
                 ...col,
-                onCell:record=>({
+                onCell: record => ({
                     record,
                     editable: col.editable,
                     dataIndex: col.dataIndex,
@@ -336,8 +460,6 @@ class TreeTest extends React.Component {
                     handleSave: this.handleSave
                 })
             }
-
-            // return col;
         })
         return <div>
             <Card title='目的地费用'
@@ -351,12 +473,7 @@ class TreeTest extends React.Component {
                     rowClassName={() => 'editable-row'}
                     bordered={true}
                     rowKey='RowNum'
-                    // onRow={(record) => {
-                    //     return {
-                    //         onClick: this.toggleEdit
-                    //     }
-                    // }}
-                    >
+                >
 
                 </Table>
                 <div style={{ marginTop: '10px' }}>

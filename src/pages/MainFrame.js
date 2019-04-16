@@ -3,8 +3,6 @@ import { Layout, Menu, Icon, Tabs } from 'antd'
 import { connect } from 'dva'
 import { Route } from 'react-router';
 import { asyncComponent } from '../utils/asyncComponent'
-// import path from 'path'
-// const {path} = require('path')
 import './MainFrame.css'
 
 import UserInfo from './user/userInfo'
@@ -28,32 +26,25 @@ class KLayout extends React.Component {
             seletedTabKeys: [],
             activeTabKey: ''
         }
-
-        // console.log('ac', asyncComponent)
     }
 
     menuItemClick = (e) => {
-        // console.log('menuItemClick', e)
         const id = e.key.split('_')[0]
         const blockUrl = e.key.split('_')[1]
 
         // 此处防止反复点击同一菜单时页面闪烁
         if (this.state.activeTabKey !== id)
             this.setState({
-                // selectedTabKeys:[e.key]
                 activeTabKey: id
             })
 
-        // console.log('this.state.seletedTabKeys', this.state.seletedTabKeys)
         let allMenus = [].concat(...this.props.menus)
         this.props.menus.map(item => {
             if (item.children) {
-                // console.log(item.children)
                 allMenus = allMenus.concat(...item.children)
             }
         })
 
-        // console.log(allMenus)
         const selectedExists = this.state.openTabs.find(item => item.id === id)
         if (!selectedExists) {
             const selectedTab = allMenus.find(item => item.id === id);
@@ -65,14 +56,12 @@ class KLayout extends React.Component {
     }
 
     tabItemChange = (e) => {
-        // console.log(e)
         this.setState({
             activeTabKey: e
         })
     }
 
     tabItemEdit = (e) => {
-        // console.log('tabItemEdit', e)
         // 获取打开的倒数第二个id并设定activeTabKey
         if (this.state.openTabs.length > 1) {
             let id = this.state.openTabs[this.state.openTabs.length - 2].id
@@ -82,12 +71,9 @@ class KLayout extends React.Component {
         }
         // 将当前活动的tab移除
         let openedtabs = this.state.openTabs;
-        // console.log('openedtabs', openedtabs)
         let itemIndex = openedtabs.findIndex(rc => rc.id === e);
         if (itemIndex > -1) {
-            // openedtabs.splice()
             openedtabs.splice(itemIndex, 1)
-            // console.log('openedtabs', openedtabs)
             this.setState({
                 openTabs: openedtabs
             })
@@ -96,12 +82,10 @@ class KLayout extends React.Component {
 
     componentDidMount() {
         setAxios();
-        // console.log('this.state.openTabs', this.state.openTabs)
     }
 
     loadTest = (e) => {
         const st = asyncComponent(() => import(e))
-        // console.log('st',st)
         return st
     }
 
@@ -115,7 +99,10 @@ class KLayout extends React.Component {
             </Header>
 
             <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
-                <Sider width={200} style={{ minHeight: '92.5vh', color: 'white', paddingTop: 16 }}>
+                <Sider 
+                    width={200} 
+                    style={{ minHeight: '92.5vh', color: 'white', paddingTop: 16 }}
+                    collapsible>
                     <Menu
                         theme="dark"
                         defaultSelectedKeys={this.state.selectedKeys}
@@ -159,7 +146,6 @@ class KLayout extends React.Component {
                                             <Content>
                                                 <Route component={this.loadTest(item.nodeInfo)}></Route>
                                             </Content>
-                                            {/* {this.props.children} */}
                                         </TabPane>
                                     })}
                                 </Tabs>

@@ -5,12 +5,6 @@ const baseUrl = 'http://localhost/TMPCC';
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
-    // switch (tabType) {
-    //     case "tab1":
-    //         return await validateUserLoginByAccount(info);
-    //     case "tab2":
-    //         return await validateUserLoginByMobile(info);
-    // }
 
     console.log('tabType',tabType);
 
