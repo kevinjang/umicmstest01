@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Card, Button, Popconfirm, DatePicker, Form, Input, Menu, Dropdown, Icon } from 'antd';
+import { Table, Card, Button, Popconfirm, DatePicker, Form, Input, Menu, Dropdown, Icon, InputNumber } from 'antd';
 import 'antd/dist/antd.css'
 import './treetest.css'
 
@@ -76,11 +76,16 @@ class EditableCell extends React.Component {
             key: '13',
             text: '飞机，头等舱'
         }]
-        // let { record } = this.props;
+        this.drpControls = ['CabinType', 'TaxCode']
+        this.numberControls = ['ExpenseTraffic']
         this.menu = (<Menu onClick={(e, v) => {
-            
-            const { record } = arguments[0]
+
+            const { record } = this.props;
             record.CabinType = e.key
+
+            const { handleSave } = this.props;
+            this.toggleEdit();
+            handleSave(record)
         }}>
             {this.CabinTypeCodes.map((item, index) => {
                 return <Menu.Item key={item.key}>
@@ -116,6 +121,30 @@ class EditableCell extends React.Component {
         })
     }
 
+    setControl = (dataIndex, that) => {
+        if (this.drpControls.findIndex(item => item === dataIndex) > -1) {
+            const { record, index } = that.props;
+            return <Dropdown overlay={this.menu} >
+                <Button id={"record_drpBtn_" + index}>
+                    {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
+                    <Icon type='down'></Icon>
+                </Button>
+            </Dropdown>
+        }
+        else if (this.numberControls.findIndex(item => item === dataIndex) > -1) {
+            return <InputNumber defaultValue={0} >
+            </InputNumber>
+        }
+        else {
+            return <Input
+                ref={node => (that.input = node)}
+                onPressEnter={that.save}
+                onBlur={that.save}
+            />
+        }
+    }
+
+
     render() {
         const { editing } = this.state;
         const {
@@ -127,6 +156,7 @@ class EditableCell extends React.Component {
             handleSave,
             ...restProps
         } = this.props;
+
         return (
             <td {...restProps}>
                 {editable ? (
@@ -143,19 +173,20 @@ class EditableCell extends React.Component {
                                             }],
                                             initialValue: record[dataIndex],
                                         })(
-                                            (dataIndex === 'CabinType') ?
-                                                <Dropdown overlay={this.menu} onBlur={this.save}>
-                                                    <Button id={"record_drpBtn_" + index}>
-                                                        {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
-                                                        <Icon type='down'></Icon>
-                                                    </Button>
-                                                </Dropdown>
-                                                :
-                                                <Input
-                                                    ref={node => (this.input = node)}
-                                                    onPressEnter={this.save}
-                                                    onBlur={this.save}
-                                                />
+                                            // (dataIndex === 'CabinType') ?
+                                            //     <Dropdown overlay={this.menu} >
+                                            //         <Button id={"record_drpBtn_" + index}>
+                                            //             {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
+                                            //             <Icon type='down'></Icon>
+                                            //         </Button>
+                                            //     </Dropdown>
+                                            //     :
+                                            //     <Input
+                                            //         ref={node => (this.input = node)}
+                                            //         onPressEnter={this.save}
+                                            //         onBlur={this.save}
+                                            //     />
+                                            this.setControl(dataIndex, this)
                                         )}
                                     </FormItem>
                                 ) : (
