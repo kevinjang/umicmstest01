@@ -48,7 +48,6 @@ class KLayout extends React.Component {
         const selectedExists = this.state.openTabs.find(item => item.id === id)
         if (!selectedExists) {
             const selectedTab = allMenus.find(item => item.id === id);
-            console.log('selectedTab', selectedTab)
             this.setState({
                 openTabs: [...this.state.openTabs, selectedTab]
             })
