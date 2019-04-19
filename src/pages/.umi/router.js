@@ -22,6 +22,11 @@ let routes = [
         "exact": true
       },
       {
+        "path": "/treetest",
+        "component": require('../treetest/treetest').default,
+        "exact": true
+      },
+      {
         "component": require('../404').default,
         "exact": true
       },
