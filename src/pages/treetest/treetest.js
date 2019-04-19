@@ -76,9 +76,42 @@ class EditableCell extends React.Component {
             key: '13',
             text: '飞机，头等舱'
         }]
-        this.drpControls = ['CabinType', 'TaxCode']
-        this.numberControls = ['ExpenseTraffic']
-        this.menu = (<Menu onClick={(e, v) => {
+        this.TaxCodes = [
+            {
+                key: '_', text: '--请选择--'
+            }, {
+                key: 'J0', text: '0%应交税费-进项税'
+            }, {
+                key: 'JC', text: '1.5%应交税费-进项税'
+            }, {
+                key: 'J6', text: '3%应交税费-进项税'
+            }, {
+                key: 'J8', text: '4%应交税费-进项税'
+            }, {
+                key: 'J7', text: '5%应交税费-进项税'
+            }, {
+                key: 'J5', text: '6%应交税费-进项税'
+            }, {
+                key: 'J9', text: '7%应交税费-进项税'
+            }, {
+                key: 'JK', text: '9%应交税费-进项税'
+            }, {
+                key: 'JG', text: '10%应交税费-进项税'
+            }, {
+                key: 'J4', text: '11%应交税费-进项税'
+            }, {
+                key: 'J2', text: '13%应交税费-进项税'
+            }, {
+                key: 'JF', text: '16%应交税费-进项税'
+            }, {
+                key: 'JJ', text: '19%应交税费-进项税'
+            }];
+        this.drpControls = ['CabinType', 'ExpenseHotelTaxCode']
+        this.numberControls = ['ExpenseTraffic'
+            , 'ExpenseBoat', 'ExpenseBaggage', 'ExpenseHotel'
+            , 'ExpenseMeal', 'ExpenseOther', 'ExpenseSum'
+            , 'Remark2']
+        this.ctMenu = (<Menu onClick={(e, v) => {
 
             const { record } = this.props;
             record.CabinType = e.key
@@ -88,6 +121,22 @@ class EditableCell extends React.Component {
             handleSave(record)
         }}>
             {this.CabinTypeCodes.map((item, index) => {
+                return <Menu.Item key={item.key}>
+                    {item.text}
+                </Menu.Item>
+            })}
+        </Menu>)
+
+        this.tcMenu = (<Menu onClick={(e, v) => {
+
+            const { record } = this.props;
+            record.ExpenseHotelTaxCode = e.key
+
+            const { handleSave } = this.props;
+            this.toggleEdit();
+            handleSave(record)
+        }}>
+            {this.TaxCodes.map((item, index) => {
                 return <Menu.Item key={item.key}>
                     {item.text}
                 </Menu.Item>
@@ -124,16 +173,32 @@ class EditableCell extends React.Component {
     setControl = (dataIndex, that) => {
         if (this.drpControls.findIndex(item => item === dataIndex) > -1) {
             const { record, index } = that.props;
-            return <Dropdown overlay={this.menu} >
-                <Button id={"record_drpBtn_" + index}>
-                    {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
-                    <Icon type='down'></Icon>
-                </Button>
-            </Dropdown>
+            return <Dropdown overlay={(dataIndex === 'CabinType') ? this.ctMenu : this.tcMenu} >
+
+                {(dataIndex === 'CabinType') ?
+                    <Button id={"record_drpBtn_" + index}>
+                        {this.CabinTypeCodes.findIndex(p => p.key === record.CabinType).text}
+                        <Icon type='down'></Icon>
+                    </Button>
+                    :
+                    <Button id={"record_drpTaxCodeBtn_" + index}>
+                        {this.TaxCodes.find(p => p.key === record.ExpenseHotelTaxCode).text
+                        }
+                        <Icon type='down'></Icon>
+                    </Button>
+                }
+            </Dropdown >
         }
         else if (this.numberControls.findIndex(item => item === dataIndex) > -1) {
-            return <InputNumber defaultValue={0} >
+            return <InputNumber autoFocus={true} onBlur={that.save}>
             </InputNumber>
+        }
+        else if (dataIndex === 'ExpenseTime') {
+            let currDate = new Date();
+            return <DatePicker
+                format={dateFormat}
+                onChange={that.save}>
+            </DatePicker>
         }
         else {
             return <Input
@@ -166,28 +231,25 @@ class EditableCell extends React.Component {
                             return (
                                 editing ? (
                                     <FormItem style={{ margin: 0 }}>
-                                        {form.getFieldDecorator(dataIndex, {
+                                        {(dataIndex !== 'InvoiceNo')?
+                                            form.getFieldDecorator(dataIndex, {
                                             rules: [{
                                                 required: true,
                                                 message: `${title} 是必填项.`,
                                             }],
-                                            initialValue: record[dataIndex],
-                                        })(
-                                            // (dataIndex === 'CabinType') ?
-                                            //     <Dropdown overlay={this.menu} >
-                                            //         <Button id={"record_drpBtn_" + index}>
-                                            //             {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
-                                            //             <Icon type='down'></Icon>
-                                            //         </Button>
-                                            //     </Dropdown>
-                                            //     :
-                                            //     <Input
-                                            //         ref={node => (this.input = node)}
-                                            //         onPressEnter={this.save}
-                                            //         onBlur={this.save}
-                                            //     />
-                                            this.setControl(dataIndex, this)
-                                        )}
+                                            initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
+                                        })(this.setControl(dataIndex, this))
+                                        :form.getFieldDecorator(dataIndex, {
+                                            rules: [{
+                                                required: true,
+                                                message: `${title} 是必填项.`,
+                                            },{                                                
+                                                max: 10,
+                                                message: '长度不符合标准'
+                                            }],
+                                            initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
+                                        })(this.setControl(dataIndex, this))
+                                    }
                                     </FormItem>
                                 ) : (
                                         <div
@@ -211,62 +273,93 @@ class TreeTest extends React.Component {
         super(props)
         this.currentRecord = null;
 
-        this.CabinTypeCodes = [{
-            key: '0',
-            text: '--请选择--'
-        },
-        {
-            key: '1',
-            text: '无'
-        },
-        {
-            key: '2',
-            text: '火车，软卧'
-        },
-        {
-            key: '3',
-            text: '火车，硬卧'
-        },
-        {
-            key: '4',
-            text: '火车，硬座'
-        },
-        {
-            key: '5',
-            text: '火车，二等座'
-        },
-        {
-            key: '6',
-            text: '火车，一等座'
-        },
-        {
-            key: '7',
-            text: '火车，商务座'
-        },
-        {
-            key: '8',
-            text: '轮船，二等座'
-        },
-        {
-            key: '9',
-            text: '轮船，一等座'
-        },
-        {
-            key: '10',
-            text: '飞机，经济舱'
-        },
-        {
-            key: '11',
-            text: '飞机，商务舱'
-        },
-        {
-            key: '12',
-            text: '飞机，公务舱'
-        },
-        {
-            key: '13',
-            text: '飞机，头等舱'
-        }]
+        this.CabinTypeCodes = [
+            {
+                key: '0',
+                text: '--请选择--'
+            },
+            {
+                key: '1',
+                text: '无'
+            },
+            {
+                key: '2',
+                text: '火车，软卧'
+            },
+            {
+                key: '3',
+                text: '火车，硬卧'
+            },
+            {
+                key: '4',
+                text: '火车，硬座'
+            },
+            {
+                key: '5',
+                text: '火车，二等座'
+            },
+            {
+                key: '6',
+                text: '火车，一等座'
+            },
+            {
+                key: '7',
+                text: '火车，商务座'
+            },
+            {
+                key: '8',
+                text: '轮船，二等座'
+            },
+            {
+                key: '9',
+                text: '轮船，一等座'
+            },
+            {
+                key: '10',
+                text: '飞机，经济舱'
+            },
+            {
+                key: '11',
+                text: '飞机，商务舱'
+            },
+            {
+                key: '12',
+                text: '飞机，公务舱'
+            },
+            {
+                key: '13',
+                text: '飞机，头等舱'
+            }]
+
+        this.TaxCodes = [{
+            key: '_', text: '--请选择--'
+        }, {
+            key: 'J0', text: '0%应交税费-进项税'
+        }, {
+            key: 'JC', text: '1.5%应交税费-进项税'
+        }, {
+            key: 'J6', text: '3%应交税费-进项税'
+        }, {
+            key: 'J8', text: '4%应交税费-进项税'
+        }, {
+            key: 'J7', text: '5%应交税费-进项税'
+        }, {
+            key: 'J5', text: '6%应交税费-进项税'
+        }, {
+            key: 'J9', text: '7%应交税费-进项税'
+        }, {
+            key: 'JK', text: '9%应交税费-进项税'
+        }, {
+            key: 'JG', text: '10%应交税费-进项税'
+        }, {
+            key: 'J4', text: '11%应交税费-进项税'
+        }, {
+            key: 'J2', text: '13%应交税费-进项税'
+        }, {
+            key: 'JF', text: '16%应交税费-进项税'
+        }, {
+            key: 'JJ', text: '19%应交税费-进项税'
+        }];
         this.state = {
             username: 'hello u',
             columns: [
@@ -279,31 +372,29 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseTime',
                     title: '日期',
+                    editable: true,
                     dataIndex: 'ExpenseTime',
-                    width: 200,
+                    width: 150,
+                    align: 'center',
                     render: (text, record, index) => {
-                        let currDate = new Date();
-                        return <DatePicker
-                            defaultValue={moment(currDate, dateFormat)}
-                            format={dateFormat}
-                            onConfirm={(e) => { console.log(e) }}>
-
-                        </DatePicker>
+                        return <div>{text && text.format('YYYY/MM/DD')}</div>;
                     }
                 },
                 {
                     key: 'ExpenseAddress',
                     title: '费用发生地',
                     dataIndex: 'ExpenseAddress',
+                    align: 'center',
                     width: 100,
                     editable: true,
                 },
                 {
                     key: 'CabinType',
                     title: '舱位',
+                    align: 'center',
                     dataIndex: 'CabinType',
                     editable: true,
-                    width: 100,
+                    width: 150,
                     render: (text, record, index) => {
                         return <div>
                             {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text}
@@ -313,6 +404,7 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseTraffic',
                     title: '航空/铁路',
+                    align: 'center',
                     dataIndex: 'ExpenseTraffic',
                     editable: true,
                     width: 100
@@ -320,6 +412,7 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseBoat',
                     title: '公路/水路',
+                    align: 'center',
                     dataIndex: 'ExpenseBoat',
                     editable: true,
                     width: 100
@@ -327,6 +420,7 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseBaggage',
                     title: '出租车/网约车/市内公交',
+                    align: 'center',
                     dataIndex: 'ExpenseBaggage',
                     editable: true,
                     width: 100
@@ -334,6 +428,7 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseHotel',
                     title: '住宿',
+                    align: 'center',
                     dataIndex: 'ExpenseHotel',
                     editable: true,
                     width: 100
@@ -341,13 +436,20 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseHotelTaxCode',
                     title: '税率',
+                    align: 'center',
                     dataIndex: 'ExpenseHotelTaxCode',
                     editable: true,
-                    width: 100
+                    width: 150,
+                    render: (text, record, index) => {
+                        return <div>
+                            {this.TaxCodes[this.TaxCodes.findIndex(p => p.key === record.ExpenseHotelTaxCode)].text}
+                        </div>
+                    }
                 },
                 {
                     key: 'ExpenseMeal',
                     title: '餐费',
+                    align: 'center',
                     dataIndex: 'ExpenseMeal',
                     editable: true,
                     width: 100
@@ -355,6 +457,7 @@ class TreeTest extends React.Component {
                 {
                     key: 'ExpenseOther',
                     title: '其他',
+                    align: 'center',
                     dataIndex: 'ExpenseOther',
                     editable: true,
                     width: 100
@@ -363,35 +466,52 @@ class TreeTest extends React.Component {
                     key: 'ExpenseSum',
                     title: '费用金额合计',
                     dataIndex: 'ExpenseSum',
-                    editable: true,
-                    width: 100
+                    align: 'center',
+                    editable: false,
+                    width: 100,
+                    render: (text, record, index) => {
+                        return <div>
+                            {
+                                this.getNumberForInput(record.ExpenseTraffic) +
+                                this.getNumberForInput(record.ExpenseBoat) +
+                                this.getNumberForInput(record.ExpenseBaggage) +
+                                this.getNumberForInput(record.ExpenseHotel) +
+                                this.getNumberForInput(record.ExpenseMeal) +
+                                this.getNumberForInput(record.ExpenseOther)
+                            }
+                        </div>
+                    }
                 },
                 {
                     key: 'InvoiceNo',
                     title: '电子发票号',
+                    align: 'center',
                     dataIndex: 'InvoiceNo',
                     editable: true,
-                    width: 100
+                    width: 100,
+                    max: 10
                 },
                 {
                     key: 'Remark2',
                     title: '住宿天数',
                     dataIndex: 'Remark2',
+                    align: 'center',
                     editable: true,
                     width: 100,
-                    type: 'int'
+                    type: 'number'
                 },
                 {
                     key: 'ExpenseDescription',
                     title: '备注',
                     dataIndex: 'ExpenseDescription',
+                    align: 'center',
                     editable: true,
                     width: 100
                 },
                 {
-                    // key: 'remove',
                     title: '操作',
                     dataIndex: 'remove',
+                    align: 'center',
                     width: 100,
                     render: (text, record) => {
                         return this.state.dataSource.length > 0 ?
@@ -415,6 +535,10 @@ class TreeTest extends React.Component {
     componentDidMount() {
     }
 
+    getNumberForInput(value) {
+        return parseFloat(value) || 0
+    }
+
     isEditing = record => record.RowNum === this.state.editingKey
 
     handleAdd = () => {
@@ -428,7 +552,7 @@ class TreeTest extends React.Component {
             ExpenseBoat: '',
             ExpenseBaggage: '',
             ExpenseHotel: '',
-            ExpenseHotelTaxCode: '',
+            ExpenseHotelTaxCode: '_',
             ExpenseMeal: '',
             ExpenseOther: '',
             ExpenseSum: '',
@@ -451,7 +575,7 @@ class TreeTest extends React.Component {
             }
         })
         this.setState({
-            dataSource,//: dataSource.filter(item => item.RowNum !== key)
+            dataSource,
             count: dataSource.length
         })
     }
@@ -498,7 +622,7 @@ class TreeTest extends React.Component {
             >
                 <Table
                     components={components}
-                    scroll={{ x: '200%', y: 240 }}
+                    scroll={{ x: '180%', y: 240 }}
                     dataSource={this.state.dataSource}
                     columns={columns}
                     rowClassName={() => 'editable-row'}
