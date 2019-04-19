@@ -231,16 +231,25 @@ class EditableCell extends React.Component {
                             return (
                                 editing ? (
                                     <FormItem style={{ margin: 0 }}>
-                                        {form.getFieldDecorator(dataIndex, {
+                                        {(dataIndex !== 'InvoiceNo')?
+                                            form.getFieldDecorator(dataIndex, {
+                                            rules: [{
+                                                required: true,
+                                                message: `${title} 是必填项.`,
+                                            }],
+                                            initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
+                                        })(this.setControl(dataIndex, this))
+                                        :form.getFieldDecorator(dataIndex, {
                                             rules: [{
                                                 required: true,
                                                 message: `${title} 是必填项.`,
                                             },{                                                
-                                                max: ((dataIndex === 'InvoiceNo') ? 10 : 1000),
+                                                max: 10,
                                                 message: '长度不符合标准'
                                             }],
                                             initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                        })(this.setControl(dataIndex, this))}
+                                        })(this.setControl(dataIndex, this))
+                                    }
                                     </FormItem>
                                 ) : (
                                         <div
@@ -489,7 +498,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     editable: true,
                     width: 100,
-                    type: 'int'
+                    type: 'number'
                 },
                 {
                     key: 'ExpenseDescription',
