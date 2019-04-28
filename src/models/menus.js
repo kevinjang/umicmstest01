@@ -10,12 +10,12 @@ export default {
                     id: '4',
                     title: 'Table数据展示',
                     icon: 'pie-chart',
-                    nodeInfo: '../dashboard/dashboard'
+                    nodeInfo: './dashboard/dashboard'
                 }, {
                     id: '5',
                     title: 'Option 5',
                     icon: 'pie-chart',
-                    nodeInfo: '../treetest/treetest'
+                    nodeInfo: './treetest/treetest'
                 }
             ]
         },
@@ -33,7 +33,7 @@ export default {
                     id: '7',
                     title: 'Option 7',
                     icon: 'pie-chart',
-                    nodeInfo: '../treetest/treetest'
+                    nodeInfo: './treetest/treetest'
                 }
             ]
         },
