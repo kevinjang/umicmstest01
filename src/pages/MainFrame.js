@@ -14,7 +14,10 @@ const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
 
 @connect(
-    state => ({ menus: state.menus })
+    state => ({ 
+        menus: state.menus,
+        ERColumns: state.ERColumns
+     })
 )
 class KLayout extends React.Component {
     constructor(props) {

@@ -374,7 +374,7 @@ class TreeTest extends React.Component {
                     title: '日期',
                     editable: true,
                     dataIndex: 'ExpenseTime',
-                    width: 150,
+                    width: 120,
                     align: 'center',
                     render: (text, record, index) => {
                         return <div>{text && text.format('YYYY/MM/DD')}</div>;
@@ -407,7 +407,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseTraffic',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseBoat',
@@ -415,7 +415,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseBoat',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseBaggage',
@@ -423,7 +423,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseBaggage',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseHotel',
@@ -431,7 +431,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseHotel',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseHotelTaxCode',
@@ -439,7 +439,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseHotelTaxCode',
                     editable: true,
-                    width: 150,
+                    width: 100,
                     render: (text, record, index) => {
                         return <div>
                             {this.TaxCodes[this.TaxCodes.findIndex(p => p.key === record.ExpenseHotelTaxCode)].text}
@@ -452,7 +452,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseMeal',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseOther',
@@ -460,7 +460,7 @@ class TreeTest extends React.Component {
                     align: 'center',
                     dataIndex: 'ExpenseOther',
                     editable: true,
-                    width: 100
+                    width: 80
                 },
                 {
                     key: 'ExpenseSum',
@@ -468,7 +468,7 @@ class TreeTest extends React.Component {
                     dataIndex: 'ExpenseSum',
                     align: 'center',
                     editable: false,
-                    width: 100,
+                    width: 80,
                     render: (text, record, index) => {
                         return <div>
                             {
@@ -506,7 +506,12 @@ class TreeTest extends React.Component {
                     dataIndex: 'ExpenseDescription',
                     align: 'center',
                     editable: true,
-                    width: 100
+                    width: 100,
+                    // render:(text,record)=>{
+                    //     return <div style={{width: 100, overflowWrap: 'break-word' }}>
+                    //     {text}
+                    //     </div>
+                    // }
                 },
                 {
                     title: '操作',
@@ -622,7 +627,7 @@ class TreeTest extends React.Component {
             >
                 <Table
                     components={components}
-                    scroll={{ x: '180%', y: 240 }}
+                    scroll={{ x: '120%', y: 240 }}
                     dataSource={this.state.dataSource}
                     columns={columns}
                     rowClassName={() => 'editable-row'}
