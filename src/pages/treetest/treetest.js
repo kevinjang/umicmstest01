@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Card, Button, Popconfirm, DatePicker, Form, Input, Menu, Dropdown, Icon, InputNumber } from 'antd';
-import 'antd/dist/antd.css'
+
 import './treetest.css'
 
 import moment from 'moment';
@@ -254,7 +254,9 @@ class EditableCell extends React.Component {
                                 ) : (
                                         <div
                                             className="editable-cell-value-wrap"
-                                            style={{ paddingRight: (dataIndex === 'InvoiceNo' ? 0 : 24), height: 30 }}
+                                            style={{ paddingRight: 0, height: 30}}
+                                            //, overflowWrap: 'break-word' 
+                                            //(dataIndex === 'InvoiceNo' ? 0 : 24)
                                             onClick={this.toggleEdit}>
                                             {restProps.children}
                                         </div>
@@ -360,6 +362,7 @@ class TreeTest extends React.Component {
         }, {
             key: 'JJ', text: '19%应交税费-进项税'
         }];
+        
         this.state = {
             username: 'hello u',
             columns: [
