@@ -240,7 +240,7 @@ class EditableCell extends React.Component {
                                     }],
                                     initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
                                 })(this.setControl(dataIndex, this)) :
-                                form.getFieldDecorator(dataIndex, {
+                                form.getFieldDecorator6(dataIndex, {
                                     rules: [{
                                         required: true,
                                         message: `${title} 是必填项.`,
