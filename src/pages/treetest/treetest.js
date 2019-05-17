@@ -1,7 +1,6 @@
 import React from 'react'
 import { Table, Card, Button, Popconfirm, DatePicker, Form, Input, Menu, Dropdown, Icon, InputNumber } from 'antd';
-
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.css'
 import './treetest.css'
 
 import moment from 'moment';
@@ -12,7 +11,7 @@ const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
     <EditableContext.Provider value={form}>
-        {console.log('props',props)}
+        {console.log('props', props)}
         <tr {...props}> </tr>
     </EditableContext.Provider>
 )
@@ -79,6 +78,7 @@ class EditableCell extends React.Component {
             text: '飞机，头等舱'
         }
         ]
+
         this.TaxCodes = [
             {
                 key: '_',
@@ -223,47 +223,6 @@ class EditableCell extends React.Component {
             handleSave,
             ...restProps
         } = this.props;
-<<<<<<< HEAD
-        console.log('...restProps',...restProps)
-
-        return (<td {...restProps}>
-            {editable ? (<EditableContext.Consumer>
-                {(form) => {
-                    this.form = form;
-                    // console.log('form.getFieldDecorator',form.getFieldDecorator)
-                    return (
-                        editing ? (<FormItem style={{ margin: 0 }} > {
-                            (dataIndex !== 'InvoiceNo') ?
-                                form.getFieldDecorator(dataIndex, {
-                                    rules: [{
-                                        required: true,
-                                        message: `${title} 是必填项.`,
-                                    }],
-                                    initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                })(this.setControl(dataIndex, this)) :
-                                form.getFieldDecorator6(dataIndex, {
-                                    rules: [{
-                                        required: true,
-                                        message: `${title} 是必填项.`,
-                                    }, {
-                                        max: 10,
-                                        message: '长度不符合标准'
-                                    }],
-                                    initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                })(this.setControl(dataIndex, this))
-                        } </FormItem>
-                        ) : (<div className="editable-cell-value-wrap"
-                            style={{ paddingRight: 0, height: 30 }}
-                            //, overflowWrap: 'break-word' 
-                            //(dataIndex === 'InvoiceNo' ? 0 : 24)
-                            onClick={this.toggleEdit} > {restProps.children}
-                        </div>)
-                    );
-                }}
-            </EditableContext.Consumer>)
-                : restProps.children}
-        </td>);
-=======
 
         return (
             <td {...restProps}>
@@ -274,30 +233,30 @@ class EditableCell extends React.Component {
                             return (
                                 editing ? (
                                     <FormItem style={{ margin: 0 }}>
-                                        {(dataIndex !== 'InvoiceNo')?
+                                        {(dataIndex !== 'InvoiceNo') ?
                                             form.getFieldDecorator(dataIndex, {
-                                            rules: [{
-                                                required: true,
-                                                message: `${title} 是必填项.`,
-                                            }],
-                                            initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                        })(this.setControl(dataIndex, this))
-                                        :form.getFieldDecorator(dataIndex, {
-                                            rules: [{
-                                                required: true,
-                                                message: `${title} 是必填项.`,
-                                            },{                                                
-                                                max: 10,
-                                                message: '长度不符合标准'
-                                            }],
-                                            initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                        })(this.setControl(dataIndex, this))
-                                    }
+                                                rules: [{
+                                                    required: true,
+                                                    message: `${title} 是必填项.`,
+                                                }],
+                                                initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
+                                            })(this.setControl(dataIndex, this))
+                                            : form.getFieldDecorator(dataIndex, {
+                                                rules: [{
+                                                    required: true,
+                                                    message: `${title} 是必填项.`,
+                                                }, {
+                                                    max: 10,
+                                                    message: '长度不符合标准'
+                                                }],
+                                                initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
+                                            })(this.setControl(dataIndex, this))
+                                        }
                                     </FormItem>
                                 ) : (
                                         <div
                                             className="editable-cell-value-wrap"
-                                            style={{ paddingRight: 24, height: 30 }}
+                                            style={{ paddingRight: (dataIndex === 'InvoiceNo' ? 0 : 24), height: 30 }}
                                             onClick={this.toggleEdit}>
                                             {restProps.children}
                                         </div>
@@ -308,7 +267,6 @@ class EditableCell extends React.Component {
                 ) : restProps.children}
             </td>
         );
->>>>>>> parent of 963f755... Update treetest.js
     }
 }
 
@@ -317,62 +275,63 @@ class TreeTest extends React.Component {
         super(props)
         this.currentRecord = null;
 
-        this.CabinTypeCodes = [{
-            key: '0',
-            text: '--请选择--'
-        },
-        {
-            key: '1',
-            text: '无'
-        },
-        {
-            key: '2',
-            text: '火车，软卧'
-        },
-        {
-            key: '3',
-            text: '火车，硬卧'
-        },
-        {
-            key: '4',
-            text: '火车，硬座'
-        },
-        {
-            key: '5',
-            text: '火车，二等座'
-        },
-        {
-            key: '6',
-            text: '火车，一等座'
-        },
-        {
-            key: '7',
-            text: '火车，商务座'
-        },
-        {
-            key: '8',
-            text: '轮船，二等座'
-        },
-        {
-            key: '9',
-            text: '轮船，一等座'
-        },
-        {
-            key: '10',
-            text: '飞机，经济舱'
-        },
-        {
-            key: '11',
-            text: '飞机，商务舱'
-        },
-        {
-            key: '12',
-            text: '飞机，公务舱'
-        },
-        {
-            key: '13',
-            text: '飞机，头等舱'
-        }
+        this.CabinTypeCodes = [
+            {
+                key: '0',
+                text: '--请选择--'
+            },
+            {
+                key: '1',
+                text: '无'
+            },
+            {
+                key: '2',
+                text: '火车，软卧'
+            },
+            {
+                key: '3',
+                text: '火车，硬卧'
+            },
+            {
+                key: '4',
+                text: '火车，硬座'
+            },
+            {
+                key: '5',
+                text: '火车，二等座'
+            },
+            {
+                key: '6',
+                text: '火车，一等座'
+            },
+            {
+                key: '7',
+                text: '火车，商务座'
+            },
+            {
+                key: '8',
+                text: '轮船，二等座'
+            },
+            {
+                key: '9',
+                text: '轮船，一等座'
+            },
+            {
+                key: '10',
+                text: '飞机，经济舱'
+            },
+            {
+                key: '11',
+                text: '飞机，商务舱'
+            },
+            {
+                key: '12',
+                text: '飞机，公务舱'
+            },
+            {
+                key: '13',
+                text: '飞机，头等舱'
+            }
         ]
 
         this.TaxCodes = [
@@ -422,6 +381,7 @@ class TreeTest extends React.Component {
 
         this.state = {
             username: 'hello u',
+            dataSource:[],
             columns: [{
                 key: 'RowNum',
                 title: '序号',
@@ -546,49 +506,9 @@ class TreeTest extends React.Component {
                 max: 10
             },
             {
-                key: 'Remark2',
-                title: '住宿天数',
-                dataIndex: 'Remark2',
-                align: 'center',
-                editable: true,
-                // width: 100,
-                type: 'number'
-            },
-            {
-                key: 'ExpenseDescription',
-                title: '备注',
-                dataIndex: 'ExpenseDescription',
-                align: 'center',
-                editable: true,
-                // width: 100,
-                // render:(text,record)=>{
-                //     return <div style={{width: 100, overflowWrap: 'break-word' }}>
-                //     {text}
-                //     </div>
-                // }
-            },
-            {
-                title: '操作',
-                dataIndex: 'remove',
-                align: 'center',
-                // width: 100,
-                render: (text, record) => {
-                    return this.state.dataSource.length > 0 ?
-                        (<Popconfirm title='确定删除当前行？'
-                            onConfirm={
-                                () => {
-                                    this.handleDelete(record.RowNum)
-                                }
-                            } >
-                            <a href='javascript:;' > 删除 </a> </Popconfirm >) :
-                        null;
-                },
-                fixed: 'right'
-            }
-            ],
-            editingKey: '',
-            count: 0,
-            dataSource: []
+                key: '13',
+                text: '飞机，头等舱'
+            }]
         }
     }
 
