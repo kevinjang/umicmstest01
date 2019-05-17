@@ -221,6 +221,8 @@ class EditableTable extends React.Component {
             }
         }
 
+        console.log("EditableCell",EditableCell);
+
         const columns = this.state.columns.map((col) => {
             if (!col.editable) {
                 return col;

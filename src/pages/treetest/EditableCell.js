@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form } from 'antd'
+import { Form, Input } from 'antd'
 import 'antd/dist/antd.css'
 
 const FormItem = Form.Item;
@@ -70,7 +70,7 @@ class EditableCell extends React.Component {
                                                         message: `${title} is required.`
                                                     }],
                                                     initialValue: record[dataIndex]
-                                                })
+                                                })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)
                                             }
                                         </FormItem>) :
                                         (

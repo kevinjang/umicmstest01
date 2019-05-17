@@ -382,6 +382,7 @@ class TreeTest extends React.Component {
         this.state = {
             username: 'hello u',
             dataSource:[],
+            count: 0,
             columns: [{
                 key: 'RowNum',
                 title: '序号',
@@ -505,10 +506,11 @@ class TreeTest extends React.Component {
                 // width: 100,
                 max: 10
             },
-            {
-                key: '13',
-                text: '飞机，头等舱'
-            }]
+            // {
+            //     key: '13',
+            //     text: '飞机，头等舱'
+            // }
+        ]
         }
     }
 
