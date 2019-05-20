@@ -1,7 +1,9 @@
 import React from 'react'
-import { Table, Input, Button, Popconfirm, Form, DatePicker, Dropdown, Menu, Icon } from 'antd'
+import { Table, Input, Button, Popconfirm, Form, DatePicker, Dropdown, Menu, Icon, message, InputNumber } from 'antd'
 // import EditableCell from './EditableCell'
 import moment from 'moment'
+
+import 'antd/dist/antd.css'
 
 const dateFormat = 'YYYY/MM/DD';;
 
@@ -16,9 +18,9 @@ const EditableRow = ({ form, index, ...props }) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        
+
         this.CabinTypeCodes = [
             {
                 key: '0',
@@ -78,6 +80,55 @@ class EditableCell extends React.Component {
             }
         ]
 
+        this.TaxCodes = [
+            {
+                key: '_',
+                text: '--请选择--'
+            }, {
+                key: 'J0',
+                text: '0%应交税费-进项税'
+            }, {
+                key: 'JC',
+                text: '1.5%应交税费-进项税'
+            }, {
+                key: 'J6',
+                text: '3%应交税费-进项税'
+            }, {
+                key: 'J8',
+                text: '4%应交税费-进项税'
+            }, {
+                key: 'J7',
+                text: '5%应交税费-进项税'
+            }, {
+                key: 'J5',
+                text: '6%应交税费-进项税'
+            }, {
+                key: 'J9',
+                text: '7%应交税费-进项税'
+            }, {
+                key: 'JK',
+                text: '9%应交税费-进项税'
+            }, {
+                key: 'JG',
+                text: '10%应交税费-进项税'
+            }, {
+                key: 'J4',
+                text: '11%应交税费-进项税'
+            }, {
+                key: 'J2',
+                text: '13%应交税费-进项税'
+            }, {
+                key: 'JF',
+                text: '16%应交税费-进项税'
+            }, {
+                key: 'JJ',
+                text: '19%应交税费-进项税'
+            }];
+
+        this.numberControls = ['ExpenseTraffic','ExpenseBoat'
+        ,'ExpenseBaggage','ExpenseHotel','ExpenseMeal','ExpenseOther']
+
+        this.drpControls = ['ExpenseHotelTaxCode', 'CabinType']
     }
     state = {
         editing: false
@@ -108,49 +159,90 @@ class EditableCell extends React.Component {
             if (dataIndex === 'ExpenseTime') {
                 values.ExpenseTime = e
             }
-            if(dataIndex === 'CabinType'){
+            if (dataIndex === 'CabinType') {
                 values.CabinType = e.key
+            }
+
+            if(dataIndex === 'ExpenseHotelTaxCode'){
+                values.ExpenseHotelTaxCode = e.key
             }
             this.toggleEdit();
             handleSave({ ...record, ...values });
         })
     }
 
-    setCellControl = (dataIndex,text) => {
-        if(dataIndex === 'ExpenseTime'){
+    // cabinTypeClick = (e) => {
+    //     // console.log('cabinTypeClick.e',e);
+    //     // console.log('cabinTypeClick.this.props',this.props);
+    //     // message.info('cabinTypeClick.e'+e);
+    //     this.save(e);
+    // }
+
+    // taxCodeClick = (e)=>{
+    //     this.save(e);
+    // }
+
+    setCellControl = (dataIndex, text) => {
+        const { record, index, type } = this.props;
+        console.log('setCellControl', this.props);
+        if (dataIndex === 'ExpenseTime') {
             return <DatePicker
-            autoFocus={true}
-            format={dateFormat}
-            onChange={this.save}
-            // onBlur={this.save}
-            defaultValue={moment(record[dataIndex], dateFormat)}></DatePicker>;
+                autoFocus={true}
+                format={dateFormat}
+                onChange={this.save}
+                // onBlur={this.save}
+                defaultValue={moment(record[dataIndex], dateFormat)}></DatePicker>;
         }
-        else if(dataIndex === 'CabinType'){
-            const menu = (
-                <Menu onClick={this.save}>
-                    {this.CabinTypeCodes.map(item=>{
-                        return <Menu.Item key={item.key}>
-                            {item.text}
-                        </Menu.Item>
-                    })}
-                </Menu>
-            );
+        else if (this.drpControls.findIndex(item=>item === dataIndex)>=0) {
+            if(dataIndex === 'CabinType'){
+                const menu = (
+                    <Menu onClick={this.save}>
+                        {this.CabinTypeCodes.map(item => {
+                            return <Menu.Item key={item.key}>
+                                {item.text}
+                            </Menu.Item>
+                        })}
+                    </Menu>
+                );
+    
+                return <Dropdown overlay={menu} >
+                    <Button id={`record_drpBtn_${index}`}>
+                        {
+                            this.CabinTypeCodes.find(p => p.key == record.CabinType).text
+                        }
+                        <Icon type='down'> </Icon>
+                    </Button>
+                </Dropdown>
+            }else if(dataIndex === 'ExpenseHotelTaxCode'){
+                const menu = (
+                    <Menu onClick={this.save}>
+                        {this.TaxCodes.map(item=>{
+                            return <Menu.Item key={item.key}>
+                                {item.text}
+                            </Menu.Item>
+                        })}
+                    </Menu>
+                )
 
-            const {record, index} = this.props;
-
-            return <Dropdown overlay={menu} >
-                <Button id={`record_drpBtn_${index}`}>
-                    {
-                        this.CabinTypeCodes.findIndex(p=>p.key == record.CabinType).text
-                    }
-                    <Icon type='down'> </Icon>
-                </Button>
-            </Dropdown>
-        }else{
+                
+                return <Dropdown overlay={menu} >
+                    <Button id={`record_drpBtnTC_${index}`}>
+                        {
+                            this.TaxCodes.find(p => p.key == record.ExpenseHotelTaxCode).text
+                        }
+                        <Icon type='down'> </Icon>
+                    </Button>
+                </Dropdown>
+            }
+        } else {
+            if (this.numberControls.findIndex(item => item === dataIndex) >= 0) {
+                return <InputNumber defaultValue={record[dataIndex]} onBlur={this.save} onPressEnter={this.save}>
+                </InputNumber>
+            }
             return <Input
-            ref={node => (this.input = node)}
-            onPressEnter={this.save}
-            onBlur={this.save} />
+                ref={node => (this.input = node)}
+                onPressEnter={this.save}
+                onBlur={this.save} />
         }
     }
 
@@ -165,7 +257,7 @@ class EditableCell extends React.Component {
                     rules: [
                         {
                             required: true,
-                            message: `${title} is requried.`
+                            message: `${title} 是必填项.`
                         }
                     ],
                     initialValue: record[dataIndex]
@@ -206,7 +298,10 @@ class EditableTable extends React.Component {
     constructor(props) {
         super(props);
         // console.log('editabletable-props', props)
-        
+
+        this.numberControls = ['ExpenseTraffic','ExpenseBoat'
+        ,'ExpenseBaggage','ExpenseHotel','ExpenseMeal','ExpenseOther']
+
         this.CabinTypeCodes = [
             {
                 key: '0',
@@ -266,11 +361,56 @@ class EditableTable extends React.Component {
             }
         ]
 
+        this.TaxCodes = [
+            {
+                key: '_',
+                text: '--请选择--'
+            }, {
+                key: 'J0',
+                text: '0%应交税费-进项税'
+            }, {
+                key: 'JC',
+                text: '1.5%应交税费-进项税'
+            }, {
+                key: 'J6',
+                text: '3%应交税费-进项税'
+            }, {
+                key: 'J8',
+                text: '4%应交税费-进项税'
+            }, {
+                key: 'J7',
+                text: '5%应交税费-进项税'
+            }, {
+                key: 'J5',
+                text: '6%应交税费-进项税'
+            }, {
+                key: 'J9',
+                text: '7%应交税费-进项税'
+            }, {
+                key: 'JK',
+                text: '9%应交税费-进项税'
+            }, {
+                key: 'JG',
+                text: '10%应交税费-进项税'
+            }, {
+                key: 'J4',
+                text: '11%应交税费-进项税'
+            }, {
+                key: 'J2',
+                text: '13%应交税费-进项税'
+            }, {
+                key: 'JF',
+                text: '16%应交税费-进项税'
+            }, {
+                key: 'JJ',
+                text: '19%应交税费-进项税'
+            }];
+
         this.columns = [
             {
                 title: '序号',
                 dataIndex: 'RowNum',
-                width: '30%',
+                width: '10%',
                 editable: false
             },
             {
@@ -284,16 +424,80 @@ class EditableTable extends React.Component {
                 }
             },
             {
+                title: '费用发生地',
+                dataIndex: 'ExpenseAddress',
+                editable: true
+            },
+            {
                 title: '舱位',
                 dataIndex: 'CabinType',
                 editable: true,
                 render: (text, record, index) => {
-                    return this.CabinTypeCodes.find(item=>item.key === text).text;
+                    return this.CabinTypeCodes.find(item => item.key === text).text;
                 }
+            },
+            {
+                title: '航空/铁路',
+                dataIndex: 'ExpenseTraffic',
+                editable: true,
+                type: 'number'
+            },
+            {
+                title: '公路/水路',
+                dataIndex: 'ExpenseBoat',
+                editable: true,
+
+            },
+            {
+                title: '出租车/网约车/市内公交',
+                dataIndex: 'ExpenseBaggage',
+                editable: true
+            },
+            {
+                title: '住宿',
+                dataIndex: 'ExpenseHotel',
+                editable: true
+            },
+            {
+                title: '税率',
+                dataIndex: 'ExpenseHotelTaxCode',
+                editable: true,
+                render:(text,record,index)=>{
+                    return this.TaxCodes.find(item => item.key === text).text
+                }
+            },
+            {
+                title: '餐费',
+                dataIndex: 'ExpenseMeal',
+                editable: true
+            },
+            {
+                title: '其他',
+                dataIndex: 'ExpenseOther',
+                editable: true
+            },
+            {
+                title: '费用合计',
+                dataIndex: 'ExpenseSum',
+                render:(text,record,index)=>{
+                    let sum = 0;
+                    this.numberControls.map(item=>{
+                       sum += this.getNumberForInput(record[item]);
+                    })
+
+                    return sum;
+                }
+            },
+            {
+                title: '电子发票号',
+                dataIndex: 'InvoiceNo',
+                editable: true,
+                max: 10
             },
             {
                 title: 'operation',
                 dataIndex: 'operation',
+                // fixed: true,
                 render: (text, record) =>
                     this.state.dataSource.length >= 1 ?
                         (
@@ -311,11 +515,25 @@ class EditableTable extends React.Component {
                     key: '0',
                     RowNum: '1',
                     ExpenseTime: moment(new Date(), dateFormat),
-                    CabinType: '0'
+                    ExpenseAddress: '',
+                    CabinType: '0',
+                    ExpenseTraffic: 0,
+                    ExpenseBoat: 0,
+                    ExpenseBaggage: 0,
+                    ExpenseHotel: 0,
+                    ExpenseHotelTaxCode: '_',
+                    ExpenseMeal: 0,
+                    ExpenseOther: 0,
+                    ExpenseSum: 0,
+                    InvoiceNo: ''
                 }
             ],
             count: 1
         }
+    }
+
+    getNumberForInput(value) {
+        return parseFloat(value) || 0
     }
 
     handleDelete = key => {
@@ -336,7 +554,17 @@ class EditableTable extends React.Component {
             key: count,
             RowNum: count,
             ExpenseTime: this._moment(new Date(), dateFormat),
-            CabinType: '0'
+            ExpenseAddress: '0',
+            CabinType: '0',
+            ExpenseTraffic: 0,
+            ExpenseBoat: 0,
+            ExpenseBaggage: 0,
+            ExpenseHotel: 0,
+            ExpenseHotelTaxCode: '_',
+            ExpenseMeal: 0,
+            ExpenseOther: 0,
+            ExpenseSum: 0,
+            InvoiceNo: ''
         };
 
         this.setState({
