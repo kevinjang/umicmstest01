@@ -211,9 +211,30 @@ class EditableCell extends React.Component {
         }
     }
 
+    renderCell = form => {
+        this.form = form;
+        const { children, dataIndex, record, title } = this.props;
+        const { editing } = this.state;
+        return editing ? (
+            <Form.Item style={{ margin: 0 }}>
+                {form.getFieldDecorator(dataIndex, {
+                    rules: [
+                        {
+                            required: true,
+                            message: `${title} is required`
+                        }
+                    ],
+                    initialValue: record[dataIndex]
+                })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+            </Form.Item>
+        ) :
+            (<div className='editable-cell-value-wrap' style={{ paddingRight: 24 }} onClick={this.toggleEdit}>
+                {children}
+            </div>);
+    }
 
     render() {
-        const { editing } = this.state;
+        // const { editing } = this.state;
         const {
             editable,
             dataIndex,
@@ -226,45 +247,12 @@ class EditableCell extends React.Component {
 
         return (
             <td {...restProps}>
-                {editable ? (
-                    <EditableContext.Consumer>
-                        {(form) => {
-                            this.form = form;
-                            return (
-                                editing ? (
-                                    <FormItem style={{ margin: 0 }}>
-                                        {(dataIndex !== 'InvoiceNo') ?
-                                            form.getFieldDecorator(dataIndex, {
-                                                rules: [{
-                                                    required: true,
-                                                    message: `${title} 是必填项.`,
-                                                }],
-                                                initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                            })(this.setControl(dataIndex, this))
-                                            : form.getFieldDecorator(dataIndex, {
-                                                rules: [{
-                                                    required: true,
-                                                    message: `${title} 是必填项.`,
-                                                }, {
-                                                    max: 10,
-                                                    message: '长度不符合标准'
-                                                }],
-                                                initialValue: (dataIndex === 'ExpenseTime' ? moment(new Date(), dateFormat) : record[dataIndex] || 0),
-                                            })(this.setControl(dataIndex, this))
-                                        }
-                                    </FormItem>
-                                ) : (
-                                        <div
-                                            className="editable-cell-value-wrap"
-                                            style={{ paddingRight: (dataIndex === 'InvoiceNo' ? 0 : 24), height: 30 }}
-                                            onClick={this.toggleEdit}>
-                                            {restProps.children}
-                                        </div>
-                                    )
-                            );
-                        }}
-                    </EditableContext.Consumer>
-                ) : restProps.children}
+                {editable ?
+                    (<EditableContext.Consumer>
+                        {this.renderCell}
+                    </EditableContext.Consumer>)
+                    : (children)
+                }
             </td>
         );
     }
@@ -381,7 +369,7 @@ class TreeTest extends React.Component {
 
         this.state = {
             username: 'hello u',
-            dataSource:[],
+            dataSource: [],
             count: 0,
             columns: [{
                 key: 'RowNum',
@@ -401,116 +389,116 @@ class TreeTest extends React.Component {
                     return <div> {text && text.format('YYYY/MM/DD')} </div>;
                 }
             },
-            {
-                key: 'ExpenseAddress',
-                title: '费用发生地',
-                dataIndex: 'ExpenseAddress',
-                align: 'center',
-                width: 100,
-                editable: true,
-            },
-            {
-                key: 'CabinType',
-                title: '舱位',
-                align: 'center',
-                dataIndex: 'CabinType',
-                editable: true,
-                // width: 100,
-                render: (text, record, index) => {
-                    return <div > {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text} </div>
-                }
-            },
-            {
-                key: 'ExpenseTraffic',
-                title: '航空/铁路',
-                align: 'center',
-                dataIndex: 'ExpenseTraffic',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseBoat',
-                title: '公路/水路',
-                align: 'center',
-                dataIndex: 'ExpenseBoat',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseBaggage',
-                title: '出租车/网约车/市内公交',
-                align: 'center',
-                dataIndex: 'ExpenseBaggage',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseHotel',
-                title: '住宿',
-                align: 'center',
-                dataIndex: 'ExpenseHotel',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseHotelTaxCode',
-                title: '税率',
-                align: 'center',
-                dataIndex: 'ExpenseHotelTaxCode',
-                editable: true,
-                // width: 100,
-                render: (text, record, index) => {
-                    return <div > {this.TaxCodes[this.TaxCodes.findIndex(p => p.key === record.ExpenseHotelTaxCode)].text} </div>
-                }
-            },
-            {
-                key: 'ExpenseMeal',
-                title: '餐费',
-                align: 'center',
-                dataIndex: 'ExpenseMeal',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseOther',
-                title: '其他',
-                align: 'center',
-                dataIndex: 'ExpenseOther',
-                editable: true,
-                // width: 80
-            },
-            {
-                key: 'ExpenseSum',
-                title: '费用金额合计',
-                dataIndex: 'ExpenseSum',
-                align: 'center',
-                editable: false,
-                // width: 80,
-                render: (text, record, index) => {
-                    return <div > {
-                        this.getNumberForInput(record.ExpenseTraffic) +
-                        this.getNumberForInput(record.ExpenseBoat) +
-                        this.getNumberForInput(record.ExpenseBaggage) +
-                        this.getNumberForInput(record.ExpenseHotel) +
-                        this.getNumberForInput(record.ExpenseMeal) +
-                        this.getNumberForInput(record.ExpenseOther)
-                    } </div>
-                }
-            },
-            {
-                key: 'InvoiceNo',
-                title: '电子发票号',
-                align: 'center',
-                dataIndex: 'InvoiceNo',
-                editable: true,
-                // width: 100,
-                max: 10
-            },
             // {
-            //     key: '13',
-            //     text: '飞机，头等舱'
-            // }
-        ]
+            //     key: 'ExpenseAddress',
+            //     title: '费用发生地',
+            //     dataIndex: 'ExpenseAddress',
+            //     align: 'center',
+            //     width: 100,
+            //     editable: true,
+            // },
+            // {
+            //     key: 'CabinType',
+            //     title: '舱位',
+            //     align: 'center',
+            //     dataIndex: 'CabinType',
+            //     editable: true,
+            //     // width: 100,
+            //     render: (text, record, index) => {
+            //         return <div > {this.CabinTypeCodes[this.CabinTypeCodes.findIndex(p => p.key === record.CabinType)].text} </div>
+            //     }
+            // },
+            // {
+            //     key: 'ExpenseTraffic',
+            //     title: '航空/铁路',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseTraffic',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseBoat',
+            //     title: '公路/水路',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseBoat',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseBaggage',
+            //     title: '出租车/网约车/市内公交',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseBaggage',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseHotel',
+            //     title: '住宿',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseHotel',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseHotelTaxCode',
+            //     title: '税率',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseHotelTaxCode',
+            //     editable: true,
+            //     // width: 100,
+            //     render: (text, record, index) => {
+            //         return <div > {this.TaxCodes[this.TaxCodes.findIndex(p => p.key === record.ExpenseHotelTaxCode)].text} </div>
+            //     }
+            // },
+            // {
+            //     key: 'ExpenseMeal',
+            //     title: '餐费',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseMeal',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseOther',
+            //     title: '其他',
+            //     align: 'center',
+            //     dataIndex: 'ExpenseOther',
+            //     editable: true,
+            //     // width: 80
+            // },
+            // {
+            //     key: 'ExpenseSum',
+            //     title: '费用金额合计',
+            //     dataIndex: 'ExpenseSum',
+            //     align: 'center',
+            //     editable: false,
+            //     // width: 80,
+            //     render: (text, record, index) => {
+            //         return <div > {
+            //             this.getNumberForInput(record.ExpenseTraffic) +
+            //             this.getNumberForInput(record.ExpenseBoat) +
+            //             this.getNumberForInput(record.ExpenseBaggage) +
+            //             this.getNumberForInput(record.ExpenseHotel) +
+            //             this.getNumberForInput(record.ExpenseMeal) +
+            //             this.getNumberForInput(record.ExpenseOther)
+            //         } </div>
+            //     }
+            // },
+            // {
+            //     key: 'InvoiceNo',
+            //     title: '电子发票号',
+            //     align: 'center',
+            //     dataIndex: 'InvoiceNo',
+            //     editable: true,
+            //     // width: 100,
+            //     max: 10
+            // },
+                // {
+                //     key: '13',
+                //     text: '飞机，头等舱'
+                // }
+            ]
         }
     }
 
@@ -527,19 +515,19 @@ class TreeTest extends React.Component {
         const newData = {
             RowNum: count + 1,
             ExpenseTime: '',
-            ExpenseAddress: '',
-            CabinType: '0',
-            ExpenseTraffic: '',
-            ExpenseBoat: '',
-            ExpenseBaggage: '',
-            ExpenseHotel: '',
-            ExpenseHotelTaxCode: '_',
-            ExpenseMeal: '',
-            ExpenseOther: '',
-            ExpenseSum: '',
-            InvoiceNo: '',
-            Remark2: '',
-            ExpenseDescription: ''
+            // ExpenseAddress: '',
+            // CabinType: '0',
+            // ExpenseTraffic: '',
+            // ExpenseBoat: '',
+            // ExpenseBaggage: '',
+            // ExpenseHotel: '',
+            // ExpenseHotelTaxCode: '_',
+            // ExpenseMeal: '',
+            // ExpenseOther: '',
+            // ExpenseSum: '',
+            // InvoiceNo: '',
+            // Remark2: '',
+            // ExpenseDescription: ''
         }
 
         this.setState({
