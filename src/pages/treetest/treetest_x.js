@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Input, Button, Popconfirm, Form, DatePicker, Dropdown, Menu } from 'antd'
+import { Table, Input, Button, Popconfirm, Form, DatePicker, Dropdown, Menu, Icon } from 'antd'
 // import EditableCell from './EditableCell'
 import moment from 'moment'
 
@@ -285,7 +285,7 @@ class EditableTable extends React.Component {
                 dataIndex: 'CabinType',
                 editable: true,
                 render: (text, record, index) => {
-                    return text;
+                    return this.CabinTypeCodes.find(item=>item.key === text).text;
                 }
             },
             {
