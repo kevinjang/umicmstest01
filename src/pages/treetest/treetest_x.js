@@ -108,6 +108,9 @@ class EditableCell extends React.Component {
             if (dataIndex === 'ExpenseTime') {
                 values.ExpenseTime = e
             }
+            if(dataIndex === 'CabinType'){
+                values.CabinType = e.key
+            }
             this.toggleEdit();
             handleSave({ ...record, ...values });
         })
