@@ -1,5 +1,8 @@
 import React from 'react'
-import { Table, Input, Button, Popconfirm, Form, DatePicker, Dropdown, Menu, Icon, message, InputNumber } from 'antd'
+import {
+    Table, Input, Button, Popconfirm, Form,
+    DatePicker, Dropdown, Menu, Icon, message, InputNumber, Tooltip
+} from 'antd'
 // import EditableCell from './EditableCell'
 import moment from 'moment'
 
@@ -125,8 +128,8 @@ class EditableCell extends React.Component {
                 text: '19%应交税费-进项税'
             }];
 
-        this.numberControls = ['ExpenseTraffic','ExpenseBoat'
-        ,'ExpenseBaggage','ExpenseHotel','ExpenseMeal','ExpenseOther']
+        this.numberControls = ['ExpenseTraffic', 'ExpenseBoat'
+            , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
 
         this.drpControls = ['ExpenseHotelTaxCode', 'CabinType']
     }
@@ -163,7 +166,7 @@ class EditableCell extends React.Component {
                 values.CabinType = e.key
             }
 
-            if(dataIndex === 'ExpenseHotelTaxCode'){
+            if (dataIndex === 'ExpenseHotelTaxCode') {
                 values.ExpenseHotelTaxCode = e.key
             }
             this.toggleEdit();
@@ -171,12 +174,16 @@ class EditableCell extends React.Component {
         })
     }
 
-    // cabinTypeClick = (e) => {
-    //     // console.log('cabinTypeClick.e',e);
-    //     // console.log('cabinTypeClick.this.props',this.props);
-    //     // message.info('cabinTypeClick.e'+e);
-    //     this.save(e);
-    // }
+    cabinTypeClick = (e) => {
+        console.log('cabinTypeClick.e', e);
+        // console.log('cabinTypeClick.this.props',this.props);
+        // message.info('cabinTypeClick.e'+e);
+
+        if (e.key === '0') {
+            // 全部禁用
+        }
+        this.save(e);
+    }
 
     // taxCodeClick = (e)=>{
     //     this.save(e);
@@ -191,12 +198,14 @@ class EditableCell extends React.Component {
                 format={dateFormat}
                 onChange={this.save}
                 // onBlur={this.save}
-                defaultValue={moment(record[dataIndex], dateFormat)}></DatePicker>;
+                // defaultValue={moment(record[dataIndex], dateFormat)}                
+                initialValue={moment(record[dataIndex], dateFormat)}
+            ></DatePicker>;
         }
-        else if (this.drpControls.findIndex(item=>item === dataIndex)>=0) {
-            if(dataIndex === 'CabinType'){
+        else if (this.drpControls.findIndex(item => item === dataIndex) >= 0) {
+            if (dataIndex === 'CabinType') {
                 const menu = (
-                    <Menu onClick={this.save}>
+                    <Menu onClick={this.cabinTypeClick}>
                         {this.CabinTypeCodes.map(item => {
                             return <Menu.Item key={item.key}>
                                 {item.text}
@@ -204,7 +213,7 @@ class EditableCell extends React.Component {
                         })}
                     </Menu>
                 );
-    
+
                 return <Dropdown overlay={menu} >
                     <Button id={`record_drpBtn_${index}`}>
                         {
@@ -213,10 +222,10 @@ class EditableCell extends React.Component {
                         <Icon type='down'> </Icon>
                     </Button>
                 </Dropdown>
-            }else if(dataIndex === 'ExpenseHotelTaxCode'){
+            } else if (dataIndex === 'ExpenseHotelTaxCode') {
                 const menu = (
                     <Menu onClick={this.save}>
-                        {this.TaxCodes.map(item=>{
+                        {this.TaxCodes.map(item => {
                             return <Menu.Item key={item.key}>
                                 {item.text}
                             </Menu.Item>
@@ -224,7 +233,7 @@ class EditableCell extends React.Component {
                     </Menu>
                 )
 
-                
+
                 return <Dropdown overlay={menu} >
                     <Button id={`record_drpBtnTC_${index}`}>
                         {
@@ -264,10 +273,28 @@ class EditableCell extends React.Component {
                 })(this.setCellControl(dataIndex, record[dataIndex]))}
             </Form.Item>
         ) : (
-                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={this.toggleEdit}>
+                <div className="editable-cell-value-wrap"
+                    style={{ width: '100%', paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.toggleEdit}>
                     {children}
                 </div>
             );
+    }
+
+    setIneditableTooltip = (content) => {
+        let msg = '';
+        const {dataIndex, record} = this.props;
+        if (record) {
+            const cabinTypeValue = record['CabinType'];
+            if (cabinTypeValue === '0')
+                msg = '请选择舱位';
+            return <Tooltip title={msg}>
+                {content}
+            </Tooltip>
+        }
+        else{
+            return <div>{content}</div>
+        }
     }
 
     render() {
@@ -288,7 +315,9 @@ class EditableCell extends React.Component {
                     (<EditableContext.Consumer>
                         {this.renderCell}
                     </EditableContext.Consumer>)
-                    : (children)}
+                    : (
+                        this.setIneditableTooltip(children)
+                    )}
             </td>
         );
     }
@@ -299,8 +328,8 @@ class EditableTable extends React.Component {
         super(props);
         // console.log('editabletable-props', props)
 
-        this.numberControls = ['ExpenseTraffic','ExpenseBoat'
-        ,'ExpenseBaggage','ExpenseHotel','ExpenseMeal','ExpenseOther']
+        this.numberControls = ['ExpenseTraffic', 'ExpenseBoat'
+            , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
 
         this.CabinTypeCodes = [
             {
@@ -410,13 +439,14 @@ class EditableTable extends React.Component {
             {
                 title: '序号',
                 dataIndex: 'RowNum',
-                width: '10%',
+                width: '2%',
                 editable: false
             },
             {
                 title: '费用日期',
                 dataIndex: 'ExpenseTime',
                 editable: true,
+                width: '8.2%',
                 render: (text, record, index) => {
                     // console.log(text)
                     // return <div>{text && text.format('YYYY/MM/DD')}</div>;
@@ -426,12 +456,14 @@ class EditableTable extends React.Component {
             {
                 title: '费用发生地',
                 dataIndex: 'ExpenseAddress',
-                editable: true
+                editable: true,
+                width: '8.2%',
             },
             {
                 title: '舱位',
                 dataIndex: 'CabinType',
                 editable: true,
+                width: '8.2%',
                 render: (text, record, index) => {
                     return this.CabinTypeCodes.find(item => item.key === text).text;
                 }
@@ -439,50 +471,63 @@ class EditableTable extends React.Component {
             {
                 title: '航空/铁路',
                 dataIndex: 'ExpenseTraffic',
-                editable: true,
-                type: 'number'
+                editable: false,
+                width: '8%',
+                type: 'number',
+                // render: (text, record, index) => {
+                //     return <Tooltip title={text}>
+                //         {text}
+                //     </Tooltip>
+                // }
             },
             {
                 title: '公路/水路',
                 dataIndex: 'ExpenseBoat',
-                editable: true,
+                editable: false,
+                width: '8%',
 
             },
             {
                 title: '出租车/网约车/市内公交',
                 dataIndex: 'ExpenseBaggage',
-                editable: true
+                width: '10%',
+                editable: false
             },
             {
                 title: '住宿',
                 dataIndex: 'ExpenseHotel',
-                editable: true
+                width: '5%',
+                editable: false
             },
             {
                 title: '税率',
                 dataIndex: 'ExpenseHotelTaxCode',
                 editable: true,
-                render:(text,record,index)=>{
+                width: '8.2%',
+                render: (text, record, index) => {
                     return this.TaxCodes.find(item => item.key === text).text
                 }
             },
             {
                 title: '餐费',
                 dataIndex: 'ExpenseMeal',
+                width: '5%',
                 editable: true
             },
             {
                 title: '其他',
                 dataIndex: 'ExpenseOther',
+                width: '5%',
                 editable: true
             },
             {
                 title: '费用合计',
                 dataIndex: 'ExpenseSum',
-                render:(text,record,index)=>{
+                width: '8%',
+                render: (text, record, index) => {
                     let sum = 0;
-                    this.numberControls.map(item=>{
-                       sum += this.getNumberForInput(record[item]);
+                    this.numberControls.map(item => {
+                        sum += this.getNumberForInput(record[item]);
                     })
 
                     return sum;
@@ -492,12 +537,13 @@ class EditableTable extends React.Component {
                 title: '电子发票号',
                 dataIndex: 'InvoiceNo',
                 editable: true,
+                width: '8%',
                 max: 10
             },
             {
-                title: 'operation',
+                title: '操作',
                 dataIndex: 'operation',
-                // fixed: true,
+                fixed: 'right',
                 render: (text, record) =>
                     this.state.dataSource.length >= 1 ?
                         (
@@ -624,10 +670,14 @@ class EditableTable extends React.Component {
                     columns={columns}>
 
                 </Table>
+                {/* <Tooltip title='添加新项目'>
+                    sadfasd
+                </Tooltip> */}
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+
                     添加新项目
-                </Button>
-            </div>
+                    </Button>
+            </div >
         )
     }
 }
