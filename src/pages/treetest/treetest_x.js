@@ -176,8 +176,6 @@ class EditableCell extends React.Component {
 
     cabinTypeClick = (e) => {
         console.log('cabinTypeClick.e', e);
-        // console.log('cabinTypeClick.this.props',this.props);
-        // message.info('cabinTypeClick.e'+e);
 
         if (e.key === '0') {
             // 全部禁用
@@ -191,7 +189,6 @@ class EditableCell extends React.Component {
 
     setCellControl = (dataIndex, text) => {
         const { record, index, type } = this.props;
-        console.log('setCellControl', this.props);
         if (dataIndex === 'ExpenseTime') {
             return <DatePicker
                 autoFocus={true}
@@ -281,19 +278,39 @@ class EditableCell extends React.Component {
             );
     }
 
-    setIneditableTooltip = (content) => {
-        let msg = '';
-        const {dataIndex, record} = this.props;
-        if (record) {
-            const cabinTypeValue = record['CabinType'];
-            if (cabinTypeValue === '0')
-                msg = '请选择舱位';
-            return <Tooltip title={msg}>
-                {content}
-            </Tooltip>
+    setIneditableTooltip = (content, restProps) => {
+        let msg = 'test';
+        const { dataIndex } = this.props;
+        const { children } = this.props;
+        if (typeof children[2] === 'object') {
+            // console.log('setIneditableTooltip.this.props.children.props', children[2].props);
+            const { record } = children[2].props;
+            if (record) {
+                const record_x = JSON.parse(record);
+                if (record_x) {
+                    const cabinTypeValue = record_x['CabinType'];
+                    if (cabinTypeValue === '0')
+                        msg = '请选择舱位';
+                    return <Tooltip title={msg}>
+                        {content}
+                    </Tooltip>
+                }
+                else {
+                    return <Tooltip title={msg}>
+                        {content}
+                    </Tooltip>
+                }
+            }
+            else {
+                return <div>
+                    {content}
+                </div>
+            }
         }
-        else{
-            return <div>{content}</div>
+        else {
+            return <div>
+                {content}
+            </div>
         }
     }
 
@@ -309,6 +326,8 @@ class EditableCell extends React.Component {
             ...restProps
         } = this.props;
 
+        // console.log('editablecell.restProps.title', restProps, title);
+
         return (
             <td {...restProps}>
                 {editable ?
@@ -316,7 +335,7 @@ class EditableCell extends React.Component {
                         {this.renderCell}
                     </EditableContext.Consumer>)
                     : (
-                        this.setIneditableTooltip(children)
+                        this.setIneditableTooltip(children, title)
                     )}
             </td>
         );
@@ -448,8 +467,6 @@ class EditableTable extends React.Component {
                 editable: true,
                 width: '8.2%',
                 render: (text, record, index) => {
-                    // console.log(text)
-                    // return <div>{text && text.format('YYYY/MM/DD')}</div>;
                     return (text && text.format) ? text.format('YYYY/MM/DD') : null;
                 }
             },
@@ -474,30 +491,45 @@ class EditableTable extends React.Component {
                 editable: false,
                 width: '8%',
                 type: 'number',
-                // render: (text, record, index) => {
-                //     return <Tooltip title={text}>
-                //         {text}
-                //     </Tooltip>
-                // }
+                render: (text, record, index) => {
+                    return <div record={JSON.stringify(record)}>
+                        {text}
+                    </div>
+                }
             },
             {
                 title: '公路/水路',
                 dataIndex: 'ExpenseBoat',
                 editable: false,
                 width: '8%',
+                render: (text, record, index) => {
+                    return <div record={JSON.stringify(record)}>
+                        {text}
+                    </div>
+                }
 
             },
             {
                 title: '出租车/网约车/市内公交',
                 dataIndex: 'ExpenseBaggage',
                 width: '10%',
-                editable: false
+                editable: false,
+                render: (text, record, index) => {
+                    return <div record={JSON.stringify(record)}>
+                        {text}
+                    </div>
+                }
             },
             {
                 title: '住宿',
                 dataIndex: 'ExpenseHotel',
                 width: '5%',
-                editable: false
+                editable: false,
+                render: (text, record, index) => {
+                    return <div record={JSON.stringify(record)}>
+                        {text}
+                    </div>
+                }
             },
             {
                 title: '税率',
@@ -670,13 +702,10 @@ class EditableTable extends React.Component {
                     columns={columns}>
 
                 </Table>
-                {/* <Tooltip title='添加新项目'>
-                    sadfasd
-                </Tooltip> */}
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
 
                     添加新项目
-                    </Button>
+                </Button>
             </div >
         )
     }
