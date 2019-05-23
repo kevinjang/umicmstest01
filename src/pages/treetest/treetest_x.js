@@ -1,8 +1,12 @@
 import React from 'react'
 import {
     Table, Input, Button, Popconfirm, Form,
-    DatePicker, Dropdown, Menu, Icon, message, InputNumber, Tooltip
-} from 'antd'
+    DatePicker, Dropdown, Menu, Icon, message, InputNumber, Tooltip,
+    Modal,
+    Row, Col
+} from 'antd';
+
+import AddNewModal from './AddNewModal'
 // import EditableCell from './EditableCell'
 import moment from 'moment'
 
@@ -176,9 +180,11 @@ class EditableCell extends React.Component {
 
     cabinTypeClick = (e) => {
         console.log('cabinTypeClick.e', e);
+        console.log('cabinTypeClick.this.props', this.props);
 
         if (e.key === '0') {
             // 全部禁用
+            // console.log()
         }
         this.save(e);
     }
@@ -194,8 +200,6 @@ class EditableCell extends React.Component {
                 autoFocus={true}
                 format={dateFormat}
                 onChange={this.save}
-                // onBlur={this.save}
-                // defaultValue={moment(record[dataIndex], dateFormat)}                
                 initialValue={moment(record[dataIndex], dateFormat)}
             ></DatePicker>;
         }
@@ -283,7 +287,6 @@ class EditableCell extends React.Component {
         const { dataIndex } = this.props;
         const { children } = this.props;
         if (typeof children[2] === 'object') {
-            // console.log('setIneditableTooltip.this.props.children.props', children[2].props);
             const { record } = children[2].props;
             if (record) {
                 const record_x = JSON.parse(record);
@@ -326,8 +329,6 @@ class EditableCell extends React.Component {
             ...restProps
         } = this.props;
 
-        // console.log('editablecell.restProps.title', restProps, title);
-
         return (
             <td {...restProps}>
                 {editable ?
@@ -342,10 +343,18 @@ class EditableCell extends React.Component {
     }
 }
 
+const ModalEditor = ({ form, index, ...props }) => (
+    <EditableContext.Provider value={form}>
+        <div {...props}>
+        </div>
+    </EditableContext.Provider>
+);
+
+const Editor1 = Form.create({ name: 'ModalEditor' })(ModalEditor);
+
 class EditableTable extends React.Component {
     constructor(props) {
         super(props);
-        // console.log('editabletable-props', props)
 
         this.numberControls = ['ExpenseTraffic', 'ExpenseBoat'
             , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
@@ -606,8 +615,14 @@ class EditableTable extends React.Component {
                     InvoiceNo: ''
                 }
             ],
-            count: 1
+            count: 1,
+            modalOpen: false,
+            modalTitle: '添加新项目',
+            editingRecord: null
         }
+        // this.form = this.props.form;
+        // console.log('editabletable.constructor.this.props', this.props)
+
     }
 
     getNumberForInput(value) {
@@ -646,9 +661,14 @@ class EditableTable extends React.Component {
         };
 
         this.setState({
-            dataSource: [...dataSource, newData],
-            count: count + 1
+            // dataSource: [...dataSource, newData],
+            count: count + 1,
+            modalOpen: true,
+            // modalTitle: '添加新项目',
+            // editingRecord: newData
         });
+
+        
     }
 
     handleSave = row => {
@@ -666,8 +686,99 @@ class EditableTable extends React.Component {
         });
     }
 
+    modalOKClick = (e) => {
+        this.modalClose();
+    }
+
+    modalCancelClick = () => {
+        this.modalClose();
+    }
+
+    modalClose = () => {
+        this.setState({
+            modalOpen: false
+        })
+    }
+
+    ctMenuOnClick = (e) => {
+        console.log('ctMenuOnClick.e', e);
+        const { editingRecord } = this.state;
+        editingRecord.CabinType = e.key;
+        this.setState({
+            editingRecord
+        })
+    }
+
+    getCabinTypeMenu = () => {
+        return <Menu onClick={this.ctMenuOnClick}>
+            {this.CabinTypeCodes.map(item => {
+                return <Menu.Item key={item.key}>
+                    {item.text}
+                </Menu.Item>
+            })}
+        </Menu>
+    }
+
+    renderOwnCell = (form) => {
+        console.log('renderOwnCell.form', form)
+        return <div>
+
+            <Row>
+                <Col >
+                    <label>费用日期：</label>
+                </Col>
+                <Col>
+                    <DatePicker
+                        defaultValue={moment(new Date(), dateFormat)}
+                        format={dateFormat}>
+                    </DatePicker>
+                </Col>
+                <Col>
+                    <label>费用发生地：</label>
+                </Col>
+                <Col>
+                    <Form.Item>
+                        {/* {
+getFieldDecorator('ExpenseAddress', {
+rules: [
+{
+required: true,
+message: '费用发生地是必填项'
+}
+],
+initialValue: (editingRecord ? editingRecord.ExpenseAddress : '')
+})(
+<Input defaultValue={editingRecord ? editingRecord.ExpenseAddress : ''}>
+
+</Input>)
+} */}
+                        <Input defaultValue={editingRecord ? editingRecord.ExpenseAddress : ''}>
+
+                        </Input>
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <label>舱位</label>
+                </Col>
+                <Col>
+                    <Dropdown overlay={this.getCabinTypeMenu}>
+                        <Button id='ctDrpBtn'>
+                            {
+                                editingRecord ? this.CabinTypeCodes.find(p => p.key == editingRecord.CabinType).text : ''
+                            }
+                            <Icon type='down'> </Icon>
+                        </Button>
+                    </Dropdown>
+                </Col>
+            </Row>
+
+        </div>
+    }
+
     render() {
-        const { dataSource } = this.state;
+        const { dataSource, editingRecord } = this.state;
         const components = {
             body: {
                 row: EditableFormRow,
@@ -675,6 +786,7 @@ class EditableTable extends React.Component {
             }
         }
 
+        console.log('editabletable-render-this.props', this.props)
         const columns = this.columns.map(col => {
             if (!col.editable) {
                 return col;
@@ -703,9 +815,21 @@ class EditableTable extends React.Component {
 
                 </Table>
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-
                     添加新项目
                 </Button>
+                {/* <Modal
+                    visible={this.state.modalOpen}
+                    title={'添加新项目'}
+                    onOk={this.modalOKClick}
+                    onCancel={this.modalCancelClick}
+                >
+                    <EditableContext.Consumer>
+                        {this.renderOwnCell}
+                    </EditableContext.Consumer>
+                </Modal> */}
+                <AddNewModal visible={this.state.modalOpen}>
+
+                </AddNewModal>
             </div >
         )
     }
