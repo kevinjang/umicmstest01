@@ -28,12 +28,12 @@ export default {
                     id: '6',
                     title: 'Option 6',
                     icon: 'weibo-square',
-                    nodeInfo: './treetest/treetest_x'
+                    nodeInfo: './treetest/Aladin'
                 }, {
                     id: '7',
                     title: 'Option 7',
                     icon: 'pie-chart',
-                    nodeInfo: './treetest/treetest'
+                    nodeInfo: './treetest/FormTest'
                 }
             ]
         },

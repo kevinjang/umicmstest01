@@ -664,11 +664,11 @@ class EditableTable extends React.Component {
             // dataSource: [...dataSource, newData],
             count: count + 1,
             modalOpen: true,
-            // modalTitle: '添加新项目',
-            // editingRecord: newData
+            modalTitle: '添加新项目',
+            editingRecord: newData
         });
 
-        
+
     }
 
     handleSave = row => {
@@ -817,7 +817,7 @@ initialValue: (editingRecord ? editingRecord.ExpenseAddress : '')
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                     添加新项目
                 </Button>
-                {/* <Modal
+                <Modal
                     visible={this.state.modalOpen}
                     title={'添加新项目'}
                     onOk={this.modalOKClick}
@@ -826,10 +826,8 @@ initialValue: (editingRecord ? editingRecord.ExpenseAddress : '')
                     <EditableContext.Consumer>
                         {this.renderOwnCell}
                     </EditableContext.Consumer>
-                </Modal> */}
-                <AddNewModal visible={this.state.modalOpen}>
+                </Modal>
 
-                </AddNewModal>
             </div >
         )
     }
