@@ -2,7 +2,7 @@ import React from 'react'
 
 import {
     Form, Input, Row, Col, DatePicker, Menu, Dropdown,
-    Button, Icon
+    Button, Icon, InputNumber
 } from 'antd';
 
 import moment from 'moment'
@@ -31,37 +31,34 @@ class AddNewModal extends React.Component {
             record,
             // visible
         } = props;
-        
 
-        // this.visible = visible;
         this.state = {
             // visible: this.visible,
             record: record
         }
-        
-        // this.setState({
-        //     record
-        // });
     }
 
     cabinTypeClicked = (e) => {
-        console.log('cabinTypeClicked.e',e);
-        const {record }= this.state;
+        // console.log('cabinTypeClicked.e', e);
+        const { record } = this.state;
         record.CabinType = e.key;
         this.setState({
             record
         })
     }
 
-    showModal = () => {
-
+    taxCodeClicked = (e) => {
+        const { record } = this.state;
+        record.ExpenseHotelTaxCode = e.key;
+        this.setState({
+            record
+        })
     }
 
-    renderContent = (form) => {
-        const { record, columns, cabinTypeCodes, taxCodes } = this.props;
-
-
-        const tcMenu = (
+    getControl = (dataIndex, value) => {
+        // console.log('getControl.dataIndex, value', dataIndex, value)
+        const { cabinTypeCodes, taxCodes } = this.props;
+        const ctMenu = (
             <Menu onClick={this.cabinTypeClicked}>
                 {
                     cabinTypeCodes.map((item, index) => {
@@ -74,115 +71,87 @@ class AddNewModal extends React.Component {
         );
 
 
+        const tcMenu = (
+            <Menu onClick={this.taxCodeClicked}>
+                {
+                    taxCodes.map((item, index) => {
+                        return <Menu.Item key={item.key}>
+                            {item.text}
+                        </Menu.Item>
+                    })
+                }
+            </Menu>
+        );
+
+        const dataset = dataIndex === 'CabinType' ? ctMenu : tcMenu;
+
+        switch (dataIndex) {
+            case 'ExpenseTraffic':
+            case 'ExpenseBoat':
+            case 'ExpenseBaggage':
+            case 'ExpenseHotel':
+            case 'ExpenseMeal':
+            case 'ExpenseOther':
+                return <InputNumber />
+            case 'CabinType':
+                return <Dropdown overlay={dataset}>
+                    <Button>
+                        {cabinTypeCodes.find(item1 => item1.key === value).text}
+                        <Icon type='down'></Icon>
+                    </Button>
+                </Dropdown>
+            case 'ExpenseHotelTaxCode':
+                return <Dropdown overlay={dataset}>
+                    <Button>
+                        {taxCodes.find(item1 => item1.key === value).text}
+                        <Icon type='down'></Icon>
+                    </Button>
+                </Dropdown>
+            case 'ExpenseTime':
+                return <DatePicker format={dateFormat}>
+
+                </DatePicker>
+            default:
+                return <Input />
+        }
+    }
+
+    renderContent = (form) => {
+        const { record, columns, } = this.props;
+
+        const {
+            ExpenseTime,
+            ExpenseAddress,
+            ExpenseTraffic,
+            ExpenseBoat
+        } = record;
+
+        const newCols = columns.filter(item => item.visible);
         return <div>
-            {/* {columns.map((col, index) => {
-                const { dataIndex, title } = col;
-                return <FormItem>
-                    {form.getFieldDecorator(dataIndex, {
-                        rules: [
-                            {
-                                required: true,
-                                message: '必填项'
-                            }
-                        ],
-                        initialValue: record[dataIndex]
-                    })(
-                        <Row>
-                            <Col>
-                                <label>{title}</label>
-                            </Col>
-                            <Col>
-                                <Input defaultValue={record[dataIndex]} placeholder={'必填项'}></Input>
+            {
+                newCols.map((col, index) => {
+                    return <FormItem key={col.dataIndex}>
+                        <Row gutter={20}>
+                            <Col span={10}>{col.title}</Col>
+                            <Col span={10}>
+                                {
+                                    form.getFieldDecorator(col.dataIndex, {
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: `${col.title} 是必填项`
+                                            }
+                                        ],
+                                        initialValue: record[col.dataIndex]
+                                    })(
+                                        this.getControl(col.dataIndex, record[col.dataIndex])
+                                    )
+                                }
                             </Col>
                         </Row>
-                    )}
-                </FormItem>
-            })} */}
-
-            <FormItem>
-                <Row gutter={10}>
-                    <Col span={6} >费用日期</Col>
-                    <Col span={6} >
-                        <DatePicker
-                            defaultValue={moment(record['ExpenseTime'], dateFormat)}
-                            dateFormat={dateFormat}>
-                        </DatePicker>
-                    </Col>
-                    <Col span={6} >费用发生地</Col>
-                    <Col span={6} >
-                        {
-                            form.getFieldDecorator('ExpenseAddress', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '费用发生地是必填项'
-                                    }
-                                ],
-                                initialValue: record['ExpenseAddress']
-                            })(
-                                <Input defaultValue={record['ExpenseAddress']} />
-                            )
-                        }
-                    </Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>舱位</Col>
-                    <Col span={6}>
-                        {
-                            form.getFieldDecorator('CabinType', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '舱位是必选项'
-                                    }
-                                ],
-                                initialValue: record['CabinType']
-                            })(
-                                <Dropdown overlay={tcMenu} >
-                                    <Button id='ctBtn'>
-                                        {
-                                            cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
-                                        }
-                                        <Icon type='down'></Icon>
-                                    </Button>
-                                </Dropdown>
-                            )
-                        }
-                    </Col>
-                    {/* <Col span={6}></Col>
-                    <Col span={6}></Col> */}
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>航空/铁路</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}>公路/水路</Col>
-                    <Col span={6}></Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={4}>出租车/网约车/市内公交</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}>住宿</Col>
-                    <Col span={6}></Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>税率</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}></Col>
-                    <Col span={6}></Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>餐费</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}>其他</Col>
-                    <Col span={6}></Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>费用合计</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}>电子发票号</Col>
-                    <Col span={6}></Col>
-                </Row>
-            </FormItem>
+                    </FormItem>
+                })
+            }
         </div>
     }
 

@@ -1,0 +1,135 @@
+
+                <Row gutter={10}>
+                <Col span={4} >费用日期</Col>
+                <Col span={8} >
+                    {
+                        form.getFieldDecorator('ExpenseTime', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: '费用日期 必选'
+                                }
+                            ],
+                            initialValue: moment(ExpenseTime, dateFormat)
+                        })(
+                            <DatePicker
+                                // defaultValue={moment(record['ExpenseTime'], dateFormat)}
+                                dateFormat={dateFormat}>
+                            </DatePicker>
+                        )
+                    }
+                    {/* {forGetFD(form)('ExpenseForm', {
+                        rules: [
+                            {
+                                required: true,
+                                message: '费用日期 是必填项'
+                            }
+                        ],
+                        initialValue: moment(ExpenseTime, dateFormat)
+                    })(
+                        <DatePicker format={dateFormat}></DatePicker>
+                    )} */}
+                    {/* {() => this.renderFieldDecorator(form, moment(ExpenseTime, dateFormat), 'ExpenseTime')(this.getControl('ExpenseTime',moment(ExpenseTime, dateFormat),tcMenu))} */}
+                </Col>
+                <Col span={4} >费用发生地</Col>
+                <Col span={8} >
+                    {
+                        form.getFieldDecorator('ExpenseAddress', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: '费用发生地是必填项'
+                                }
+                            ],
+                            initialValue: ExpenseAddress
+                        })(
+                            <Input />
+                        )
+                    }
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>舱位</Col>
+                <Col span={8}>
+                    {
+                        form.getFieldDecorator('CabinType', {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: '舱位是必选项'
+                                }
+                            ],
+                            initialValue: record['CabinType']
+                        })(
+                            <Dropdown overlay={tcMenu} >
+                                <Button id='ctBtn'>
+                                    {
+                                        cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
+                                    }
+                                    <Icon type='down'></Icon>
+                                </Button>
+                            </Dropdown>
+                        )
+                    }
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>航空/铁路</Col>
+                <Col span={8}>
+                    {form.getFieldDecorator('ExpenseTraffic', {
+                        rules: [
+                            {
+                                required: true,
+                                message: '航空/铁路 是必填项'
+                            }
+                        ],
+                        initialValue: ExpenseTraffic
+                    })(
+                        <InputNumber
+                            formatter={value => `￥ ${value}`}>
+
+                        </InputNumber>
+                    )}
+                </Col>
+                <Col span={4}>公路/水路</Col>
+                <Col span={8}>
+                    {form.getFieldDecorator('ExpenseBoat', {
+                        rules: [
+                            {
+                                required: true,
+                                message: '公路/水路 是必填项'
+                            }
+                        ],
+                        initialValue: ExpenseBoat
+                    })(
+                        <InputNumber >
+
+                        </InputNumber>
+                    )}
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>出租车/网约车/市内公交</Col>
+                <Col span={8}></Col>
+                <Col span={4}>住宿</Col>
+                <Col span={8}></Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>税率</Col>
+                <Col span={8}></Col>
+                <Col span={6}></Col>
+                <Col span={6}></Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>餐费</Col>
+                <Col span={8}></Col>
+                <Col span={4}>其他</Col>
+                <Col span={8}></Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={4}>费用合计</Col>
+                <Col span={8}></Col>
+                <Col span={4}>电子发票号</Col>
+                <Col span={8}></Col>
+            </Row>
+        

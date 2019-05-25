@@ -125,12 +125,14 @@ class Aladin extends React.Component {
                 title: '序号',
                 dataIndex: 'RowNum',
                 width: '2%',
+                visible: false,
                 editable: false
             },
             {
                 title: '费用日期',
                 dataIndex: 'ExpenseTime',
                 editable: true,
+                visible: true,
                 width: '8.2%',
                 render: (text, record, index) => {
                     return (text && text.format) ? text.format('YYYY/MM/DD') : null;
@@ -140,12 +142,14 @@ class Aladin extends React.Component {
                 title: '费用发生地',
                 dataIndex: 'ExpenseAddress',
                 editable: true,
+                visible: true,
                 width: '8.2%',
             },
             {
                 title: '舱位',
                 dataIndex: 'CabinType',
                 editable: true,
+                visible: true,
                 width: '8.2%',
                 render: (text, record, index) => {
                     return this.CabinTypeCodes.find(item => item.key === text).text;
@@ -155,6 +159,7 @@ class Aladin extends React.Component {
                 title: '航空/铁路',
                 dataIndex: 'ExpenseTraffic',
                 editable: false,
+                visible: true,
                 width: '8%',
                 type: 'number',
                 render: (text, record, index) => {
@@ -167,6 +172,7 @@ class Aladin extends React.Component {
                 title: '公路/水路',
                 dataIndex: 'ExpenseBoat',
                 editable: false,
+                visible: true,
                 width: '8%',
                 render: (text, record, index) => {
                     return <div record={JSON.stringify(record)}>
@@ -180,6 +186,7 @@ class Aladin extends React.Component {
                 dataIndex: 'ExpenseBaggage',
                 width: '10%',
                 editable: false,
+                visible: true,
                 render: (text, record, index) => {
                     return <div record={JSON.stringify(record)}>
                         {text}
@@ -191,6 +198,7 @@ class Aladin extends React.Component {
                 dataIndex: 'ExpenseHotel',
                 width: '5%',
                 editable: false,
+                visible: true,
                 render: (text, record, index) => {
                     return <div record={JSON.stringify(record)}>
                         {text}
@@ -201,6 +209,7 @@ class Aladin extends React.Component {
                 title: '税率',
                 dataIndex: 'ExpenseHotelTaxCode',
                 editable: true,
+                visible: true,
                 width: '8.2%',
                 render: (text, record, index) => {
                     return this.TaxCodes.find(item => item.key === text).text
@@ -210,18 +219,21 @@ class Aladin extends React.Component {
                 title: '餐费',
                 dataIndex: 'ExpenseMeal',
                 width: '5%',
-                editable: true
+                editable: true,
+                visible: true,
             },
             {
                 title: '其他',
                 dataIndex: 'ExpenseOther',
                 width: '5%',
-                editable: true
+                editable: true,
+                visible: true,
             },
             {
                 title: '费用合计',
                 dataIndex: 'ExpenseSum',
                 width: '8%',
+                visible: true,
                 render: (text, record, index) => {
                     let sum = 0;
                     this.numberControls.map(item => {
@@ -235,6 +247,7 @@ class Aladin extends React.Component {
                 title: '电子发票号',
                 dataIndex: 'InvoiceNo',
                 editable: true,
+                visible: true,
                 width: '8%',
                 max: 10
             },
@@ -246,7 +259,7 @@ class Aladin extends React.Component {
                     this.state.dataSource.length >= 1 ?
                         (
                             <div>
-                                <Popconfirm title='Sure to Delete?'
+                                <Popconfirm title='确定删除吗?'
                                     onConfirm={() => this.handleDelete(record.key)}>
                                     <a href='javascript:;'>删除</a>
                                     {/* <Button>删除</Button> */}
@@ -311,23 +324,55 @@ class Aladin extends React.Component {
         })
     }
 
+    handleAdd = () => {
+        const count = this.state.dataSource.length;
+        const newData = {
+            key: count,
+            RowNum: count,
+            ExpenseTime: moment(new Date(), dateFormat),
+            ExpenseAddress: '',
+            CabinType: '0',
+            ExpenseTraffic: 0,
+            ExpenseBoat: 0,
+            ExpenseBaggage: 0,
+            ExpenseHotel: 0,
+            ExpenseHotelTaxCode: '_',
+            ExpenseMeal: 0,
+            ExpenseOther: 0,
+            ExpenseSum: 0,
+            InvoiceNo: ''
+        };
+
+        this.setState({
+            modalOpen: true,
+            editingRecord: newData
+        })
+    }
+
     render() {
         const { editingRecord } = this.state;
 
+        const modalStyle = {
+            content: {
+                height: '100px',
+                width: '1000px'
+            }
+        }
         return <div>
             <Table columns={this.columns}
                 dataSource={this.state.dataSource}
                 bordered>
 
             </Table>
+            <Button type='primary' onClick={this.handleAdd}>添加新项目</Button>
             <Modal visible={this.state.modalOpen}
                 title={this.state.modalTitle}
                 onOk={this.modalOkClick}
-                onCancel={this.modalCancelClick}>
+                onCancel={this.modalCancelClick}
+                style={modalStyle}>
                 {
                     editingRecord ?
                         (<AddNewModal
-
                             record={editingRecord}
                             columns={this.columns}
                             cabinTypeCodes={this.CabinTypeCodes}
