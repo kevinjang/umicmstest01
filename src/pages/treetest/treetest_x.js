@@ -284,7 +284,7 @@ class EditableCell extends React.Component {
 
     setIneditableTooltip = (content, restProps) => {
         let msg = 'test';
-        const { dataIndex } = this.props;
+        // const { dataIndex } = this.props;
         const { children } = this.props;
         if (typeof children[2] === 'object') {
             const { record } = children[2].props;
@@ -294,6 +294,11 @@ class EditableCell extends React.Component {
                     const cabinTypeValue = record_x['CabinType'];
                     if (cabinTypeValue === '0')
                         msg = '请选择舱位';
+                    else {
+                        // 根据选择的舱位和对应列的值判定那几列可以编辑
+                        // 
+                        
+                    }
                     return <Tooltip title={msg}>
                         {content}
                     </Tooltip>
