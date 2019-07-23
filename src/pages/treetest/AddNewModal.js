@@ -2,7 +2,7 @@ import React from 'react'
 
 import {
     Form, Input, Row, Col, DatePicker, Menu, Dropdown,
-    Button, Icon
+    Button, Icon, InputNumber
 } from 'antd';
 
 import moment from 'moment'
@@ -31,22 +31,22 @@ class AddNewModal extends React.Component {
             record,
             // visible
         } = props;
-        
+
 
         // this.visible = visible;
         this.state = {
             // visible: this.visible,
             record: record
         }
-        
+
         // this.setState({
         //     record
         // });
     }
 
     cabinTypeClicked = (e) => {
-        console.log('cabinTypeClicked.e',e);
-        const {record }= this.state;
+        console.log('cabinTypeClicked.e', e);
+        const { record } = this.state;
         record.CabinType = e.key;
         this.setState({
             record
@@ -75,38 +75,25 @@ class AddNewModal extends React.Component {
 
 
         return <div>
-            {/* {columns.map((col, index) => {
-                const { dataIndex, title } = col;
-                return <FormItem>
-                    {form.getFieldDecorator(dataIndex, {
-                        rules: [
-                            {
-                                required: true,
-                                message: '必填项'
-                            }
-                        ],
-                        initialValue: record[dataIndex]
-                    })(
-                        <Row>
-                            <Col>
-                                <label>{title}</label>
-                            </Col>
-                            <Col>
-                                <Input defaultValue={record[dataIndex]} placeholder={'必填项'}></Input>
-                            </Col>
-                        </Row>
-                    )}
-                </FormItem>
-            })} */}
-
             <FormItem>
                 <Row gutter={10}>
                     <Col span={6} >费用日期</Col>
                     <Col span={6} >
-                        <DatePicker
-                            defaultValue={moment(record['ExpenseTime'], dateFormat)}
-                            dateFormat={dateFormat}>
-                        </DatePicker>
+                        {
+                            form.getFieldDecorator('ExpenseTime',{
+                                rules:[
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: moment(record['ExpenseTime'], dateFormat)
+                            })(
+                                <DatePicker>
+                                    {moment(record['ExpenseTime'], dateFormat)}
+                                </DatePicker>
+                            )
+                        }
                     </Col>
                     <Col span={6} >费用发生地</Col>
                     <Col span={6} >
@@ -125,6 +112,8 @@ class AddNewModal extends React.Component {
                         }
                     </Col>
                 </Row>
+            </FormItem>
+            <FormItem>
                 <Row gutter={10}>
                     <Col span={6}>舱位</Col>
                     <Col span={6}>
@@ -152,17 +141,75 @@ class AddNewModal extends React.Component {
                     {/* <Col span={6}></Col>
                     <Col span={6}></Col> */}
                 </Row>
+            </FormItem>
+            <FormItem>
                 <Row gutter={10}>
                     <Col span={6}>航空/铁路</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseTraffic', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseTraffic']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseTraffic']}
+                            </InputNumber>)
+                        }
+                    </Col>
                     <Col span={6}>公路/水路</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseBoat', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseBoat']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseBoat']}
+                            </InputNumber>)
+                        }
+                    </Col>
                 </Row>
                 <Row gutter={10}>
-                    <Col span={4}>出租车/网约车/市内公交</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>出租车/网约车/市内公交</Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseBaggage', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseBaggage']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseBaggage']}
+                            </InputNumber>)
+                        }
+                    </Col>
                     <Col span={6}>住宿</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseHotel', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseHotel']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseHotel']}
+                            </InputNumber>)
+                        }
+                    </Col>
                 </Row>
                 <Row gutter={10}>
                     <Col span={6}>税率</Col>
@@ -172,9 +219,37 @@ class AddNewModal extends React.Component {
                 </Row>
                 <Row gutter={10}>
                     <Col span={6}>餐费</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseMeal', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseMeal']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseMeal']}
+                            </InputNumber>)
+                        }
+                    </Col>
                     <Col span={6}>其他</Col>
-                    <Col span={6}></Col>
+                    <Col span={6}>
+                        {
+                            form.getFieldDecorator('ExpenseOther', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: ''
+                                    }
+                                ],
+                                initialValue: record['ExpenseOther']
+                            })(<InputNumber step='1' >
+                                {record['ExpenseOther']}
+                            </InputNumber>)
+                        }
+                    </Col>
                 </Row>
                 <Row gutter={10}>
                     <Col span={6}>费用合计</Col>
