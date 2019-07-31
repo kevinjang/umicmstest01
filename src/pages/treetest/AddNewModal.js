@@ -75,13 +75,13 @@ class AddNewModal extends React.Component {
 
 
         return <div>
-            <FormItem>
-                <Row gutter={10}>
-                    <Col span={6} >费用日期</Col>
-                    <Col span={6} >
+            <Row gutter={10}>
+                <Col span={6} >费用日期</Col>
+                <Col span={6} >
+                    <FormItem>
                         {
-                            form.getFieldDecorator('ExpenseTime',{
-                                rules:[
+                            form.getFieldDecorator('ExpenseTime', {
+                                rules: [
                                     {
                                         required: true,
                                         message: ''
@@ -94,9 +94,11 @@ class AddNewModal extends React.Component {
                                 </DatePicker>
                             )
                         }
-                    </Col>
-                    <Col span={6} >费用发生地</Col>
-                    <Col span={6} >
+                    </FormItem>
+                </Col>
+                <Col span={6} >费用发生地</Col>
+                <Col span={6} >
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseAddress', {
                                 rules: [
@@ -107,16 +109,16 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['ExpenseAddress']
                             })(
-                                <Input defaultValue={record['ExpenseAddress']} />
+                                <Input></Input>
                             )
                         }
-                    </Col>
-                </Row>
-            </FormItem>
-            <FormItem>
-                <Row gutter={10}>
-                    <Col span={6}>舱位</Col>
-                    <Col span={6}>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>舱位</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('CabinType', {
                                 rules: [
@@ -127,7 +129,7 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['CabinType']
                             })(
-                                <Dropdown overlay={tcMenu} >
+                                <Dropdown overlay={tcMenu} onChange={this.onCTChange}>
                                     <Button id='ctBtn'>
                                         {
                                             cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
@@ -137,31 +139,36 @@ class AddNewModal extends React.Component {
                                 </Dropdown>
                             )
                         }
-                    </Col>
-                    {/* <Col span={6}></Col>
+                    </FormItem>
+                </Col>
+                {/* <Col span={6}></Col>
                     <Col span={6}></Col> */}
-                </Row>
-            </FormItem>
-            <FormItem>
-                <Row gutter={10}>
-                    <Col span={6}>航空/铁路</Col>
-                    <Col span={6}>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>航空/铁路</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseTraffic', {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '航空/铁路 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseTraffic']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1' min={0}
+                                onChange={this.onExpenseTrafficChange} 
+                                // onBlur={this.onExpenseTrafficBlur}
+                                >
                                 {record['ExpenseTraffic']}
                             </InputNumber>)
                         }
-                    </Col>
-                    <Col span={6}>公路/水路</Col>
-                    <Col span={6}>
+                    </FormItem>
+                </Col>
+                <Col span={6}>公路/水路</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseBoat', {
                                 rules: [
@@ -171,15 +178,16 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBoat']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1' min={0} >
                                 {record['ExpenseBoat']}
                             </InputNumber>)
-                        }
-                    </Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>出租车/网约车/市内公交</Col>
-                    <Col span={6}>
+                        }</FormItem>
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>出租车/网约车/市内公交</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseBaggage', {
                                 rules: [
@@ -189,13 +197,14 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBaggage']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1'  min={0}>
                                 {record['ExpenseBaggage']}
                             </InputNumber>)
-                        }
-                    </Col>
-                    <Col span={6}>住宿</Col>
-                    <Col span={6}>
+                        }</FormItem>
+                </Col>
+                <Col span={6}>住宿</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseHotel', {
                                 rules: [
@@ -205,21 +214,23 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseHotel']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1' min={0} >
                                 {record['ExpenseHotel']}
                             </InputNumber>)
                         }
-                    </Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>税率</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}></Col>
-                    <Col span={6}></Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>餐费</Col>
-                    <Col span={6}>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>税率</Col>
+                <Col span={6}></Col>
+                <Col span={6}></Col>
+                <Col span={6}></Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>餐费</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseMeal', {
                                 rules: [
@@ -229,13 +240,15 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseMeal']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1' min={0} >
                                 {record['ExpenseMeal']}
                             </InputNumber>)
                         }
-                    </Col>
-                    <Col span={6}>其他</Col>
-                    <Col span={6}>
+                    </FormItem>
+                </Col>
+                <Col span={6}>其他</Col>
+                <Col span={6}>
+                    <FormItem>
                         {
                             form.getFieldDecorator('ExpenseOther', {
                                 rules: [
@@ -245,22 +258,56 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseOther']
-                            })(<InputNumber step='1' >
+                            })(<InputNumber step='1'  min={0}>
                                 {record['ExpenseOther']}
                             </InputNumber>)
                         }
-                    </Col>
-                </Row>
-                <Row gutter={10}>
-                    <Col span={6}>费用合计</Col>
-                    <Col span={6}></Col>
-                    <Col span={6}>电子发票号</Col>
-                    <Col span={6}></Col>
-                </Row>
-            </FormItem>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Row gutter={10}>
+                <Col span={6}>费用合计</Col>
+                <Col span={6}>
+                    <FormItem>
+                        {
+                            form.getFieldDecorator('ExpenseSum',{
+                                initialValue: record['ExpenseSum']
+                            })(<Input contentEditable={false} value={record['ExpenseSum']}>
+                            </Input>)
+                        }
+                    </FormItem>
+                </Col>
+                <Col span={6}>电子发票号</Col>
+                <Col span={6}></Col>
+            </Row>
         </div>
     }
 
+    onExpenseTrafficChange = (value1) => {
+        console.log('value1:' + value1);
+
+        const {record} = this.state;
+        let recordNew = {...record};
+        recordNew['ExpenseTraffic'] = value1;
+
+        let sum = parseFloat(record['ExpenseSum']) || 0;
+
+        sum += value1;
+
+        recordNew['ExpenseSum'] =sum;        
+
+        this.setState({
+            record: recordNew
+        });
+
+        console.log('recordNew:'+recordNew.ExpenseSum)
+    }
+
+    onCTChange = (value1)=>{
+        // Cabin Type Change Event
+        console.log(value1)
+
+    }
     render() {
         return <div>
             <FormContextY>
