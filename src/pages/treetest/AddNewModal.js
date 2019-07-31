@@ -27,6 +27,8 @@ class AddNewModal extends React.Component {
     constructor(props) {
         super(props);
 
+
+
         const {
             record,
             // visible
@@ -36,6 +38,14 @@ class AddNewModal extends React.Component {
             // visible: this.visible,
             record: record
         }
+    }
+
+    componentDidMount(){
+        console.log('FormContextY',{...FormContextY})
+    }
+
+    componentWillUnmount(){
+        console.log('closing',this.props);
     }
 
     cabinTypeClicked = (e) => {
@@ -139,6 +149,7 @@ class AddNewModal extends React.Component {
                                         rules: [
                                             {
                                                 required: true,
+                                                type:'string',
                                                 message: `${col.title} 是必填项`
                                             }
                                         ],

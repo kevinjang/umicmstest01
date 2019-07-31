@@ -2,7 +2,6 @@ import React from 'react'
 import { Table, Popconfirm, message, Modal, Button } from 'antd';
 import AddNewModal from './AddNewModal'
 import moment from 'moment'
-import 'antd/dist/antd.css'
 
 const dateFormat = 'YYYY/MM/DD';
 class Aladin extends React.Component {
@@ -294,7 +293,8 @@ class Aladin extends React.Component {
             ],
             editingRecord: null,
             modalOpen: false,
-            modalTitle: '添加新项目'
+            modalTitle: '添加新项目',
+            form : null
         }
     }
 
@@ -311,6 +311,7 @@ class Aladin extends React.Component {
     }
 
     modalOkClick = () => {
+        console.log('modalokclick-this.props',this.props);
         this.modalClose();
     }
 
@@ -369,6 +370,7 @@ class Aladin extends React.Component {
                 title={this.state.modalTitle}
                 onOk={this.modalOkClick}
                 onCancel={this.modalCancelClick}
+                destroyOnClose={true}
                 style={modalStyle}>
                 {
                     editingRecord ?
