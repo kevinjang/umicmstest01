@@ -27,14 +27,13 @@ class AddNewModal extends React.Component {
     constructor(props) {
         super(props);
 
-
-
         const {
             record,
             // visible
         } = props;
 
 
+        // this.visible = visible;
         this.state = {
             // visible: this.visible,
             record: record
@@ -54,18 +53,15 @@ class AddNewModal extends React.Component {
         })
     }
 
-    taxCodeClicked = (e) => {
-        const { record } = this.state;
-        record.ExpenseHotelTaxCode = e.key;
-        this.setState({
-            record
-        })
+    showModal = () => {
+
     }
 
-    getControl = (dataIndex, value) => {
-        // console.log('getControl.dataIndex, value', dataIndex, value)
-        const { cabinTypeCodes, taxCodes } = this.props;
-        const ctMenu = (
+    renderContent = (form) => {
+        const { record, columns, cabinTypeCodes, taxCodes } = this.props;
+
+
+        const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
                 {
                     cabinTypeCodes.map((item, index) => {
@@ -78,62 +74,6 @@ class AddNewModal extends React.Component {
         );
 
 
-        const tcMenu = (
-            <Menu onClick={this.taxCodeClicked}>
-                {
-                    taxCodes.map((item, index) => {
-                        return <Menu.Item key={item.key}>
-                            {item.text}
-                        </Menu.Item>
-                    })
-                }
-            </Menu>
-        );
-
-        const dataset = dataIndex === 'CabinType' ? ctMenu : tcMenu;
-
-        switch (dataIndex) {
-            case 'ExpenseTraffic':
-            case 'ExpenseBoat':
-            case 'ExpenseBaggage':
-            case 'ExpenseHotel':
-            case 'ExpenseMeal':
-            case 'ExpenseOther':
-                return <InputNumber />
-            case 'CabinType':
-                return <Dropdown overlay={dataset}>
-                    <Button>
-                        {cabinTypeCodes.find(item1 => item1.key === value).text}
-                        <Icon type='down'></Icon>
-                    </Button>
-                </Dropdown>
-            case 'ExpenseHotelTaxCode':
-                return <Dropdown overlay={dataset}>
-                    <Button>
-                        {taxCodes.find(item1 => item1.key === value).text}
-                        <Icon type='down'></Icon>
-                    </Button>
-                </Dropdown>
-            case 'ExpenseTime':
-                return <DatePicker format={dateFormat}>
-
-                </DatePicker>
-            default:
-                return <Input />
-        }
-    }
-
-    renderContent = (form) => {
-        const { record, columns, } = this.props;
-
-        const {
-            ExpenseTime,
-            ExpenseAddress,
-            ExpenseTraffic,
-            ExpenseBoat
-        } = record;
-
-        const newCols = columns.filter(item => item.visible);
         return <div>
             <Row gutter={10}>
                 <Col span={6} >费用日期</Col>
@@ -218,7 +158,7 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['ExpenseTraffic']
                             })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseTrafficChange}
+                                onChange={this.onExpenseTrafficChange} 
                                 // onBlur={this.onExpenseTrafficBlur}
                                 >
                                 {record['ExpenseTraffic']}
@@ -354,7 +294,7 @@ class AddNewModal extends React.Component {
 
         sum += value1;
 
-        recordNew['ExpenseSum'] =sum;
+        recordNew['ExpenseSum'] =sum;        
 
         this.setState({
             record: recordNew
