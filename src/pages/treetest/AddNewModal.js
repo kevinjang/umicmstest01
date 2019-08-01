@@ -15,6 +15,8 @@ const FormItem = Form.Item;
 
 const FormContext = React.createContext();
 
+let timer1 = null;
+
 const FormContent = ({ form, index, ...props }) => (
     <FormContext.Provider value={form}>
         <div {...props}></div>
@@ -22,6 +24,51 @@ const FormContent = ({ form, index, ...props }) => (
 );
 
 const FormContextY = Form.create({ name: 'anm' })(FormContent);
+
+
+let timeout = 200;
+let editing = false;
+const debounce = function (fn) {
+    if (editing) {
+        // 编辑中，不执行计算
+        // return false;
+        if (timer1)
+            clearTimeout(timer1);
+
+        timer1 = setTimeout(function () {
+            // fn.call();
+            clearTimeout(timer1);
+            // timeout = false;
+            editing = false;
+            fn.call();
+        }, timeout);
+    }
+    else {
+        fn.call();
+    }
+}
+
+const ctValidateF = function (key) {
+    console.log('ctValidateF-key', key)
+    let ctValidateData;
+    if (key === '0') {
+        ctValidateData = {
+            validateStatus: 'error',
+            message: '请选择舱位信息',
+            value: key
+        }
+    }
+    else {
+        ctValidateData = {
+            validateStatus: 'success',
+            message: null,
+            value: key
+        }
+    }
+
+    return ctValidateData;
+
+}
 
 class AddNewModal extends React.Component {
     constructor(props) {
@@ -33,10 +80,16 @@ class AddNewModal extends React.Component {
         } = props;
 
 
+        let ctValidateData = {
+            validateStatus: '',// success, error, warning, validating
+            message: '',
+            value: ''
+        }
         // this.visible = visible;
         this.state = {
             // visible: this.visible,
-            record: record
+            record: record,
+            ctValidateData
         }
 
         // this.setState({
@@ -45,9 +98,26 @@ class AddNewModal extends React.Component {
     }
 
     cabinTypeClicked = (e) => {
+        const ctValidateData = ctValidateF(e.key);
+
+        this.setState({
+            ctValidateData
+        }, () => {
+            console.log('ctValidateData', ctValidateData)
+        })
+
         console.log('cabinTypeClicked.e', e);
         const { record } = this.state;
         record.CabinType = e.key;
+        this.setState({
+            record
+        })
+    }
+
+    taxCodeClicked = (e) => {
+        const { record } = this.state;
+        record.ExpenseHotelTaxCode = e.key;
+
         this.setState({
             record
         })
@@ -73,11 +143,24 @@ class AddNewModal extends React.Component {
             </Menu>
         );
 
+        const tcTaxCode = (
+            <Menu onClick={this.taxCodeClicked}>
+                {
+                    taxCodes.map((item, index) => {
+                        return <Menu.Item key={item.key}>
+                            {item.text}
+                        </Menu.Item>
+                    })
+                }
+            </Menu>
+        );
+
+        let { ctValidateData } = this.state;
 
         return <div>
             <Row gutter={10}>
-                <Col span={6} >费用日期</Col>
-                <Col span={6} >
+                <Col span={4} >费用日期</Col>
+                <Col span={8} >
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseTime', {
@@ -96,8 +179,8 @@ class AddNewModal extends React.Component {
                         }
                     </FormItem>
                 </Col>
-                <Col span={6} >费用发生地</Col>
-                <Col span={6} >
+                <Col span={4} >费用发生地</Col>
+                <Col span={8} >
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseAddress', {
@@ -116,10 +199,12 @@ class AddNewModal extends React.Component {
                 </Col>
             </Row>
             <Row gutter={10}>
-                <Col span={6}>舱位</Col>
-                <Col span={6}>
-                    <FormItem>
-                        {
+                <Col span={4}>舱位</Col>
+                <Col span={8}>
+                    <FormItem
+                        validateStatus={ctValidateData.validateStatus}
+                        help={ctValidateData.message}>
+                        {/* {
                             form.getFieldDecorator('CabinType', {
                                 rules: [
                                     {
@@ -138,15 +223,50 @@ class AddNewModal extends React.Component {
                                     </Button>
                                 </Dropdown>
                             )
-                        }
+                        } */}
+
+                        <Dropdown overlay={tcMenu} onChange={this.onCTChange}>
+                            <Button id='ctBtn'>
+                                {
+                                    cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
+                                }
+                                <Icon type='down'></Icon>
+                            </Button>
+                        </Dropdown>
                     </FormItem>
                 </Col>
                 {/* <Col span={6}></Col>
                     <Col span={6}></Col> */}
+
+                <Col span={4}>税率</Col>
+                <Col span={8}>
+                    <FormItem>
+                        {
+                            form.getFieldDecorator('ExpenseHotelTaxCode', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '税率必选'
+                                    }
+                                ],
+                                initialValue: record['ExpenseHotelTaxCode']
+                            })(
+                                <Dropdown overlay={tcTaxCode} onChange={this.onTCChange}>
+                                    <Button id='tcBtn'>
+                                        {
+                                            taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode).text
+                                        }
+                                        <Icon type='down'></Icon>
+                                    </Button>
+                                </Dropdown>
+                            )
+                        }
+                    </FormItem>
+                </Col>
             </Row>
             <Row gutter={10}>
-                <Col span={6}>航空/铁路</Col>
-                <Col span={6}>
+                <Col span={4}>航空/铁路</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseTraffic', {
@@ -158,16 +278,17 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['ExpenseTraffic']
                             })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseTrafficChange} 
-                                // onBlur={this.onExpenseTrafficBlur}
-                                >
+                                onChange={this.onExpenseTrafficChange}
+                            // width={'100%'}
+                            // onBlur={this.onExpenseTrafficBlur}
+                            >
                                 {record['ExpenseTraffic']}
                             </InputNumber>)
                         }
                     </FormItem>
                 </Col>
-                <Col span={6}>公路/水路</Col>
-                <Col span={6}>
+                <Col span={4}>公路/水路</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseBoat', {
@@ -178,15 +299,15 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBoat']
-                            })(<InputNumber step='1' min={0} >
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseBoatChange} >
                                 {record['ExpenseBoat']}
                             </InputNumber>)
                         }</FormItem>
                 </Col>
             </Row>
             <Row gutter={10}>
-                <Col span={6}>出租车/网约车/市内公交</Col>
-                <Col span={6}>
+                <Col span={4}>出租车/网约车/市内公交</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseBaggage', {
@@ -197,13 +318,13 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBaggage']
-                            })(<InputNumber step='1'  min={0}>
+                            })(<InputNumber step='1' min={0}>
                                 {record['ExpenseBaggage']}
                             </InputNumber>)
                         }</FormItem>
                 </Col>
-                <Col span={6}>住宿</Col>
-                <Col span={6}>
+                <Col span={4}>住宿</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseHotel', {
@@ -222,14 +343,8 @@ class AddNewModal extends React.Component {
                 </Col>
             </Row>
             <Row gutter={10}>
-                <Col span={6}>税率</Col>
-                <Col span={6}></Col>
-                <Col span={6}></Col>
-                <Col span={6}></Col>
-            </Row>
-            <Row gutter={10}>
-                <Col span={6}>餐费</Col>
-                <Col span={6}>
+                <Col span={4}>餐费</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseMeal', {
@@ -246,8 +361,8 @@ class AddNewModal extends React.Component {
                         }
                     </FormItem>
                 </Col>
-                <Col span={6}>其他</Col>
-                <Col span={6}>
+                <Col span={4}>其他</Col>
+                <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseOther', {
@@ -258,7 +373,7 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseOther']
-                            })(<InputNumber step='1'  min={0}>
+                            })(<InputNumber step='1' min={0}>
                                 {record['ExpenseOther']}
                             </InputNumber>)
                         }
@@ -266,48 +381,104 @@ class AddNewModal extends React.Component {
                 </Col>
             </Row>
             <Row gutter={10}>
-                <Col span={6}>费用合计</Col>
-                <Col span={6}>
+                <Col span={4}>费用合计</Col>
+                <Col span={8}>
                     <FormItem>
                         {
-                            form.getFieldDecorator('ExpenseSum',{
+                            form.getFieldDecorator('ExpenseSum', {
                                 initialValue: record['ExpenseSum']
-                            })(<Input contentEditable={false} value={record['ExpenseSum']}>
-                            </Input>)
+                            })(<InputNumber contentEditable={false} disabled={true} >
+                            </InputNumber>)
                         }
                     </FormItem>
                 </Col>
-                <Col span={6}>电子发票号</Col>
-                <Col span={6}></Col>
+                <Col span={4}>电子发票号</Col>
+                <Col span={8}>
+                    <FormItem>
+                        {
+                            form.getFieldDecorator('InvoiceNo', {
+                                rules: [
+                                    {
+                                        max: 10,
+                                        message: '电子发票号限定最长10位'
+                                    }
+                                ],
+                                initialValue: record['InvoiceNo']
+                            })(
+                                <Input >
+                                </Input>
+                            )
+                        }
+                    </FormItem>
+                </Col>
             </Row>
         </div>
     }
 
     onExpenseTrafficChange = (value1) => {
-        console.log('value1:' + value1);
+        // console.log('value1:' + value1);
+        // debugger
+        editing = true;
+        debounce(() => {
+            const { record } = this.state;
+            // let recordNew = { ...record };
+            record['ExpenseTraffic'] = value1;
 
-        const {record} = this.state;
-        let recordNew = {...record};
-        recordNew['ExpenseTraffic'] = value1;
+            let sum = 0;
 
-        let sum = parseFloat(record['ExpenseSum']) || 0;
+            sum = value1 + (parseFloat(record['ExpenseBoat']) || 0)
+                + (parseFloat(record['ExpenseBaggage']) || 0) + (parseFloat(record['ExpenseHotel']) || 0)
+                + (parseFloat(record['ExpenseMeal']) || 0) + (parseFloat(record['ExpenseOther']) || 0);
 
-        sum += value1;
+            record['ExpenseSum'] = sum;
 
-        recordNew['ExpenseSum'] =sum;        
+            this.setState({
+                record: record
+            });
+        })
 
-        this.setState({
-            record: recordNew
-        });
-
-        console.log('recordNew:'+recordNew.ExpenseSum)
+        // console.log('recordNew:'+recordNew.ExpenseSum)
     }
 
-    onCTChange = (value1)=>{
+    onExpenseBoatChange = (value1) => {
+        editing = true;
+        debounce(() => {
+            const { record } = this.state;
+            // let recordNew = { ...record };
+            record['ExpenseBoat'] = value1;
+
+            let sum = 0;
+
+            sum = value1 + (parseFloat(record['ExpenseTraffic']) || 0)
+                + (parseFloat(record['ExpenseBaggage']) || 0) + (parseFloat(record['ExpenseHotel']) || 0)
+                + (parseFloat(record['ExpenseMeal']) || 0) + (parseFloat(record['ExpenseOther']) || 0);
+
+            record['ExpenseSum'] = sum;
+
+            this.setState({
+                record: record
+            });
+        })
+    }
+
+    onCTChange = (value1) => {
         // Cabin Type Change Event
         console.log(value1)
 
+        ctValidateF(vallue1);
     }
+
+
+    onTCChange = (value1) => {
+        console.log(value1)
+    }
+
+
+
+
+
+
+
     render() {
         return <div>
             <FormContextY>

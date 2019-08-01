@@ -278,7 +278,23 @@ class Aladin extends React.Component {
                     key: '0',
                     RowNum: '1',
                     ExpenseTime: moment(new Date(), dateFormat),
-                    ExpenseAddress: '',
+                    ExpenseAddress: '北京',
+                    CabinType: '0',
+                    ExpenseTraffic: 0,
+                    ExpenseBoat: 0,
+                    ExpenseBaggage: 0,
+                    ExpenseHotel: 0,
+                    ExpenseHotelTaxCode: '_',
+                    ExpenseMeal: 0,
+                    ExpenseOther: 0,
+                    ExpenseSum: 0,
+                    InvoiceNo: ''
+                },
+                {
+                    key: '1',
+                    RowNum: '2',
+                    ExpenseTime: moment(new Date(), dateFormat),
+                    ExpenseAddress: '上海',
                     CabinType: '0',
                     ExpenseTraffic: 0,
                     ExpenseBoat: 0,
@@ -294,7 +310,7 @@ class Aladin extends React.Component {
             editingRecord: null,
             modalOpen: false,
             modalTitle: '添加新项目',
-            form : null
+            form: null
         }
     }
 
@@ -311,7 +327,7 @@ class Aladin extends React.Component {
     }
 
     modalOkClick = () => {
-        console.log('modalokclick-this.props',this.props);
+        console.log('modalokclick-this.props', this.props);
         this.modalClose();
     }
 
@@ -354,10 +370,12 @@ class Aladin extends React.Component {
         const { editingRecord } = this.state;
 
         const modalStyle = {
-            content: {
-                height: '100px',
-                width: '1000px'
-            }
+            // content: {
+
+            // }
+            height: '500px',
+            // paddingTop: '10px',
+            width: '500px'
         }
         return <div>
             <Table columns={this.columns}
@@ -371,7 +389,9 @@ class Aladin extends React.Component {
                 onOk={this.modalOkClick}
                 onCancel={this.modalCancelClick}
                 destroyOnClose={true}
-                style={modalStyle}>
+                maskClosable={false}
+                style={{width: '1000px'}}
+                bodyStyle={modalStyle}>
                 {
                     editingRecord ?
                         (<AddNewModal
