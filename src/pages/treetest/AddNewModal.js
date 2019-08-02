@@ -76,8 +76,11 @@ class AddNewModal extends React.Component {
 
         const {
             record,
+            buttonClicked
             // visible
         } = props;
+
+        console.log('buttonClicked',buttonClicked);
 
 
         let ctValidateData = {
@@ -89,13 +92,30 @@ class AddNewModal extends React.Component {
         this.state = {
             // visible: this.visible,
             record: record,
-            ctValidateData
+            ctValidateData,
+            modalButtonClicked: buttonClicked
         }
 
         // this.setState({
         //     record
         // });
     }
+    componentWillReceiveProps = (e) => {
+        console.log('will receive props - e',e)
+    }
+
+    componentWillUnmount = () =>{
+        // console.log('AddNewModal will unmount now!')
+        // 此处触发校验
+        console.log('this.state.modalButtonClicked',this.state.modalButtonClicked)
+        if(this.state.modalButtonClicked === 'ok'){
+            // 此处触发校验
+            console.log('AddNewModal will unmount now!')
+        }
+
+    }
+
+    
 
     cabinTypeClicked = (e) => {
         const ctValidateData = ctValidateF(e.key);
@@ -172,7 +192,7 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: moment(record['ExpenseTime'], dateFormat)
                             })(
-                                <DatePicker>
+                                <DatePicker onChange={this.onDatePickerChange}>
                                     {moment(record['ExpenseTime'], dateFormat)}
                                 </DatePicker>
                             )
@@ -318,7 +338,7 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBaggage']
-                            })(<InputNumber step='1' min={0}>
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseBaggageChange}>
                                 {record['ExpenseBaggage']}
                             </InputNumber>)
                         }</FormItem>
@@ -335,7 +355,7 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseHotel']
-                            })(<InputNumber step='1' min={0} >
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseHotelChange}>
                                 {record['ExpenseHotel']}
                             </InputNumber>)
                         }
@@ -355,7 +375,7 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseMeal']
-                            })(<InputNumber step='1' min={0} >
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseMealChange}>
                                 {record['ExpenseMeal']}
                             </InputNumber>)
                         }
@@ -373,7 +393,7 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseOther']
-                            })(<InputNumber step='1' min={0}>
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseOtherChange}>
                                 {record['ExpenseOther']}
                             </InputNumber>)
                         }
@@ -405,7 +425,7 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['InvoiceNo']
                             })(
-                                <Input >
+                                <Input onChange={this.onInvoiceNoChange} >
                                 </Input>
                             )
                         }
@@ -415,18 +435,47 @@ class AddNewModal extends React.Component {
         </div>
     }
 
+    onDatePickerChange = (e) => {
+        console.log('onDatePickerChange - e',e)
+    }
+
+
     onExpenseTrafficChange = (value1) => {
-        // console.log('value1:' + value1);
-        // debugger
+        this.getRecordSum('ExpenseTraffic', value1);
+    }
+
+    onExpenseBoatChange = (value1) => {
+        this.getRecordSum('ExpenseBoat', value1);
+    }
+
+    onExpenseBaggageChange = (value1) => {
+        this.getRecordSum('ExpenseBaggage', value1);
+    }
+
+    onExpenseHotelChange = (value1) => {
+        this.getRecordSum('ExpenseHotel', value1);
+    }
+
+    onExpenseMealChange = (value1) => {
+        this.getRecordSum('ExpenseMeal', value1);
+    }
+
+    onExpenseOtherChange = (value1) =>{
+        this.getRecordSum('ExpenseOther', value1);
+    }
+
+    getRecordSum = (colName, value) => {
         editing = true;
+
         debounce(() => {
             const { record } = this.state;
             // let recordNew = { ...record };
-            record['ExpenseTraffic'] = value1;
+            record[colName] = value;
 
+            // this.getRecordSum(record)
             let sum = 0;
 
-            sum = value1 + (parseFloat(record['ExpenseBoat']) || 0)
+            sum = (parseFloat(record['ExpenseTraffic']) || 0) + (parseFloat(record['ExpenseBoat']) || 0)
                 + (parseFloat(record['ExpenseBaggage']) || 0) + (parseFloat(record['ExpenseHotel']) || 0)
                 + (parseFloat(record['ExpenseMeal']) || 0) + (parseFloat(record['ExpenseOther']) || 0);
 
@@ -436,28 +485,15 @@ class AddNewModal extends React.Component {
                 record: record
             });
         })
-
-        // console.log('recordNew:'+recordNew.ExpenseSum)
     }
 
-    onExpenseBoatChange = (value1) => {
-        editing = true;
-        debounce(() => {
-            const { record } = this.state;
-            // let recordNew = { ...record };
-            record['ExpenseBoat'] = value1;
+    onInvoiceNoChange = (e) => {
+        console.log('onInvoiceNoChange-e.target.value',e.target.value)
+        const {record} = this.state;
+        record['InvoiceNo'] = e.target.value;
 
-            let sum = 0;
-
-            sum = value1 + (parseFloat(record['ExpenseTraffic']) || 0)
-                + (parseFloat(record['ExpenseBaggage']) || 0) + (parseFloat(record['ExpenseHotel']) || 0)
-                + (parseFloat(record['ExpenseMeal']) || 0) + (parseFloat(record['ExpenseOther']) || 0);
-
-            record['ExpenseSum'] = sum;
-
-            this.setState({
-                record: record
-            });
+        this.setState({
+            record
         })
     }
 

@@ -310,7 +310,8 @@ class Aladin extends React.Component {
             editingRecord: null,
             modalOpen: false,
             modalTitle: '添加新项目',
-            form: null
+            form: null,
+            modalButtonClicked: ''
         }
     }
 
@@ -324,15 +325,39 @@ class Aladin extends React.Component {
             modalOpen: true,
             modalTitle: '编辑项目'
         });
+
+        // const modal = Modal.success();
+        // console.log('modal',modal);
     }
 
     modalOkClick = () => {
-        console.log('modalokclick-this.props', this.props);
+        //想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
         this.modalClose();
+
+        let { dataSource, editingRecord } = this.state;
+
+        let item = dataSource.find(item1 => item1.key === editingRecord.key);
+        if (!item) {
+            // item = editingRecord;
+            dataSource[dataSource.length] = editingRecord;
+        } else {
+            let index = dataSource.findIndex(item1 => item1.key === editingRecord.key)
+            item = { ...editingRecord }
+            dataSource[index] = item;
+        }
+
+        this.setState({
+            dataSource,
+            modalButtonClicked: 'ok'
+        })
     }
 
     modalCancelClick = () => {
         this.modalClose();
+        this.setState({
+            // dataSource,
+            modalButtonClicked: 'cancel'
+        })
     }
 
     modalClose = () => {
@@ -345,7 +370,7 @@ class Aladin extends React.Component {
         const count = this.state.dataSource.length;
         const newData = {
             key: count,
-            RowNum: count,
+            RowNum: count + 1,
             ExpenseTime: moment(new Date(), dateFormat),
             ExpenseAddress: '',
             CabinType: '0',
@@ -366,6 +391,39 @@ class Aladin extends React.Component {
         })
     }
 
+    handleDelete = (index) => {
+        // console.log('handleDelete-index',index);
+
+        // 删除当前行项目，刷新各记录RowNum
+        let { dataSource } = this.state;
+
+        let currentItem = dataSource[index];
+
+        // let rightIndex = dataSource.length-1;
+        // dataSource.reduceRight(() => {
+
+        // })
+
+        index = parseInt(index);
+
+        if (index !== dataSource.length - 1) {
+            
+            // 不是最后一行，将其之后的行的RowNum刷新
+            for(let ind = index; ind < dataSource.length-1; ind++){
+                let item = dataSource[ind+1];
+                item.RowNum = index+1;
+                dataSource[ind] = item; //dataSource[ind+1];
+            }
+        }
+        //  如果是最后一行，不需要刷新其他行RowNum
+        // 删除最后一行即可
+        dataSource.length -=1;
+
+        this.setState({
+            dataSource
+        })
+    }
+
     render() {
         const { editingRecord } = this.state;
 
@@ -373,14 +431,27 @@ class Aladin extends React.Component {
             // content: {
 
             // }
-            height: '500px',
+            height: '400px',
             // paddingTop: '10px',
             width: '500px'
         }
         return <div>
             <Table columns={this.columns}
                 dataSource={this.state.dataSource}
-                bordered>
+                bordered
+                onRow={
+                    record=>{
+                        return {
+                            onDoubleClick: event =>{
+                                this.setState({
+                                    editingRecord: record,
+                                    modalOpen: true,
+                                    modalTitle: '编辑项目'
+                                });
+                            }
+                        }
+                    }
+                }>
 
             </Table>
             <Button type='primary' onClick={this.handleAdd}>添加新项目</Button>
@@ -390,8 +461,10 @@ class Aladin extends React.Component {
                 onCancel={this.modalCancelClick}
                 destroyOnClose={true}
                 maskClosable={false}
-                style={{width: '1000px'}}
-                bodyStyle={modalStyle}>
+                style={{ width: '1000px' }}
+                bodyStyle={modalStyle}
+                buttonClicked={this.state.modalButtonClicked}>
+
                 {
                     editingRecord ?
                         (<AddNewModal
