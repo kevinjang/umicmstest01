@@ -437,6 +437,14 @@ class AddNewModal extends React.Component {
 
     onDatePickerChange = (e) => {
         console.log('onDatePickerChange - e',e)
+        const {record} = this.state;
+        record['ExpenseTime'] = e;
+
+        this.setState({
+            record
+        },()=>{
+            console.log('time',record['ExpenseTime'])
+        })
     }
 
 
