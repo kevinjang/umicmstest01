@@ -463,6 +463,7 @@ class Aladin extends React.Component {
                 maskClosable={false}
                 style={{ width: '1000px' }}
                 bodyStyle={modalStyle}
+                forceRender={true}
                 buttonClicked={this.state.modalButtonClicked}>
 
                 {

@@ -18,6 +18,8 @@ const FormContext = React.createContext();
 
 let timer1 = null;
 
+const _ZERO = 0;
+
 const FormContent = ({ form, index, ...props }) => (
     <FormContext.Provider value={form}>
         <div {...props}></div>
@@ -136,10 +138,10 @@ class AddNewModal extends React.Component {
         if (record.CabinType === '0') {
             record.ExpenseSum -= (record.ExpenseTraffic + record.ExpenseBoat +
                 record.ExpenseBaggage + record.ExpenseHotel);
-            record.ExpenseTraffic =
-                record.ExpenseBoat =
-                record.ExpenseBaggage =
-                record.ExpenseHotel = 0;
+            record.ExpenseTraffic = 0;
+            record.ExpenseBoat = 0;
+            record.ExpenseBaggage = 0;
+            record.ExpenseHotel = 0;
 
             this.setState({
                 record,
@@ -211,36 +213,26 @@ class AddNewModal extends React.Component {
         else {
             const cabinTypeText = this.CabinTypeCodes.find(item => item.key === record.CabinType).text;
 
-            if (cabinTypeText.startsWith('火车') || cabinTypeText.startsWith('飞机')) {
+            if (cabinTypeText.startsWith('火车') || 
+                cabinTypeText.startsWith('飞机')) {
                 // 航空火车可用， 其他禁用并清零
                 // console.log('starts with train or flight')
                 record.ExpenseSum -= (record.ExpenseBoat +
                     record.ExpenseBaggage +
                     record.ExpenseHotel);
-                record.ExpenseBoat -= record.ExpenseBoat;
-                record.ExpenseBaggage = 0;
-                record.ExpenseHotel = 0;
+                record['ExpenseBoat'] = _ZERO;
+                record['ExpenseBaggage'] = _ZERO;
+                record['ExpenseHotel'] = _ZERO;
                 this.setState({
                     record,
                     ctValidateData,
-                }, () => {
-                    this.setState({
-                        trafficControlDisabled: false,
-                        boatControlDisabled: true,
-                        baggageControlDisabled: true,
-                        hotelControlDisabled: true
-                    })
-                })
+                    trafficControlDisabled: false,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: true
+                });
             }
         }
-
-
-        // this.setState({
-        //     record,
-        //     ctValidateData
-        // }, () => {
-        //     // this.onControlChange();
-        // })
 
 
     }
@@ -259,7 +251,8 @@ class AddNewModal extends React.Component {
     }
 
     renderContent = (form) => {
-        const { record, columns, cabinTypeCodes, taxCodes } = this.props;
+        const { record, } = this.state;
+        const { columns, cabinTypeCodes, taxCodes} = this.props;
 
         const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
@@ -386,10 +379,7 @@ class AddNewModal extends React.Component {
                                 initialValue: record['ExpenseTraffic']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseTrafficChange}
-                                disabled={this.state.trafficControlDisabled}
-                            // width={'100%'}
-                            // onBlur={this.onExpenseTrafficBlur}
-                            >
+                                disabled={this.state.trafficControlDisabled}>
                                 {record['ExpenseTraffic']}
                             </InputNumber>)
                         }
@@ -410,7 +400,7 @@ class AddNewModal extends React.Component {
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseBoatChange}
                                 disabled={this.state.boatControlDisabled}>
-                                {record['ExpenseBoat']}
+                                {/* {record['ExpenseBoat']} */}
                             </InputNumber>)
                         }</FormItem>
                 </Col>
@@ -597,8 +587,6 @@ class AddNewModal extends React.Component {
 
             this.setState({
                 record: record
-            }, () => {
-                // this.onControlChange();
             });
 
             // this.onControlChange();
