@@ -26,12 +26,12 @@ export default {
             children: [
                 {
                     id: '6',
-                    title: 'Option 6',
+                    title: '弹窗编辑示例',
                     icon: 'weibo-square',
                     nodeInfo: './treetest/Aladin'
                 }, {
                     id: '7',
-                    title: 'Option 7',
+                    title: '网格内编辑示例',
                     icon: 'pie-chart',
                     nodeInfo: './treetest/FormTest'
                 }

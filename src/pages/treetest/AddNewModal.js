@@ -8,6 +8,7 @@ import {
 import moment from 'moment'
 
 import 'antd/dist/antd.css'
+import cabinTypeCodes from '../../models/cabinTypeCodes';
 
 const dateFormat = 'YYYY/MM/DD';
 
@@ -49,7 +50,7 @@ const debounce = function (fn) {
 }
 
 const ctValidateF = function (key) {
-    console.log('ctValidateF-key', key)
+    // console.log('ctValidateF-key', key)
     let ctValidateData;
     if (key === '0') {
         ctValidateData = {
@@ -76,11 +77,14 @@ class AddNewModal extends React.Component {
 
         const {
             record,
-            buttonClicked
+            buttonClicked,
+            cabinTypeCodes
             // visible
         } = props;
 
-        console.log('buttonClicked',buttonClicked);
+        this.CabinTypeCodes = cabinTypeCodes;
+
+        // console.log('buttonClicked',buttonClicked);
 
 
         let ctValidateData = {
@@ -91,47 +95,154 @@ class AddNewModal extends React.Component {
         // this.visible = visible;
         this.state = {
             // visible: this.visible,
-            record: record,
+            record,
             ctValidateData,
-            modalButtonClicked: buttonClicked
+            modalButtonClicked: buttonClicked,
+            trafficControlDisabled: false,
+            boatControlDisabled: false,
+            baggageControlDisabled: false,
+            hotelControlDisabled: false
         }
-
-        // this.setState({
-        //     record
-        // });
     }
+
+    componentDidMount = () => {
+        // this.onControlChange();
+    }
+
     componentWillReceiveProps = (e) => {
-        console.log('will receive props - e',e)
+        // console.log('will receive props - e',e)
     }
 
-    componentWillUnmount = () =>{
+    componentWillUnmount = () => {
         // console.log('AddNewModal will unmount now!')
         // 此处触发校验
-        console.log('this.state.modalButtonClicked',this.state.modalButtonClicked)
-        if(this.state.modalButtonClicked === 'ok'){
+        // console.log('this.state.modalButtonClicked',this.state.modalButtonClicked)
+        if (this.state.modalButtonClicked === 'ok') {
             // 此处触发校验
             console.log('AddNewModal will unmount now!')
         }
 
     }
 
-    
-
     cabinTypeClicked = (e) => {
         const ctValidateData = ctValidateF(e.key);
 
-        this.setState({
-            ctValidateData
-        }, () => {
-            console.log('ctValidateData', ctValidateData)
-        })
-
-        console.log('cabinTypeClicked.e', e);
-        const { record } = this.state;
-        record.CabinType = e.key;
-        this.setState({
+        const {
             record
-        })
+        } = this.state;
+        record.CabinType = e.key;
+
+        // = 0 ，全部禁用并清零
+        if (record.CabinType === '0') {
+            record.ExpenseSum -= (record.ExpenseTraffic + record.ExpenseBoat +
+                record.ExpenseBaggage + record.ExpenseHotel);
+            record.ExpenseTraffic =
+                record.ExpenseBoat =
+                record.ExpenseBaggage =
+                record.ExpenseHotel = 0;
+
+            this.setState({
+                record,
+                ctValidateData,
+                trafficControlDisabled: true,
+                boatControlDisabled: true,
+                baggageControlDisabled: true,
+                hotelControlDisabled: true
+            })
+        }
+        else if (record.CabinType === '1') {
+            // 无 航空火车禁用并清零 其它可用但互斥
+            record.ExpenseSum -= (record.ExpenseTraffic);
+
+            record.ExpenseTraffic = 0;
+            if (parseFloat(record['ExpenseBoat']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBaggage + record.ExpenseHotel);
+                record.ExpenseBaggage = 0;
+                record.ExpenseHotel = 0;
+                this.setState({
+                    record,
+                    ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: false,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: true
+                })
+            }
+            else if (parseFloat(record['ExpenseBaggage']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseHotel);
+                record.ExpenseBoat = 0;
+                record.ExpenseHotel = 0;
+                this.setState({
+                    record,
+                    ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: false,
+                    hotelControlDisabled: true
+                })
+            }
+            else if (parseFloat(record['ExpenseHotel']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseBaggage);
+                record.ExpenseBoat = 0;
+                record.ExpenseBaggage = 0;
+                this.setState({
+                    record,
+                    ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: false
+                })
+            }
+            else {
+                this.setState({
+                    record,
+                    ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: false,
+                    baggageControlDisabled: false,
+                    hotelControlDisabled: false
+                })
+            }
+        }
+        else {
+            const cabinTypeText = this.CabinTypeCodes.find(item => item.key === record.CabinType).text;
+
+            if (cabinTypeText.startsWith('火车') || cabinTypeText.startsWith('飞机')) {
+                // 航空火车可用， 其他禁用并清零
+                // console.log('starts with train or flight')
+                record.ExpenseSum -= (record.ExpenseBoat +
+                    record.ExpenseBaggage +
+                    record.ExpenseHotel);
+                record.ExpenseBoat -= record.ExpenseBoat;
+                record.ExpenseBaggage = 0;
+                record.ExpenseHotel = 0;
+                this.setState({
+                    record,
+                    ctValidateData,
+                }, () => {
+                    this.setState({
+                        trafficControlDisabled: false,
+                        boatControlDisabled: true,
+                        baggageControlDisabled: true,
+                        hotelControlDisabled: true
+                    })
+                })
+            }
+        }
+
+
+        // this.setState({
+        //     record,
+        //     ctValidateData
+        // }, () => {
+        //     // this.onControlChange();
+        // })
+
+
     }
 
     taxCodeClicked = (e) => {
@@ -149,7 +260,6 @@ class AddNewModal extends React.Component {
 
     renderContent = (form) => {
         const { record, columns, cabinTypeCodes, taxCodes } = this.props;
-
 
         const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
@@ -212,7 +322,7 @@ class AddNewModal extends React.Component {
                                 ],
                                 initialValue: record['ExpenseAddress']
                             })(
-                                <Input></Input>
+                                <Input onChange={this.onExpenseAddressChange}></Input>
                             )
                         }
                     </FormItem>
@@ -224,26 +334,6 @@ class AddNewModal extends React.Component {
                     <FormItem
                         validateStatus={ctValidateData.validateStatus}
                         help={ctValidateData.message}>
-                        {/* {
-                            form.getFieldDecorator('CabinType', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '舱位是必选项'
-                                    }
-                                ],
-                                initialValue: record['CabinType']
-                            })(
-                                <Dropdown overlay={tcMenu} onChange={this.onCTChange}>
-                                    <Button id='ctBtn'>
-                                        {
-                                            cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
-                                        }
-                                        <Icon type='down'></Icon>
-                                    </Button>
-                                </Dropdown>
-                            )
-                        } */}
 
                         <Dropdown overlay={tcMenu} onChange={this.onCTChange}>
                             <Button id='ctBtn'>
@@ -255,9 +345,6 @@ class AddNewModal extends React.Component {
                         </Dropdown>
                     </FormItem>
                 </Col>
-                {/* <Col span={6}></Col>
-                    <Col span={6}></Col> */}
-
                 <Col span={4}>税率</Col>
                 <Col span={8}>
                     <FormItem>
@@ -299,6 +386,7 @@ class AddNewModal extends React.Component {
                                 initialValue: record['ExpenseTraffic']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseTrafficChange}
+                                disabled={this.state.trafficControlDisabled}
                             // width={'100%'}
                             // onBlur={this.onExpenseTrafficBlur}
                             >
@@ -319,7 +407,9 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBoat']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseBoatChange} >
+                            })(<InputNumber step='1' min={0}
+                                onChange={this.onExpenseBoatChange}
+                                disabled={this.state.boatControlDisabled}>
                                 {record['ExpenseBoat']}
                             </InputNumber>)
                         }</FormItem>
@@ -338,7 +428,9 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseBaggage']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseBaggageChange}>
+                            })(<InputNumber step='1' min={0}
+                                onChange={this.onExpenseBaggageChange}
+                                disabled={this.state.baggageControlDisabled}>
                                 {record['ExpenseBaggage']}
                             </InputNumber>)
                         }</FormItem>
@@ -355,7 +447,9 @@ class AddNewModal extends React.Component {
                                     }
                                 ],
                                 initialValue: record['ExpenseHotel']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseHotelChange}>
+                            })(<InputNumber step='1' min={0}
+                                onChange={this.onExpenseHotelChange}
+                                disabled={this.state.hotelControlDisabled}>
                                 {record['ExpenseHotel']}
                             </InputNumber>)
                         }
@@ -436,20 +530,32 @@ class AddNewModal extends React.Component {
     }
 
     onDatePickerChange = (e) => {
-        console.log('onDatePickerChange - e',e)
-        const {record} = this.state;
+        console.log('onDatePickerChange - e', e)
+        const { record } = this.state;
         record['ExpenseTime'] = e;
 
         this.setState({
             record
-        },()=>{
-            console.log('time',record['ExpenseTime'])
+        }, () => {
+            console.log('time', record['ExpenseTime'])
         })
     }
 
+    onExpenseAddressChange = (e) => {
+        // console.log('onExpenseAddressChange', e.target.value);
+        const { record } = this.state;
+        record['ExpenseAddress'] = e.target.value;
+
+        this.setState({
+            record
+        }, () => {
+            console.log('ExpenseAddress', record['ExpenseAddress'])
+        })
+    }
 
     onExpenseTrafficChange = (value1) => {
         this.getRecordSum('ExpenseTraffic', value1);
+
     }
 
     onExpenseBoatChange = (value1) => {
@@ -468,7 +574,7 @@ class AddNewModal extends React.Component {
         this.getRecordSum('ExpenseMeal', value1);
     }
 
-    onExpenseOtherChange = (value1) =>{
+    onExpenseOtherChange = (value1) => {
         this.getRecordSum('ExpenseOther', value1);
     }
 
@@ -491,13 +597,17 @@ class AddNewModal extends React.Component {
 
             this.setState({
                 record: record
+            }, () => {
+                // this.onControlChange();
             });
+
+            // this.onControlChange();
         })
     }
 
     onInvoiceNoChange = (e) => {
-        console.log('onInvoiceNoChange-e.target.value',e.target.value)
-        const {record} = this.state;
+        console.log('onInvoiceNoChange-e.target.value', e.target.value)
+        const { record } = this.state;
         record['InvoiceNo'] = e.target.value;
 
         this.setState({
@@ -517,7 +627,125 @@ class AddNewModal extends React.Component {
         console.log(value1)
     }
 
+    onControlChange = () => {
+        // 税改联动逻辑
+        const {
+            record,
+            // trafficControlDisabled,
+            // boatControlDisabled,
+            // baggageControlDisabled,
+            // hotelControlDisabled
+        } = this.state;
 
+        // let disabled = false;
+
+        const cabinType = record.CabinType;
+        console.log('after select cabin type :', cabinType);
+        if (cabinType === '0') {
+            // disabled = true;
+            let recordNew = {
+                ...record,
+                ExpenseTraffic: 0
+            }
+            this.setState({
+                record: recordNew,
+                trafficControlDisabled: true,
+                boatControlDisabled: true,
+                baggageControlDisabled: true,
+                hotelControlDisabled: true
+            })
+        }
+        else {
+            if (cabinType === '1') {
+                // 舱位选择了无，航空禁用并清零
+                // 公路和出租车和住宿可用，但是互斥（填了非零数字，禁用另一个控件；填了0，都恢复可用）
+
+                // 全为零，全可用
+                // 某个不为零，其他不可用
+                if (parseFloat(record['ExpenseBoat']) === 0 &&
+                    parseFloat(record['ExpenseBaggage']) === 0 &&
+                    parseFloat(record['ExpenseHotel']) === 0) {
+
+                    this.setState({
+                        trafficControlDisabled: true,
+                        boatControlDisabled: false,
+                        baggageControlDisabled: false,
+                        hotelControlDisabled: false
+                    })
+                }
+                else if (parseFloat(record['ExpenseBoat']) !== 0) {
+                    this.setState({
+                        trafficControlDisabled: true,
+                        boatControlDisabled: false,
+                        baggageControlDisabled: true,
+                        hotelControlDisabled: true
+                    })
+                }
+                else if (parseFloat(record['ExpenseBaggage']) !== 0) {
+                    this.setState({
+                        trafficControlDisabled: true,
+                        boatControlDisabled: true,
+                        baggageControlDisabled: false,
+                        hotelControlDisabled: true
+                    })
+                }
+                else if (parseFloat(record['ExpenseHotel']) !== 0) {
+                    this.setState({
+                        trafficControlDisabled: true,
+                        boatControlDisabled: true,
+                        baggageControlDisabled: true,
+                        hotelControlDisabled: false
+                    })
+                }
+            }
+            else {
+                const { cabinTypeCodes } = this.props;
+
+
+                let cabinTypeText = cabinTypeCodes.find(item => item.key === cabinType).text;
+                // disabled =false;
+                // console.log('cabinTypeText', cabinTypeText)
+                if (cabinTypeText.startsWith('火车') || cabinTypeText.startsWith('飞机')) {
+                    // console.log('ok');
+                    let {
+                        ExpenseBoat,
+                        ExpenseBaggage,
+                        ExpenseHotel,
+                        ExpenseSum
+                    } = record;
+
+                    ExpenseSum = (ExpenseSum - ExpenseBoat - ExpenseBaggage - ExpenseHotel);
+
+                    // let recordNew = {
+                    //     ...record,
+                    //     ExpenseBoat: 0,
+                    //     ExpenseBaggage: 0,
+                    //     ExpenseHotel: 0,
+                    //     ExpenseSum
+                    // }
+
+                    record.ExpenseBoat =
+                        record.ExpenseBaggage =
+                        record.ExpenseHotel = 0;
+                    record.ExpenseSum = ExpenseSum;
+
+
+                    console.log('after change cabin type record:', record);
+                    console.log('after change cabin type recordNew:', record);
+
+                    this.setState({
+                        record: record,
+                        trafficControlDisabled: false,
+                        boatControlDisabled: true,
+                        baggageControlDisabled: true,
+                        hotelControlDisabled: true
+                    }, () => {
+                        console.log('oncontrolchange state.record:', this.state.record);
+                    })
+                }
+            }
+        }
+    }
 
 
 
