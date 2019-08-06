@@ -78,6 +78,7 @@ class AddNewModal extends React.Component {
 
         const {
             record,
+            currentIndex,
             buttonClicked,
             cabinTypeCodes,
             taxCodes
@@ -99,6 +100,7 @@ class AddNewModal extends React.Component {
         this.state = {
             // visible: this.visible,
             record,
+            currentIndex,
             ctValidateData,
             cabinTypeCodes,
             taxCodes: newTaxCodes,
@@ -110,13 +112,28 @@ class AddNewModal extends React.Component {
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount = (e) => {
+        console.log('did mount props',this.props);
         this.onControlChange();
     }
 
     componentWillReceiveProps = (e) => {
-        // console.log('will receive props - e',e)
+        console.log('will receive props - e',e)
     }
+
+    shouldComponentUpdate = (nextProps, nextState) => {
+        console.log('should update',nextProps,nextState)
+        // const {record} = nextProps;
+        // const nextRecord = {...record};
+        // const {record} = 
+        return true;
+    }
+
+    componentDidUpdate= (e)=>{
+        console.log('did update',e)
+    }
+
+    // componentdi
 
     componentWillUnmount = () => {
         // console.log('AddNewModal will unmount now!')
@@ -127,6 +144,18 @@ class AddNewModal extends React.Component {
             console.log('AddNewModal will unmount now!')
         }
 
+    }
+
+    componentWillUpdate = (e) => {
+        // console.log('will update',e, this.props);
+
+        const {record} = e;
+
+        console.log('will update', record);
+
+        // this.setState({
+        //     record
+        // })
     }
 
 
@@ -600,20 +629,24 @@ class AddNewModal extends React.Component {
 
                     // 只要3%的行
                     let newTaxCodes = [];
-                    this.TaxCodes.forEach((e,i)=>{
+                    this.TaxCodes.forEach((e, i) => {
                         // console.log('index', i)
-                        if(e.key === 'J6')
+                        if (e.key === 'J6')
                             newTaxCodes.push({
                                 ...e
                             })
                     });
 
-                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
-                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
-                    this.setState({
-                        record,
-                        taxCodes: newTaxCodes
-                    })
+
+                    if (!this.compareArray(this.state.taxCodes, newTaxCodes)) {
+
+                        // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                        record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                        this.setState({
+                            record,
+                            taxCodes: newTaxCodes
+                        })
+                    }
 
                 })
             }
@@ -637,19 +670,24 @@ class AddNewModal extends React.Component {
                         ExpenseHotel: _ZERO
                     });
                     // 出租车 税率需要0、3、6、9的
-                    const neededTCs = ['J0','J6','J5','JK'];
+                    const neededTCs = ['J0', 'J6', 'J5', 'JK'];
                     let newTaxCodes = [];
-                    neededTCs.forEach((e,i)=>{
-                        let item = this.TaxCodes.find(itemx=>itemx.key === e);
+                    neededTCs.forEach((e, i) => {
+                        let item = this.TaxCodes.find(itemx => itemx.key === e);
                         newTaxCodes.push({
                             ...item
                         });
                     })
 
-                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
-                    this.setState({
-                        taxCodes: newTaxCodes
-                    })
+                    if (!this.compareArray(this.state.taxCodes, newTaxCodes)) {
+
+                        // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                        record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                        this.setState({
+                            record,
+                            taxCodes: newTaxCodes
+                        })
+                    }
 
                 })
             }
@@ -675,19 +713,24 @@ class AddNewModal extends React.Component {
                     })
 
                     // 住宿 0、3、6
-                    const neededTCs = ['J0','J6','J5'];
+                    const neededTCs = ['J0', 'J6', 'J5'];
                     let newTaxCodes = [];
-                    neededTCs.forEach((e,i)=>{
-                        let item = this.TaxCodes.find(itemx=>itemx.key === e);
+                    neededTCs.forEach((e, i) => {
+                        let item = this.TaxCodes.find(itemx => itemx.key === e);
                         newTaxCodes.push({
                             ...item
                         });
                     })
 
-                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
-                    this.setState({
-                        taxCodes: newTaxCodes
-                    })
+                    if (!this.compareArray(this.state.taxCodes, newTaxCodes)) {
+
+                        // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                        record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                        this.setState({
+                            record,
+                            taxCodes: newTaxCodes
+                        })
+                    }
                 })
             }
             else {
@@ -730,23 +773,26 @@ class AddNewModal extends React.Component {
                         ExpenseHotel: _ZERO
                     });
 
-                    
+
                     // 只要9%的行
                     let newTaxCodes = [];
-                    this.TaxCodes.forEach((e,i)=>{
+                    this.TaxCodes.forEach((e, i) => {
                         // console.log('index', i)
-                        if(e.key === 'JK')
+                        if (e.key === 'JK')
                             newTaxCodes.push({
                                 ...e
                             })
                     });
 
-                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
-                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
-                    this.setState({
-                        record,
-                        taxCodes: newTaxCodes
-                    })
+                    if (!this.compareArray(this.state.taxCodes, newTaxCodes)) {
+
+                        // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                        record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                        this.setState({
+                            record,
+                            taxCodes: newTaxCodes
+                        })
+                    }
                 });
             }
             else if (cabinTypeText.startsWith('轮船')) {
@@ -775,27 +821,49 @@ class AddNewModal extends React.Component {
                     });
                     // 只要3%的行
                     let newTaxCodes = [];
-                    this.TaxCodes.forEach((e,i)=>{
+                    this.TaxCodes.forEach((e, i) => {
                         // console.log('index', i)
-                        if(e.key === 'J6')
+                        if (e.key === 'J6')
                             newTaxCodes.push({
                                 ...e
                             })
                     });
 
-                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
-                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
-                    this.setState({
-                        record,
-                        taxCodes: newTaxCodes
-                    })
+                    if (!this.compareArray(this.state.taxCodes, newTaxCodes)) {
+
+                        // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                        record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                        this.setState({
+                            record,
+                            taxCodes: newTaxCodes
+                        })
+                    }
                 });
             }
         }
     }
 
 
+    compareArray = (arr1, arr2) => {
+        if (Array.isArray(arr1) && Array.isArray(arr2)) {
+            if (arr1.length !== arr2.length) {
+                return false;
+            }
+            else {
+                arr1.forEach((e, i) => {
+                    let item = arr2.find(itemx => itemx.key === e.key && itemx.text === e.text);
+                    if (!item) {
+                        return false;
+                    }
+                })
 
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
 
     render() {
