@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Popconfirm, message, Modal, Button } from 'antd';
+import { Table, Popconfirm, message, Modal, Button, Icon } from 'antd';
 import AddNewModal from './AddNewModal'
 import moment from 'moment'
 
@@ -279,15 +279,15 @@ class Aladin extends React.Component {
                     RowNum: '1',
                     ExpenseTime: moment(new Date(), dateFormat),
                     ExpenseAddress: '北京',
-                    CabinType: '0',
-                    ExpenseTraffic: 0,
+                    CabinType: '2',
+                    ExpenseTraffic: 123,
                     ExpenseBoat: 0,
                     ExpenseBaggage: 0,
                     ExpenseHotel: 0,
                     ExpenseHotelTaxCode: '_',
                     ExpenseMeal: 0,
                     ExpenseOther: 0,
-                    ExpenseSum: 0,
+                    ExpenseSum: 123,
                     InvoiceNo: ''
                 },
                 {
@@ -333,6 +333,11 @@ class Aladin extends React.Component {
     modalOkClick = () => {
         //想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
         this.modalClose();
+
+        this.updateDataSource();
+    }
+
+    updateDataSource = () => {
 
         let { dataSource, editingRecord } = this.state;
 
@@ -407,17 +412,17 @@ class Aladin extends React.Component {
         index = parseInt(index);
 
         if (index !== dataSource.length - 1) {
-            
+
             // 不是最后一行，将其之后的行的RowNum刷新
-            for(let ind = index; ind < dataSource.length-1; ind++){
-                let item = dataSource[ind+1];
-                item.RowNum = index+1;
+            for (let ind = index; ind < dataSource.length - 1; ind++) {
+                let item = dataSource[ind + 1];
+                item.RowNum = index + 1;
                 dataSource[ind] = item; //dataSource[ind+1];
             }
         }
         //  如果是最后一行，不需要刷新其他行RowNum
         // 删除最后一行即可
-        dataSource.length -=1;
+        dataSource.length -= 1;
 
         this.setState({
             dataSource
@@ -433,16 +438,16 @@ class Aladin extends React.Component {
             // }
             height: '400px',
             // paddingTop: '10px',
-            width: '500px'
+            width: '100%'
         }
         return <div>
             <Table columns={this.columns}
                 dataSource={this.state.dataSource}
                 bordered
                 onRow={
-                    record=>{
+                    record => {
                         return {
-                            onDoubleClick: event =>{
+                            onDoubleClick: event => {
                                 this.setState({
                                     editingRecord: record,
                                     modalOpen: true,
@@ -461,18 +466,31 @@ class Aladin extends React.Component {
                 onCancel={this.modalCancelClick}
                 destroyOnClose={true}
                 maskClosable={false}
-                style={{ width: '1000px' }}
+                // style={{ width: '1000px' }}
+                width='700px'
                 bodyStyle={modalStyle}
                 forceRender={true}
                 buttonClicked={this.state.modalButtonClicked}>
 
                 {
                     editingRecord ?
-                        (<AddNewModal
-                            record={editingRecord}
-                            columns={this.columns}
-                            cabinTypeCodes={this.CabinTypeCodes}
-                            taxCodes={this.TaxCodes}></AddNewModal>) : null
+                        (<div style={{ display: 'flex' }}>
+                            <div style={{ width: '50px', height: '370px',  paddingTop: '25%', position: 'relative', marginRight: '15px' }}>
+                                <Button type='link'>
+                                    <Icon type='double-left' />
+                                </Button>
+                            </div>
+
+                            <AddNewModal
+                                record={editingRecord}
+                                columns={this.columns}
+                                cabinTypeCodes={this.CabinTypeCodes}
+                                taxCodes={this.TaxCodes}></AddNewModal>
+                            <div style={{ width: '50px', height: '370px',paddingTop: '25%', position: 'relative', marginLeft: '15px' }}>
+                                <Button type='link'>
+                                    <Icon type='double-right' />
+                                </Button>
+                            </div></div>) : null
                 }
             </Modal>
         </div>

@@ -20,6 +20,8 @@ let timer1 = null;
 
 const _ZERO = 0;
 
+let _FORM;
+
 const FormContent = ({ form, index, ...props }) => (
     <FormContext.Provider value={form}>
         <div {...props}></div>
@@ -33,15 +35,12 @@ let timeout = 200;
 let editing = false;
 const debounce = function (fn) {
     if (editing) {
-        // 编辑中，不执行计算
-        // return false;
+        // 编辑中，重新开始计时，不执行计算
         if (timer1)
             clearTimeout(timer1);
 
         timer1 = setTimeout(function () {
-            // fn.call();
             clearTimeout(timer1);
-            // timeout = false;
             editing = false;
             fn.call();
         }, timeout);
@@ -80,25 +79,29 @@ class AddNewModal extends React.Component {
         const {
             record,
             buttonClicked,
-            cabinTypeCodes
-            // visible
+            cabinTypeCodes,
+            taxCodes
         } = props;
 
-        this.CabinTypeCodes = cabinTypeCodes;
-
-        // console.log('buttonClicked',buttonClicked);
-
-
+        this.TaxCodes = taxCodes;
         let ctValidateData = {
             validateStatus: '',// success, error, warning, validating
             message: '',
             value: ''
         }
         // this.visible = visible;
+
+        let newTaxCodes = this.TaxCodes.map(item => {
+            return {
+                ...item
+            }
+        });
         this.state = {
             // visible: this.visible,
             record,
             ctValidateData,
+            cabinTypeCodes,
+            taxCodes: newTaxCodes,
             modalButtonClicked: buttonClicked,
             trafficControlDisabled: false,
             boatControlDisabled: false,
@@ -108,7 +111,7 @@ class AddNewModal extends React.Component {
     }
 
     componentDidMount = () => {
-        // this.onControlChange();
+        this.onControlChange();
     }
 
     componentWillReceiveProps = (e) => {
@@ -126,7 +129,10 @@ class AddNewModal extends React.Component {
 
     }
 
+
+
     cabinTypeClicked = (e) => {
+
         const ctValidateData = ctValidateF(e.key);
 
         const {
@@ -134,107 +140,12 @@ class AddNewModal extends React.Component {
         } = this.state;
         record.CabinType = e.key;
 
-        // = 0 ，全部禁用并清零
-        if (record.CabinType === '0') {
-            record.ExpenseSum -= (record.ExpenseTraffic + record.ExpenseBoat +
-                record.ExpenseBaggage + record.ExpenseHotel);
-            record.ExpenseTraffic = 0;
-            record.ExpenseBoat = 0;
-            record.ExpenseBaggage = 0;
-            record.ExpenseHotel = 0;
-
-            this.setState({
-                record,
-                ctValidateData,
-                trafficControlDisabled: true,
-                boatControlDisabled: true,
-                baggageControlDisabled: true,
-                hotelControlDisabled: true
-            })
-        }
-        else if (record.CabinType === '1') {
-            // 无 航空火车禁用并清零 其它可用但互斥
-            record.ExpenseSum -= (record.ExpenseTraffic);
-
-            record.ExpenseTraffic = 0;
-            if (parseFloat(record['ExpenseBoat']) !== 0) {
-                // 如果有值且不为零，其他两项禁用并清零
-                record.ExpenseSum -= (record.ExpenseBaggage + record.ExpenseHotel);
-                record.ExpenseBaggage = 0;
-                record.ExpenseHotel = 0;
-                this.setState({
-                    record,
-                    ctValidateData,
-                    trafficControlDisabled: true,
-                    boatControlDisabled: false,
-                    baggageControlDisabled: true,
-                    hotelControlDisabled: true
-                })
-            }
-            else if (parseFloat(record['ExpenseBaggage']) !== 0) {
-                // 如果有值且不为零，其他两项禁用并清零
-                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseHotel);
-                record.ExpenseBoat = 0;
-                record.ExpenseHotel = 0;
-                this.setState({
-                    record,
-                    ctValidateData,
-                    trafficControlDisabled: true,
-                    boatControlDisabled: true,
-                    baggageControlDisabled: false,
-                    hotelControlDisabled: true
-                })
-            }
-            else if (parseFloat(record['ExpenseHotel']) !== 0) {
-                // 如果有值且不为零，其他两项禁用并清零
-                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseBaggage);
-                record.ExpenseBoat = 0;
-                record.ExpenseBaggage = 0;
-                this.setState({
-                    record,
-                    ctValidateData,
-                    trafficControlDisabled: true,
-                    boatControlDisabled: true,
-                    baggageControlDisabled: true,
-                    hotelControlDisabled: false
-                })
-            }
-            else {
-                this.setState({
-                    record,
-                    ctValidateData,
-                    trafficControlDisabled: true,
-                    boatControlDisabled: false,
-                    baggageControlDisabled: false,
-                    hotelControlDisabled: false
-                })
-            }
-        }
-        else {
-            const cabinTypeText = this.CabinTypeCodes.find(item => item.key === record.CabinType).text;
-
-            if (cabinTypeText.startsWith('火车') || 
-                cabinTypeText.startsWith('飞机')) {
-                // 航空火车可用， 其他禁用并清零
-                // console.log('starts with train or flight')
-                record.ExpenseSum -= (record.ExpenseBoat +
-                    record.ExpenseBaggage +
-                    record.ExpenseHotel);
-                record['ExpenseBoat'] = _ZERO;
-                record['ExpenseBaggage'] = _ZERO;
-                record['ExpenseHotel'] = _ZERO;
-                this.setState({
-                    record,
-                    ctValidateData,
-                    trafficControlDisabled: false,
-                    boatControlDisabled: true,
-                    baggageControlDisabled: true,
-                    hotelControlDisabled: true
-                });
-            }
-        }
-
-
+        this.setState({
+            record,
+            ctValidateData
+        }, () => {
+            this.onControlChange();
+        })
     }
 
     taxCodeClicked = (e) => {
@@ -251,9 +162,10 @@ class AddNewModal extends React.Component {
     }
 
     renderContent = (form) => {
-        const { record, } = this.state;
-        const { columns, cabinTypeCodes, taxCodes} = this.props;
+        const { record, taxCodes } = this.state;
+        const { columns, cabinTypeCodes } = this.props;
 
+        _FORM = form;
         const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
                 {
@@ -281,7 +193,7 @@ class AddNewModal extends React.Component {
         let { ctValidateData } = this.state;
 
         return <div>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4} >费用日期</Col>
                 <Col span={8} >
                     <FormItem>
@@ -321,7 +233,7 @@ class AddNewModal extends React.Component {
                     </FormItem>
                 </Col>
             </Row>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4}>舱位</Col>
                 <Col span={8}>
                     <FormItem
@@ -333,7 +245,7 @@ class AddNewModal extends React.Component {
                                 {
                                     cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
                                 }
-                                <Icon type='down'></Icon>
+                                <Icon type="down" />
                             </Button>
                         </Dropdown>
                     </FormItem>
@@ -355,6 +267,7 @@ class AddNewModal extends React.Component {
                                     <Button id='tcBtn'>
                                         {
                                             taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode).text
+                                            // console.log('taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode)', taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode))
                                         }
                                         <Icon type='down'></Icon>
                                     </Button>
@@ -364,7 +277,7 @@ class AddNewModal extends React.Component {
                     </FormItem>
                 </Col>
             </Row>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4}>航空/铁路</Col>
                 <Col span={8}>
                     <FormItem>
@@ -379,8 +292,11 @@ class AddNewModal extends React.Component {
                                 initialValue: record['ExpenseTraffic']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseTrafficChange}
-                                disabled={this.state.trafficControlDisabled}>
-                                {record['ExpenseTraffic']}
+                                disabled={this.state.trafficControlDisabled}
+                                formatter={value => `￥ ${value}`}
+                            // value={record['ExpenseTraffic']}
+                            >
+                                {/* {record['ExpenseTraffic']} */}
                             </InputNumber>)
                         }
                     </FormItem>
@@ -393,19 +309,21 @@ class AddNewModal extends React.Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '公路/水路 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseBoat']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseBoatChange}
-                                disabled={this.state.boatControlDisabled}>
-                                {/* {record['ExpenseBoat']} */}
+                                disabled={this.state.boatControlDisabled}
+                                formatter={value => `￥ ${value}`}
+                            >
+                                {record['ExpenseBoat']}
                             </InputNumber>)
                         }</FormItem>
                 </Col>
             </Row>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4}>出租车/网约车/市内公交</Col>
                 <Col span={8}>
                     <FormItem>
@@ -414,13 +332,14 @@ class AddNewModal extends React.Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '出租车/网约车/市内公交 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseBaggage']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseBaggageChange}
-                                disabled={this.state.baggageControlDisabled}>
+                                disabled={this.state.baggageControlDisabled}
+                                formatter={value => `￥ ${value}`}>
                                 {record['ExpenseBaggage']}
                             </InputNumber>)
                         }</FormItem>
@@ -433,20 +352,21 @@ class AddNewModal extends React.Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '住宿 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseHotel']
                             })(<InputNumber step='1' min={0}
                                 onChange={this.onExpenseHotelChange}
-                                disabled={this.state.hotelControlDisabled}>
+                                disabled={this.state.hotelControlDisabled}
+                                formatter={value => `￥ ${value}`}>
                                 {record['ExpenseHotel']}
                             </InputNumber>)
                         }
                     </FormItem>
                 </Col>
             </Row>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4}>餐费</Col>
                 <Col span={8}>
                     <FormItem>
@@ -455,11 +375,12 @@ class AddNewModal extends React.Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '餐费 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseMeal']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseMealChange}>
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseMealChange}
+                                formatter={value => `￥ ${value}`}>
                                 {record['ExpenseMeal']}
                             </InputNumber>)
                         }
@@ -473,25 +394,26 @@ class AddNewModal extends React.Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: ''
+                                        message: '其他 必填！'
                                     }
                                 ],
                                 initialValue: record['ExpenseOther']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseOtherChange}>
+                            })(<InputNumber step='1' min={0} onChange={this.onExpenseOtherChange}
+                                formatter={value => `￥ ${value}`}>
                                 {record['ExpenseOther']}
                             </InputNumber>)
                         }
                     </FormItem>
                 </Col>
             </Row>
-            <Row gutter={10}>
+            <Row gutter={12}>
                 <Col span={4}>费用合计</Col>
                 <Col span={8}>
                     <FormItem>
                         {
                             form.getFieldDecorator('ExpenseSum', {
                                 initialValue: record['ExpenseSum']
-                            })(<InputNumber contentEditable={false} disabled={true} >
+                            })(<InputNumber contentEditable={false} disabled={true} formatter={value => `￥ ${value}`}>
                             </InputNumber>)
                         }
                     </FormItem>
@@ -545,10 +467,11 @@ class AddNewModal extends React.Component {
 
     onExpenseTrafficChange = (value1) => {
         this.getRecordSum('ExpenseTraffic', value1);
-
     }
 
     onExpenseBoatChange = (value1) => {
+        // 公路水路
+
         this.getRecordSum('ExpenseBoat', value1);
     }
 
@@ -573,10 +496,8 @@ class AddNewModal extends React.Component {
 
         debounce(() => {
             const { record } = this.state;
-            // let recordNew = { ...record };
             record[colName] = value;
 
-            // this.getRecordSum(record)
             let sum = 0;
 
             sum = (parseFloat(record['ExpenseTraffic']) || 0) + (parseFloat(record['ExpenseBoat']) || 0)
@@ -587,9 +508,11 @@ class AddNewModal extends React.Component {
 
             this.setState({
                 record: record
+            }, () => {
+                this.onControlChange();
             });
 
-            // this.onControlChange();
+            // 
         })
     }
 
@@ -617,120 +540,256 @@ class AddNewModal extends React.Component {
 
     onControlChange = () => {
         // 税改联动逻辑
-        const {
-            record,
-            // trafficControlDisabled,
-            // boatControlDisabled,
-            // baggageControlDisabled,
-            // hotelControlDisabled
-        } = this.state;
+        const { record } = this.state;
+        // = 0 ，全部禁用并清零
+        if (record.CabinType === '0') {
+            record.ExpenseSum -= (record.ExpenseTraffic + record.ExpenseBoat +
+                record.ExpenseBaggage + record.ExpenseHotel);
+            record.ExpenseTraffic = 0;
+            record.ExpenseBoat = 0;
+            record.ExpenseBaggage = 0;
+            record.ExpenseHotel = 0;
 
-        // let disabled = false;
-
-        const cabinType = record.CabinType;
-        console.log('after select cabin type :', cabinType);
-        if (cabinType === '0') {
-            // disabled = true;
-            let recordNew = {
-                ...record,
-                ExpenseTraffic: 0
-            }
             this.setState({
-                record: recordNew,
+                record,
                 trafficControlDisabled: true,
                 boatControlDisabled: true,
                 baggageControlDisabled: true,
                 hotelControlDisabled: true
+            }, () => {
+                //手动更新界面控件内容
+                _FORM.setFieldsValue({
+                    ExpenseTraffic: _ZERO,
+                    ExpenseBoat: _ZERO,
+                    ExpenseBaggage: _ZERO,
+                    ExpenseHotel: _ZERO
+                });
+
+                // 全部重置后，税率全部加载
+                this.setState({
+                    taxCodes: this.TaxCodes
+                })
             })
         }
-        else {
-            if (cabinType === '1') {
-                // 舱位选择了无，航空禁用并清零
-                // 公路和出租车和住宿可用，但是互斥（填了非零数字，禁用另一个控件；填了0，都恢复可用）
+        else if (record.CabinType === '1') {
+            // 无 航空火车禁用并清零 其它可用但互斥
+            record.ExpenseSum -= (record.ExpenseTraffic);
+            // const {form} = this.props;
+            record.ExpenseTraffic = 0;
+            _FORM.setFieldsValue({
+                ExpenseTraffic: _ZERO
+            })
+            if (parseFloat(record['ExpenseBoat']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBaggage + record.ExpenseHotel);
+                record.ExpenseBaggage = 0;
+                record.ExpenseHotel = 0;
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: false,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: true
+                }, () => {
+                    _FORM.setFieldsValue({
+                        // ExpenseTraffic: 0,
+                        ExpenseBaggage: _ZERO,
+                        ExpenseHotel: _ZERO
+                    });
 
-                // 全为零，全可用
-                // 某个不为零，其他不可用
-                if (parseFloat(record['ExpenseBoat']) === 0 &&
-                    parseFloat(record['ExpenseBaggage']) === 0 &&
-                    parseFloat(record['ExpenseHotel']) === 0) {
+                    // 只要3%的行
+                    let newTaxCodes = [];
+                    this.TaxCodes.forEach((e,i)=>{
+                        // console.log('index', i)
+                        if(e.key === 'J6')
+                            newTaxCodes.push({
+                                ...e
+                            })
+                    });
 
+                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
                     this.setState({
-                        trafficControlDisabled: true,
-                        boatControlDisabled: false,
-                        baggageControlDisabled: false,
-                        hotelControlDisabled: false
+                        record,
+                        taxCodes: newTaxCodes
                     })
-                }
-                else if (parseFloat(record['ExpenseBoat']) !== 0) {
+
+                })
+            }
+            else if (parseFloat(record['ExpenseBaggage']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseHotel);
+                record.ExpenseBoat = 0;
+                record.ExpenseHotel = 0;
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: false,
+                    hotelControlDisabled: true
+                }, () => {
+
+                    _FORM.setFieldsValue({
+                        // ExpenseTraffic: 0,
+                        ExpenseBoat: _ZERO,
+                        ExpenseHotel: _ZERO
+                    });
+                    // 出租车 税率需要0、3、6、9的
+                    const neededTCs = ['J0','J6','J5','JK'];
+                    let newTaxCodes = [];
+                    neededTCs.forEach((e,i)=>{
+                        let item = this.TaxCodes.find(itemx=>itemx.key === e);
+                        newTaxCodes.push({
+                            ...item
+                        });
+                    })
+
+                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
                     this.setState({
-                        trafficControlDisabled: true,
-                        boatControlDisabled: false,
-                        baggageControlDisabled: true,
-                        hotelControlDisabled: true
+                        taxCodes: newTaxCodes
                     })
-                }
-                else if (parseFloat(record['ExpenseBaggage']) !== 0) {
+
+                })
+            }
+            else if (parseFloat(record['ExpenseHotel']) !== 0) {
+                // 如果有值且不为零，其他两项禁用并清零
+                record.ExpenseSum -= (record.ExpenseBoat + record.ExpenseBaggage);
+                record.ExpenseBoat = 0;
+                record.ExpenseBaggage = 0;
+
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: false
+                }, () => {
+                    // console.log('form',_FORM);
+                    _FORM.setFieldsValue({
+                        // ExpenseTraffic: 0,
+                        ExpenseBaggage: _ZERO,
+                        ExpenseBoat: _ZERO
+                    })
+
+                    // 住宿 0、3、6
+                    const neededTCs = ['J0','J6','J5'];
+                    let newTaxCodes = [];
+                    neededTCs.forEach((e,i)=>{
+                        let item = this.TaxCodes.find(itemx=>itemx.key === e);
+                        newTaxCodes.push({
+                            ...item
+                        });
+                    })
+
+                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
                     this.setState({
-                        trafficControlDisabled: true,
-                        boatControlDisabled: true,
-                        baggageControlDisabled: false,
-                        hotelControlDisabled: true
+                        taxCodes: newTaxCodes
                     })
-                }
-                else if (parseFloat(record['ExpenseHotel']) !== 0) {
-                    this.setState({
-                        trafficControlDisabled: true,
-                        boatControlDisabled: true,
-                        baggageControlDisabled: true,
-                        hotelControlDisabled: false
-                    })
-                }
+                })
             }
             else {
-                const { cabinTypeCodes } = this.props;
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: false,
+                    baggageControlDisabled: false,
+                    hotelControlDisabled: false
+                })
+            }
+        }
+        else {
+            const cabinTypeText = this.state.cabinTypeCodes.find(item => item.key === record.CabinType).text;
 
+            if (cabinTypeText.startsWith('火车') ||
+                cabinTypeText.startsWith('飞机')) {
+                // 航空火车可用， 其他禁用并清零
+                // console.log('starts with train or flight')
+                record.ExpenseSum -= (record.ExpenseBoat +
+                    record.ExpenseBaggage +
+                    record.ExpenseHotel);
 
-                let cabinTypeText = cabinTypeCodes.find(item => item.key === cabinType).text;
-                // disabled =false;
-                // console.log('cabinTypeText', cabinTypeText)
-                if (cabinTypeText.startsWith('火车') || cabinTypeText.startsWith('飞机')) {
-                    // console.log('ok');
-                    let {
-                        ExpenseBoat,
-                        ExpenseBaggage,
-                        ExpenseHotel,
-                        ExpenseSum
-                    } = record;
+                record.ExpenseBoat = _ZERO.toString();
+                record['ExpenseBaggage'] = _ZERO;
+                record['ExpenseHotel'] = _ZERO;
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: false,
+                    boatControlDisabled: true,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: true
+                }, () => {
+                    //手动更新界面控件内容
+                    _FORM.setFieldsValue({
+                        ExpenseBoat: _ZERO,
+                        ExpenseBaggage: _ZERO,
+                        ExpenseHotel: _ZERO
+                    });
 
-                    ExpenseSum = (ExpenseSum - ExpenseBoat - ExpenseBaggage - ExpenseHotel);
+                    
+                    // 只要9%的行
+                    let newTaxCodes = [];
+                    this.TaxCodes.forEach((e,i)=>{
+                        // console.log('index', i)
+                        if(e.key === 'JK')
+                            newTaxCodes.push({
+                                ...e
+                            })
+                    });
 
-                    // let recordNew = {
-                    //     ...record,
-                    //     ExpenseBoat: 0,
-                    //     ExpenseBaggage: 0,
-                    //     ExpenseHotel: 0,
-                    //     ExpenseSum
-                    // }
-
-                    record.ExpenseBoat =
-                        record.ExpenseBaggage =
-                        record.ExpenseHotel = 0;
-                    record.ExpenseSum = ExpenseSum;
-
-
-                    console.log('after change cabin type record:', record);
-                    console.log('after change cabin type recordNew:', record);
-
+                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
                     this.setState({
-                        record: record,
-                        trafficControlDisabled: false,
-                        boatControlDisabled: true,
-                        baggageControlDisabled: true,
-                        hotelControlDisabled: true
-                    }, () => {
-                        console.log('oncontrolchange state.record:', this.state.record);
+                        record,
+                        taxCodes: newTaxCodes
                     })
-                }
+                });
+            }
+            else if (cabinTypeText.startsWith('轮船')) {
+                // 公路水路可用， 其他禁用并清零
+                // console.log('starts with train or flight')
+                record.ExpenseSum -= (record.ExpenseTraffic +
+                    record.ExpenseBaggage +
+                    record.ExpenseHotel);
+
+                record.ExpenseTraffic = _ZERO;
+                record['ExpenseBaggage'] = _ZERO;
+                record['ExpenseHotel'] = _ZERO;
+                this.setState({
+                    record,
+                    // ctValidateData,
+                    trafficControlDisabled: true,
+                    boatControlDisabled: false,
+                    baggageControlDisabled: true,
+                    hotelControlDisabled: true
+                }, () => {
+                    //手动更新界面控件内容
+                    _FORM.setFieldsValue({
+                        ExpenseTraffic: _ZERO,
+                        ExpenseBaggage: _ZERO,
+                        ExpenseHotel: _ZERO
+                    });
+                    // 只要3%的行
+                    let newTaxCodes = [];
+                    this.TaxCodes.forEach((e,i)=>{
+                        // console.log('index', i)
+                        if(e.key === 'J6')
+                            newTaxCodes.push({
+                                ...e
+                            })
+                    });
+
+                    // 还要重新设定记录的taxcode是新数组中的第一条，否则会报错！！！
+                    record.ExpenseHotelTaxCode = newTaxCodes[0].key;
+                    this.setState({
+                        record,
+                        taxCodes: newTaxCodes
+                    })
+                });
             }
         }
     }
