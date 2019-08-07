@@ -41,6 +41,25 @@ export default {
             id: '3',
             title: 'Option 3',
             icon: 'inbox'
+        },
+        {
+            id: '8',
+            title: 'Form表单学习',
+            icon: 'form',
+            children: [
+                {
+                    id: '9',
+                    title: '水平排列登陆表单',
+                    icon: 'form',
+                    nodeInfo: './treetest/HorizontalLoginForm'
+                },
+                {
+                    id: '10',
+                    title: 'NormalLoginForm',
+                    icon: 'form',
+                    nodeInfo: './treetest/NormalLoginForm'
+                }
+            ]
         }
     ]
 }
