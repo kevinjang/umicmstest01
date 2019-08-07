@@ -288,7 +288,7 @@ class Aladin extends React.Component {
                     ExpenseMeal: 0,
                     ExpenseOther: 0,
                     ExpenseSum: 123,
-                    InvoiceNo: ''
+                    InvoiceNo: '123123123'
                 },
                 {
                     key: '1',
@@ -395,6 +395,7 @@ class Aladin extends React.Component {
 
         this.setState({
             modalOpen: true,
+            editingRecordIndex: count,
             editingRecord: newData
         })
     }
@@ -444,9 +445,22 @@ class Aladin extends React.Component {
         this.setState({
             editingRecord:item, 
             editingRecordIndex: index
-        },()=>{
-            console.log('editingRecord', this.state.editingRecord)
         })
+    }
+
+    nextRecord = () => {
+        if(this.state.editingRecordIndex === this.state.dataSource.length - 1){
+            message.info('已经是最后一条记录', 3);
+            return false;
+        }
+
+        let index = this.state.editingRecordIndex + 1;
+        let item = this.state.dataSource[index];
+        this.setState({
+            editingRecord:item, 
+            editingRecordIndex: index
+        })
+
     }
 
     render() {
@@ -510,7 +524,7 @@ class Aladin extends React.Component {
                                 cabinTypeCodes={this.CabinTypeCodes}
                                 taxCodes={this.TaxCodes}></AddNewModal>
                             <div style={{ width: '50px', height: '370px',paddingTop: '25%', position: 'relative', marginLeft: '15px' }}>
-                                <Button type='link'>
+                                <Button type='link' onClick={this.nextRecord}>
                                     <Icon type='double-right' />
                                 </Button>
                             </div></div>) : null
