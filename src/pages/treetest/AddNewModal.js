@@ -113,24 +113,23 @@ class AddNewModal extends React.Component {
     }
 
     componentDidMount = (e) => {
-        console.log('did mount props',this.props);
+        // console.log('did mount props',this.props);
         this.onControlChange();
     }
 
     componentWillReceiveProps = (e) => {
-        console.log('will receive props - e',e)
+        // console.log('will receive props - e - this.state',e, this.state);
+        const {record} = e;
+        this.setState({
+            record,
+            taxCodes: this.TaxCodes
+        },()=>{
+            this.onControlChange();
+        })
     }
 
-    shouldComponentUpdate = (nextProps, nextState) => {
-        console.log('should update',nextProps,nextState)
-        // const {record} = nextProps;
-        // const nextRecord = {...record};
-        // const {record} = 
-        return true;
-    }
-
-    componentDidUpdate= (e)=>{
-        console.log('did update',e)
+    componentDidUpdate = (e) => {
+        // console.log('did update this.state.record', this.state.record)
     }
 
     // componentdi
@@ -141,24 +140,14 @@ class AddNewModal extends React.Component {
         // console.log('this.state.modalButtonClicked',this.state.modalButtonClicked)
         if (this.state.modalButtonClicked === 'ok') {
             // 此处触发校验
-            console.log('AddNewModal will unmount now!')
+            // console.log('AddNewModal will unmount now!')
         }
 
     }
 
     componentWillUpdate = (e) => {
-        // console.log('will update',e, this.props);
-
-        const {record} = e;
-
-        console.log('will update', record);
-
-        // this.setState({
-        //     record
-        // })
+        const { record } = e;
     }
-
-
 
     cabinTypeClicked = (e) => {
 
@@ -546,7 +535,7 @@ class AddNewModal extends React.Component {
     }
 
     onInvoiceNoChange = (e) => {
-        console.log('onInvoiceNoChange-e.target.value', e.target.value)
+        // console.log('onInvoiceNoChange-e.target.value', e.target.value)
         const { record } = this.state;
         record['InvoiceNo'] = e.target.value;
 
@@ -750,7 +739,6 @@ class AddNewModal extends React.Component {
             if (cabinTypeText.startsWith('火车') ||
                 cabinTypeText.startsWith('飞机')) {
                 // 航空火车可用， 其他禁用并清零
-                // console.log('starts with train or flight')
                 record.ExpenseSum -= (record.ExpenseBoat +
                     record.ExpenseBaggage +
                     record.ExpenseHotel);
