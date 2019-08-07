@@ -55,7 +55,7 @@ export default {
                 },
                 {
                     id: '10',
-                    title: 'NormalLoginForm',
+                    title: '正常登录表单',
                     icon: 'form',
                     nodeInfo: './treetest/NormalLoginForm'
                 }
