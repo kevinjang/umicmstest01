@@ -1,9 +1,9 @@
-#components-form-demo-normal-login .login-form {
+ .loginForm {
     max-width: 300px;
   }
-  #components-form-demo-normal-login .login-form-forgot {
+ .loginFormForgot {
     float: right;
   }
-  #components-form-demo-normal-login .login-form-button {
+ .loginFormButton {
     width: 100%;
   }
