@@ -58,6 +58,24 @@ export default {
                     title: '正常登录表单',
                     icon: 'form',
                     nodeInfo: './treetest/NormalLoginForm'
+                },
+                {
+                    id: '11',
+                    title: '注册新用户',
+                    icon: 'form',
+                    nodeInfo: './treetest/NewUserRegistration'
+                },
+                {
+                    id: '12',
+                    title: '高级搜索',
+                    icon: 'form',
+                    nodeInfo: './treetest/MultiConditionSearch'
+                },
+                {
+                    id: '13',
+                    title: '弹出层中的新建表单',
+                    icon: 'form',
+                    nodeInfo: './treetest/CollectionCreateForm'
                 }
             ]
         }
