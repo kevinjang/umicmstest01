@@ -76,6 +76,18 @@ export default {
                     title: '弹出层中的新建表单',
                     icon: 'form',
                     nodeInfo: './treetest/CollectionCreateForm'
+                },
+                {
+                    id: '14',
+                    title: '动态增减表单项',
+                    icon: 'form',
+                    nodeInfo: './treetest/DynamicFieldSet'
+                },
+                {
+                    id: '15',
+                    title: '时间类控件',
+                    icon: 'form',
+                    nodeInfo: './OtherForms/TimeRelatedForm'
                 }
             ]
         }
