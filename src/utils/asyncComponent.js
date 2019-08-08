@@ -28,7 +28,6 @@ export const asyncComponent = loadComponent =>(
             .catch(error=>{
                 throw error
             })
-
         }
 
         hasLoadedComponent(){
