@@ -2,7 +2,7 @@ import React from 'react'
 
 import {Form, Icon, Input, Button, Checkbox } from 'antd'
 
-import './NormalLoginForm.css'
+import styles from './NormalLoginForm.css'
 
 const FormItem = Form.Item;
 class NormalLoginForm extends React.Component {
@@ -18,7 +18,7 @@ class NormalLoginForm extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className='login-form'>
+            <Form onSubmit={this.handleSubmit} className={styles.loginForm}>
                 <FormItem>
                     {getFieldDecorator('username',{
                         rules:[
@@ -43,8 +43,8 @@ class NormalLoginForm extends React.Component {
                         valuePropName: 'checked',
                         initialValue: true,
                     })(<Checkbox>Remember me</Checkbox>)}
-                    <a className='login-form-forgot' href=''>Forgot password</a>
-                    <Button type='primary' htmlType='submit' className='login-form-button'>
+                    <a className={styles.loginFormForgot} href=''>Forgot password</a>
+                    <Button type='primary' htmlType='submit' className={styles.loginFormButton}>
                         Log in
                     </Button>
                     Or <a href=''>register now!</a>
