@@ -89,13 +89,7 @@ class KLayout extends React.Component {
     loadTest = (e) => {
         const st = asyncComponent(() => import(e))
         return st
-
-        // import(e).then((x1)=>{
-        //     // console.log('按需加载：',x1,x2);
-        //     return x1;
-        // })
-    }
-
+    };
 
     render() {
         return <Layout>
