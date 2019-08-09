@@ -1,5 +1,7 @@
 import React from 'react'
-import { Form, Input, Button, Select, Layout, Row, Col, Icon } from 'antd'
+import { Form, Input, Button, Select, Layout, Row, Col, Icon, Modal } from 'antd'
+
+import LeaveAuthorizationModal from './LeaveAuthorizationModal'
 
 const { Header } = Layout;
 
@@ -9,26 +11,21 @@ const { Option } = Select;
 
 import styles from './LeaveAuthorization.css';
 
-// const filterTextConfig = {
-//     rules:[
-//         {
-//             required: true,
-//             message: '请填写过滤内容或者取消选择过滤条件'
-//         }
-//     ]
-// }
-
 class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            modalShow: false
+        }
     }
 
     handleSearch = (e) => {
         e.preventDefault();
         // alert(e.target.value);
         const {getFieldValue} = this.props.form;
-        console.log(getFieldValue('filter_text'));
-        alert(getFieldValue('filter_text')||'');
+        console.log(getFieldValue('leaveauth_filter_text'));
+        alert(getFieldValue('leaveauth_filter_text')||'');
     }
 
     handleSubmit = (e) => {
@@ -40,13 +37,13 @@ class LeaveAuthorization extends React.Component {
 
         return (<div className={styles.mainContainer}>
             <Layout>
-                <Header>
-                    <Form onSubmit={this.handleSubmit}>
+                <Header style={{background: 'whitesmoke',}}>
+                    <Form onSubmit={this.handleSubmit} style={{ paddingRight: '15px'}}>
                         <Row gutter={1}>
-                            <Col span={4}>
+                            <Col span={4} >
                                 <Form.Item >
                                     {
-                                        getFieldDecorator('headerToolBar', {
+                                        getFieldDecorator('leaveauth_filterKeyWord', {
                                             initialValue: 'none'
                                         })(
                                             <Select style={{ width: '150px' }} value='none'>
@@ -61,11 +58,11 @@ class LeaveAuthorization extends React.Component {
                                         )}
                                 </Form.Item>
                             </Col>
-                            <Col span={4}>
+                            <Col span={2} >
                                 <Form.Item>
                                     {
-                                        getFieldDecorator('filter_text')(
-                                            <div style={{ display: 'flex' }}>
+                                        getFieldDecorator('leaveauth_filter_text')(
+                                            <div style={{ display: 'flex',paddingTop: '3px' }}>
                                                 <Input style={{ width: '120px' }} 
                                                     suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
                                                 {/* <Button><Icon type='search' /></Button> */}
@@ -74,10 +71,31 @@ class LeaveAuthorization extends React.Component {
                                     }
                                 </Form.Item>
                             </Col>
+                            <Col span={2} >
+                                <Form.Item>
+                                    {
+                                        getFieldDecorator('leaveauth_delete_button')(
+                                            <Button type='danger'>删除所选</Button>
+                                        )
+                                    }
+                                </Form.Item>
+                            </Col>
+                            <Col span={2} >
+                                <Form.Item>
+                                    {
+                                        getFieldDecorator('leaveauth_add_button')(
+                                            <Button type='primary' onClick={()=>{this.setState({modalShow: true})}}>添加</Button>
+                                        )
+                                    }
+                                </Form.Item>
+                            </Col>
                         </Row>
                     </Form>
                 </Header>
             </Layout>
+            <Modal visible={this.state.modalShow}>
+                <LeaveAuthorizationModal></LeaveAuthorizationModal>
+            </Modal>
         </div>);
     }
 }
