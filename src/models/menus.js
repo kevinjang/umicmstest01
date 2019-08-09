@@ -39,8 +39,16 @@ export default {
         },
         {
             id: '3',
-            title: 'Option 3',
-            icon: 'inbox'
+            title: '数据管理中心',
+            icon: 'inbox',
+            children:[
+                {
+                    id: '17',
+                    title: '离职授权查询',
+                    icon: 'form',
+                    nodeInfo: './BPM_RM/LeaveAuthorization'
+                },
+            ]
         },
         {
             id: '8',
@@ -88,6 +96,12 @@ export default {
                     title: '时间类控件',
                     icon: 'form',
                     nodeInfo: './OtherForms/TimeRelatedForm'
+                },
+                {
+                    id: '16',
+                    title: '自定义表单控件',
+                    icon: 'form',
+                    nodeInfo: './OtherForms/PriceInput'
                 }
             ]
         }
