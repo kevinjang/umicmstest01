@@ -44,7 +44,7 @@ export default {
             children:[
                 {
                     id: '17',
-                    title: '离职授权查询',
+                    title: '离职查询授权',
                     icon: 'form',
                     nodeInfo: './BPM_RM/LeaveAuthorization'
                 },
