@@ -11,14 +11,14 @@ class TimeRelatedForm extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        this.props.form.validateFields((err, fieldsValue)=>{
-            if(err){
+        this.props.form.validateFields((err, fieldsValue) => {
+            if (err) {
                 return;
             }
 
             // should format date value before submit.
             const rangeValue = fieldsValue['range-picker'];
-            const rangeTimeValue =  fieldsValue['range-time-value'];
+            const rangeTimeValue = fieldsValue['range-time-value'];
             const values = {
                 ...fieldsValue,
                 'date-picker': fieldsValue['date-pciker'].format('YYYY-MM-DD'),
@@ -35,24 +35,25 @@ class TimeRelatedForm extends React.Component {
         })
     };
 
-    render(){
-        const {getFieldDecorator} = this.props.form;
+    render() {
+        const { getFieldDecorator } = this.props.form;
 
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
                 sm: { span: 8 },
-              },
-              wrapperCol: {
+            },
+            wrapperCol: {
                 xs: { span: 24 },
                 sm: { span: 16 },
-              },
+            },
         };
 
         const config = {
-            rules:[
+            rules: [
                 {
                     type: 'object',
+                    // 因为是moment对象，所以应该是object类型就对了
                     required: true,
                     message: '请选择时间！'
                 }
@@ -60,9 +61,10 @@ class TimeRelatedForm extends React.Component {
         };
 
         const rangeConfig = {
-            rules:[
+            rules: [
                 {
                     type: 'array',
+                    // moment对象数组
                     required: true,
                     message: '请选择时间！'
                 }
@@ -72,10 +74,10 @@ class TimeRelatedForm extends React.Component {
         return (
             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
                 <Form.Item label='DatePicker'>
-                    {getFieldDecorator('date-picker',config)(<DatePicker />)}
+                    {getFieldDecorator('date-picker', config)(<DatePicker />)}
                 </Form.Item>
                 <Form.Item label='DatePicker[showTime]' >
-                    {getFieldDecorator('date-time-picker',config)(
+                    {getFieldDecorator('date-time-picker', config)(
                         <DatePicker showTime format='YYYY-MM-DD HH:mm:ss'></DatePicker>
                     )}
                 </Form.Item>
@@ -88,18 +90,18 @@ class TimeRelatedForm extends React.Component {
                 </Form.Item>
                 <Form.Item label='RangePicker'>
                     {
-                        getFieldDecorator('range-picker',rangeConfig)(
+                        getFieldDecorator('range-picker', rangeConfig)(
                             <RangePicker />
                         )
                     }
                 </Form.Item>
                 <Form.Item label='RangePicker[showTime]'>
-                    {getFieldDecorator('range-time-picker',rangeConfig)(
+                    {getFieldDecorator('range-time-picker', rangeConfig)(
                         <RangePicker showTime format='YYYY-MM-DD HH:mm:ss'></RangePicker>
                     )}
                 </Form.Item>
                 <Form.Item label='TimePicker'>
-                    {getFieldDecorator('time-picker',config)(
+                    {getFieldDecorator('time-picker', config)(
                         <TimePicker ></TimePicker>
                     )}
                 </Form.Item>
@@ -113,10 +115,10 @@ class TimeRelatedForm extends React.Component {
         );
     }
 }
-const WrappedDynamicFieldSet = Form.create({name: 'dynamic_form_item'})(TimeRelatedForm);
+const WrappedDynamicFieldSet = Form.create({ name: 'dynamic_form_item' })(TimeRelatedForm);
 
 class WrappedDynamicFieldSetComp extends React.Component {
-    render(){
+    render() {
         return (
             <WrappedDynamicFieldSet></WrappedDynamicFieldSet>
         );
