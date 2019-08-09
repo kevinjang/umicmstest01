@@ -3,7 +3,7 @@ import { Layout, Menu, Icon, Tabs } from 'antd'
 import { connect } from 'dva'
 import { Route } from 'react-router';
 import { asyncComponent } from '../utils/asyncComponent'
-import './MainFrame.css'
+import styles from './MainFrame.css'
 
 import UserInfo from './user/userInfo'
 
@@ -102,7 +102,7 @@ class KLayout extends React.Component {
             <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
                 <Sider 
                     width={200} 
-                    style={{ minHeight: '92.5vh', color: 'white', paddingTop: 16 }}
+                    style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
                     collapsible>
                     <Menu
                         theme="dark"
@@ -153,7 +153,7 @@ class KLayout extends React.Component {
                             }
                         </div>
                     </Content>
-                    <Footer style={{ textAlign: 'left', backgroundColor: 'whitesmoke' }}>
+                    <Footer className={styles.footer}>
                         <Icon type="copyright">  </Icon>KSNL
                     </Footer>
                 </Layout>
