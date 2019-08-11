@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Button, Select, Layout, Row, Col, Icon, Modal, Table, Popconfirm } from 'antd'
+import { Form, Input, Button, Select, Layout, Row, Col, Icon, Modal, Table, Popconfirm, message } from 'antd'
 
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
 
@@ -121,6 +121,14 @@ class LeaveAuthorization extends React.Component {
         })
     }
 
+    handleDeleteSelectedRecords = () => {
+        const {selectedRowKeys} = this.state.selectedRowKeys;
+        if(!selectedRowKeys || selectedRowKeys.length ===0){
+            message.info('请选择要删除的记录！');
+            return;
+        }
+    }
+
     handleSearch = (e) => {
         e.preventDefault();
         // alert(e.target.value);
@@ -201,7 +209,7 @@ class LeaveAuthorization extends React.Component {
                             <Form.Item style={{ float: 'right' }}>
                                 {
                                     getFieldDecorator('leaveauth_delete_button')(
-                                        <Button type='danger'>删除所选</Button>
+                                        <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
                                     )
                                 }
                             </Form.Item>
