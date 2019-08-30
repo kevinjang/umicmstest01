@@ -1,9 +1,12 @@
 import axios from 'axios'
 const setAxios = () => {
 
+    axios.defaults.baseURL = "http://localhost:3000/";
+
     axios.interceptors.request.use(request => {
         // console.log('request.headers',request.headers)
-        // request.headers["Access-Control-Allow-Origin"] = "*";
+        request.headers["Access-Control-Allow-Origin"] = "*";
+        
         // // request.headers
         // // console.log('request.headers["Access-Control-Allow-Origin"]', request.headers["Access-Control-Allow-Origin"]);
         // // config//headers["Access-Control-Allow-Credentials","true"]
@@ -35,6 +38,29 @@ const setAxios = () => {
     },error=>{
         console.log(error)
     })
+
+    
 }
 
 export { setAxios }
+
+// axios.defaults.baseURL = "http://localhost:3000/";
+// const instance = axios.create({
+//     xsrfCookieName: 'xsrf-token'
+// });
+
+// instance.interceptors.request.use(function(config){
+//     config.headers["Access-Control-Allow-Origin"] = "*";
+//     return config;
+// },function(error){
+//     return Promise.reject(error);
+// });
+
+// instance.interceptors.response.use(function(response){
+    
+//     return response.data;
+// },function(error){
+//     return Promise.reject(error);
+// });
+
+// export default instance;
