@@ -3,6 +3,8 @@ import { Form, Input, Button, Select, Layout, Row, Col, Icon, Modal, Table, Popc
 
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
 
+import axios from 'axios'
+
 const { Header } = Layout;
 
 // const { getFieldDecorator } = Form;
@@ -121,9 +123,21 @@ class LeaveAuthorization extends React.Component {
         })
     }
 
+    componentDidMount() {
+        // console.log('la-mounted-axios:',axios);
+        axios.get('getBasePeople', {
+            params: { pageSize: 10, startPage: 3 }
+        }).then((response)=>{
+            console.log(response.data);
+        }).catch((err)=>{
+            console.error(err)
+        })
+
+    }
+
     handleDeleteSelectedRecords = () => {
-        const {selectedRowKeys} = this.state.selectedRowKeys;
-        if(!selectedRowKeys || selectedRowKeys.length ===0){
+        const { selectedRowKeys } = this.state.selectedRowKeys;
+        if (!selectedRowKeys || selectedRowKeys.length === 0) {
             message.info('请选择要删除的记录！');
             return;
         }
@@ -173,7 +187,7 @@ class LeaveAuthorization extends React.Component {
             onChange: this.onTableRowSelectedChange
         }
 
-        const tableFooter = () =>{
+        const tableFooter = () => {
             return `共计${this.state.dataSource.length}条数据`
         }
 
@@ -186,10 +200,10 @@ class LeaveAuthorization extends React.Component {
                                 {
                                     getFieldDecorator('leaveauth_add_button')(
                                         <Button type='primary' onClick={() => {
-                                            
+
                                             const newRecord = {
                                                 key: (this.state.dataSource.length).toString(),
-                                                RowNum: this.state.dataSource.length+1,
+                                                RowNum: this.state.dataSource.length + 1,
                                                 PersonalID: 'x',
                                                 userAD: 'x',
                                                 UserCname: 'x',
@@ -197,7 +211,7 @@ class LeaveAuthorization extends React.Component {
                                                 quanxianAD: 'y',
                                                 quanxianCname: 'y',
                                                 valid: true
-                                            }; 
+                                            };
                                             this.setState({
                                                 editingRecord: newRecord,
                                                 modalShow: true
