@@ -7,6 +7,8 @@ import axios from 'axios'
 
 const { Header } = Layout;
 
+// import cors from 'cors'
+
 // const { getFieldDecorator } = Form;
 
 const { Option } = Select;
@@ -103,7 +105,7 @@ class LeaveAuthorization extends React.Component {
                 title: '操作',
                 width: '3.3%',
                 render: (text, record) => {
-                    console.log('render-this', this)
+                    // console.log('render-this', this)
                     return <div>
                         <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <Icon type='file'></Icon></a>
                         <Popconfirm title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
@@ -124,12 +126,26 @@ class LeaveAuthorization extends React.Component {
     }
 
     componentDidMount() {
-        // console.log('la-mounted-axios:',axios);
-        axios.get('getBasePeople', {
-            params: { pageSize: 10, startPage: 3 }
-        }).then((response)=>{
-            console.log(response.data);
-        }).catch((err)=>{
+        // console.log(cors);
+        // console.log('la-mounted-axios:', axios);
+        // axios.head('getBasePeople').then((response) => {
+        //     console.log('head-response:', response)
+
+
+        // }).catch(err => {
+        //     console.log('head-err:', err)
+        // });
+        var baseURL = axios.defaults.baseURL;
+        console.log('baseURL:', baseURL)
+        axios.get(baseURL + 'getBasePeople', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: { pageSize: 10, startPage: 3 },
+            responseType: 'json'
+        }).then((response) => {
+            console.log('get-response:', response);
+        }).catch((err) => {
             console.error(err)
         })
 
