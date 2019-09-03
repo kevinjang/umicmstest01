@@ -28,7 +28,7 @@ class LeaveAuthorizationModal extends React.Component {
     radioClick = e => {
         console.log(e.target.value);
         this.setState({
-            radioChecked: e.target.value
+            radioChecked: e.target.value==="valid"
         })
     }
 
