@@ -83,7 +83,7 @@ class KLayout extends React.Component {
     }
 
     componentDidMount() {
-        setAxios();
+        // setAxios();
     }
 
     loadTest = (e) => {
