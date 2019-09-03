@@ -1,15 +1,14 @@
 import React from 'react'
-import { Form, Input, Button, Select, Layout, Row, Col, Icon, Modal, Table, Popconfirm, message } from 'antd'
+import {
+    Form, Input, Button, Select, Layout, Row,
+    Col, Icon, Modal, Table, Popconfirm, message, Pagination
+} from 'antd'
 
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
 
 import axios from 'axios'
 
 const { Header } = Layout;
-
-// import cors from 'cors'
-
-// const { getFieldDecorator } = Form;
 
 const { Option } = Select;
 
@@ -23,33 +22,28 @@ class LeaveAuthorization extends React.Component {
             modalShow: false,
             selectedRowKeys: [],
             editingRecord: null,
-            dataSource: [
-                {
-                    key: '0',
-                    RowNum: 1,
-                    // checked: false,
-                    PersonalID: 'cofco\\zoumeili',
-                    userAD: 'cofco\\zoumeili',
-                    UserCname: '邹美丽',
-                    quanxianPersonalID: 'cofco\\zoumeili1',
-                    quanxianAD: 'cofco\\zoumeili1',
-                    quanxianCname: '邹美丽',
-                    valid: true
-                },
-                {
-                    key: '1',
-                    RowNum: 2,
-                    // checked: false,
-                    PersonalID: 'cofco\\zhuxi',
-                    userAD: 'cofco\\zhuxi',
-                    UserCname: '朱希',
-                    quanxianPersonalID: 'cofco\\xinyujing',
-                    quanxianAD: 'cofco\\xinyujing',
-                    quanxianCname: '辛玉婧',
-                    valid: true
-                }
-            ]
+            dataSource: [],
+            allCount: 0,
+            pagi_pageSize: 10,
+            pagi_total: 0,
+            pagi_current: 0
         };
+
+        this.pagination = {
+            pageSize: 10,
+            total: 0,
+            current: 0,
+            onChange: (page, pageSize) => {
+                console.log('pagination - page:', page);
+                this.pagination.current = page;
+                this.setState({
+                    pagi_pageSize: pageSize,
+                    pagi_current: page
+                }, ()=>{
+                    this.loadData();
+                })
+            }
+        }
 
         this.columns = [
             {
@@ -81,14 +75,14 @@ class LeaveAuthorization extends React.Component {
                 editable: false
             },
             {
-                title: '离职人员ID',
+                title: '授权人员ID',
                 dataIndex: 'quanxianPersonalID',
                 width: '15%',
                 visible: true,
                 editable: false
             },
             {
-                title: '离职人员AD',
+                title: '授权人员AD',
                 dataIndex: 'quanxianAD',
                 width: '15%',
                 visible: true,
@@ -103,7 +97,7 @@ class LeaveAuthorization extends React.Component {
             },
             {
                 title: '操作',
-                width: '3.3%',
+                width: '5%',
                 render: (text, record) => {
                     // console.log('render-this', this)
                     return <div>
@@ -126,29 +120,42 @@ class LeaveAuthorization extends React.Component {
     }
 
     componentDidMount() {
-        // console.log(cors);
-        // console.log('la-mounted-axios:', axios);
-        // axios.head('getBasePeople').then((response) => {
-        //     console.log('head-response:', response)
+        this.loadData();
+    }
 
-
-        // }).catch(err => {
-        //     console.log('head-err:', err)
-        // });
-        var baseURL = axios.defaults.baseURL;
+    loadData = () => {
+        var baseURL = axios.defaults.baseURL = "http://localhost:3000";
         console.log('baseURL:', baseURL)
-        axios.get(baseURL + 'getBasePeople', {
+        axios.get(baseURL + '/getBasePeople', {
             headers: {
+                "Access-Control-Allow-Origin": "http://localhost:3000",
                 'Content-Type': 'application/json'
             },
-            params: { pageSize: 10, startPage: 3 },
+            params: { pageSize: this.state.pagi_pageSize, startPage: this.state.pagi_current },
             responseType: 'json'
         }).then((response) => {
-            console.log('get-response:', response);
+            console.log('get-response-data:', response.data);
+            var results = response.data.results;
+            results = results.map((item, index) => {
+                return {
+                    key: item.new_id,
+                    RowNum: item.new_id,
+                    ...item,
+                    valid: 'valid'
+                }
+            });
+
+            // console.log(results[0]);
+            this.pagination.total = parseInt(response.data.allCount) || 0;
+
+            this.setState({
+                dataSource: results,
+                allCount: response.data.allCount,
+                pagi_total: response.data.allCount
+            })
         }).catch((err) => {
             console.error(err)
         })
-
     }
 
     handleDeleteSelectedRecords = () => {
@@ -204,14 +211,14 @@ class LeaveAuthorization extends React.Component {
         }
 
         const tableFooter = () => {
-            return `共计${this.state.dataSource.length}条数据`
+            return `共计${this.state.allCount}条数据`
         }
 
         return (<div className={styles.mainContainer}>
             <Layout>
                 <Header style={{ background: 'whitesmoke', }}>
                     <Form onSubmit={this.handleSubmit} style={{ paddingRight: '15px' }}>
-                        <Row gutter={10} style={{ paddingBottom: '20px', paddingTop: '20px', float: 'right', width: '100%' }}>
+                        <Row gutter={10} style={{ float: 'right', width: '100%' }}>
                             <Form.Item style={{ float: 'right' }}>
                                 {
                                     getFieldDecorator('leaveauth_add_button')(
@@ -259,14 +266,14 @@ class LeaveAuthorization extends React.Component {
                                     getFieldDecorator('leaveauth_filterKeyWord', {
                                         initialValue: 'none'
                                     })(
-                                        <Select style={{ width: '150px' }} value='none'>
+                                        <Select style={{ width: '150px' }} >
                                             <Option value='none'>请选择过滤字段</Option>
-                                            <Option value='PersonalID'>PersonalID</Option>
-                                            <Option value='userAD'>userAD</Option>
-                                            <Option value='UserCname'>UserCname</Option>
-                                            <Option value='quanxianPersonalID'>quanxianPersonalID</Option>
-                                            <Option value='quanxianAD'>quanxianAD</Option>
-                                            <Option value='quanxianCname'>quanxianCname</Option>
+                                            <Option value='PersonalID'>离职人员ID</Option>
+                                            <Option value='userAD'>离职人员AD</Option>
+                                            <Option value='UserCname'>离职人员姓名</Option>
+                                            <Option value='quanxianPersonalID'>授权人员ID</Option>
+                                            <Option value='quanxianAD'>授权人员AD</Option>
+                                            <Option value='quanxianCname'>授权人员姓名</Option>
                                         </Select>
                                     )}
                             </Form.Item>
@@ -276,7 +283,7 @@ class LeaveAuthorization extends React.Component {
                 <Layout>
                     <Form style={{ padding: '0 15px' }}>
                         <Row gutter={8}>
-                            <Form.Item label='离职员工发起申请授权管理'>
+                            <Form.Item>
                                 <Table columns={this.columns}
                                     dataSource={this.state.dataSource}
                                     bordered style={{ paddingBottom: '10px' }}
@@ -290,6 +297,7 @@ class LeaveAuthorization extends React.Component {
                                             }
                                         }
                                     }
+                                    pagination={this.pagination}
                                     footer={tableFooter}
                                 >
 
@@ -312,7 +320,7 @@ class LeaveAuthorization extends React.Component {
 
                 </LeaveAuthorizationModal>
             </Modal>
-        </div>);
+        </div >);
     }
 }
 
