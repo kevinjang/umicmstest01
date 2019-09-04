@@ -1,22 +1,45 @@
 import React from 'react'
 import { Form, Row, Input, Col, Radio, Modal } from 'antd'
-
+const FORM_NAME = 'leaveauth_form'
 class LeaveAuthorizationModal extends React.Component {
     constructor(props) {
         super(props);
 
-        const { editingRecord } = this.props;
+        const { editingRecord, updateParentState, updateOkButtonAvailable, updateCancelButtonAvailable } = this.props;
+
+        const {
+            PersonalID,
+            userAD,
+            UserCname,
+            quanxianPersonalID,
+            quanxianAD,
+            quanxianCname,
+            valid
+        } = editingRecord;
+
+        console.log('this.props:', this.props);
+
+        this.updateParentState = updateParentState;
+        this.updateOkButtonAvailable = updateOkButtonAvailable;
+        this.updateCancelButtonAvailable = updateCancelButtonAvailable;
 
         this.state = {
             radioChecked: true,
-            editingRecord
+            PersonalID,
+            userAD,
+            UserCname,
+            quanxianPersonalID,
+            quanxianAD,
+            quanxianCname,
+            valid,
+            okAvailable: true
         }
     };
 
     componentDidMount() {
         if (this.state.editingRecord) {
             this.setState({
-                radioChecked: this.state.editingRecord.valid
+                radioChecked: (this.state.valid === "valid")
             })
         }
     }
@@ -25,18 +48,177 @@ class LeaveAuthorizationModal extends React.Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // console.log('did update prevState:', prevState);
+        // console.log('did update state:', this.state);
+
+    }
+
     radioClick = e => {
         console.log(e.target.value);
         this.setState({
-            radioChecked: e.target.value==="valid"
+            radioChecked: e.target.value === "valid"
         })
     }
+
+    // ----------------------------------------------all blurs ---------------------------------------------------------------
+    PersonalADOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        if (!!val && val.indexOf('cofco\\') !== 0) {
+            val = "cofco\\" + val;
+        }
+        // var id = e.target.id.replace(FORM_NAME+"_","");
+        const { form } = this.props;
+        if (val !== "") {
+            this.setState({
+                userAD: val
+            }, () => {
+                form.setFieldsValue({
+                    'leave_ad': this.state.userAD
+                });
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+    quanxianPersonalADOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        if (!!val && val.indexOf('cofco\\') !== 0) {
+            val = "cofco\\" + val;
+        }
+        if (val !== "") {
+            this.setState({
+                quanxianAD: val
+            }, () => {
+                const { form } = this.props;
+                form.setFieldsValue({
+                    'auth_ad': this.state.quanxianAD
+                })
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+
+    PersonalIDOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        // if (!!val && val.indexOf('cofco\\') !== 0) {
+        //     val = "cofco\\" + val;
+        // }
+        if (val !== "") {
+            this.setState({
+                PersonalID: val
+            }, () => {
+                const { form } = this.props;
+                form.setFieldsValue({
+                    'leave_id': this.state.PersonalID
+                })
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+    quanxianPersonalIDOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        // if (!!val && val.indexOf('cofco\\') !== 0) {
+        //     val = "cofco\\" + val;
+        // }
+        if (val !== "") {
+            this.setState({
+                quanxianPersonalID: val
+            }, () => {
+                const { form } = this.props;
+                form.setFieldsValue({
+                    'leave_id': this.state.quanxianPersonalID
+                })
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+    UserCnameOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        // if (!!val && val.indexOf('cofco\\') !== 0) {
+        //     val = "cofco\\" + val;
+        // }
+        if (val !== "") {
+            this.setState({
+                UserCname: val
+            }, () => {
+                const { form } = this.props;
+                form.setFieldsValue({
+                    'leave_id': this.state.UserCname
+                })
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+
+    quanxianCnameOnBlur = (e) => {
+        let val = (e.target.value || '').toString();
+        // if (!!val && val.indexOf('cofco\\') !== 0) {
+        //     val = "cofco\\" + val;
+        // }
+        if (val !== "") {
+            this.setState({
+                quanxianCname: val
+            }, () => {
+                const { form } = this.props;
+                form.setFieldsValue({
+                    'leave_id': this.state.quanxianCname
+                })
+                this.setoffValidation();
+            })
+        } else {
+            this.setoffValidation();
+        }
+    }
+
+    setoffValidation = () => {
+        const { form } = this.props;
+        form.validateFields([
+            'leave_id',
+            'leave_ad',
+            'leave_name',
+            'auth_id',
+            'auth_ad',
+            'auth_name',
+            // ''
+        ], (err, values) => {
+            if (err) {
+                this.updateOkButtonAvailable(false);
+                this.updateCancelButtonAvailable(false);
+                console.error(err);
+            }
+            else {
+                this.updateOkButtonAvailable(true);
+                this.updateCancelButtonAvailable(true);
+                console.log('setoffValidation-values:', values);
+            }
+        })
+    }
+
+    // ----------------------------------------------all blurs ---------------------------------------------------------------
 
     render() {
 
         const { getFieldDecorator } = this.props.form;
 
-        const { editingRecord } = this.state;
+        const {
+            PersonalID,
+            userAD,
+            UserCname,
+            quanxianPersonalID,
+            quanxianAD,
+            quanxianCname,
+            valid
+        } = this.state;
 
         return (<div>
             <Form>
@@ -50,8 +232,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['PersonalID'] || ''
-                            })(<Input />)}
+                                initialValue: PersonalID || ''
+                            })(<Input onBlur={this.PersonalIDOnBlur} />)}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -63,8 +245,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['quanxianPersonalID'] || ''
-                            })(<Input />)}
+                                initialValue: quanxianPersonalID || ''
+                            })(<Input onBlur={this.quanxianPersonalIDOnBlur} />)}
                         </Form.Item>
                     </Col>
                 </Row>
@@ -78,8 +260,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['userAD'] || ''
-                            })(<Input />)}
+                                initialValue: userAD || ''
+                            })(<Input onBlur={this.PersonalADOnBlur} />)}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -91,8 +273,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['quanxianAD'] || ''
-                            })(<Input />)}
+                                initialValue: quanxianAD || ''
+                            })(<Input onBlur={this.quanxianPersonalADOnBlur} />)}
                         </Form.Item>
                     </Col>
                 </Row>
@@ -106,8 +288,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['UserCname'] || ''
-                            })(<Input />)}
+                                initialValue: UserCname || ''
+                            })(<Input onBlur={this.UserCnameOnBlur} />)}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -119,8 +301,8 @@ class LeaveAuthorizationModal extends React.Component {
                                         message: '必填！'
                                     }
                                 ],
-                                initialValue: editingRecord['quanxianCname'] || ''
-                            })(<Input />)}
+                                initialValue: quanxianCname || ''
+                            })(<Input onBlur={this.quanxianCnameOnBlur} />)}
                         </Form.Item>
                     </Col>
                 </Row>
@@ -137,7 +319,7 @@ class LeaveAuthorizationModal extends React.Component {
     }
 }
 
-const LeaveAuthorizationModalForm = Form.create({ name: 'leaveauth_form' })(LeaveAuthorizationModal);
+const LeaveAuthorizationModalForm = Form.create({ name: FORM_NAME })(LeaveAuthorizationModal);
 
 class LeaveAuthorizationModalFormComp extends React.Component {
     constructor(props) {
@@ -151,7 +333,10 @@ class LeaveAuthorizationModalFormComp extends React.Component {
     }
     render() {
         return (
-            <LeaveAuthorizationModalForm editingRecord={this.state.editingRecord}></LeaveAuthorizationModalForm>
+            <LeaveAuthorizationModalForm editingRecord={this.state.editingRecord}
+                updateParentState={this.props.updateParentState}
+                updateOkButtonAvailable={this.props.updateOkButtonAvailable}
+                updateCancelButtonAvailable={this.props.updateCancelButtonAvailable}></LeaveAuthorizationModalForm>
         );
     }
 }
