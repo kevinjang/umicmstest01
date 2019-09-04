@@ -20,6 +20,8 @@ class LeaveAuthorization extends React.Component {
 
         this.state = {
             modalShow: false,
+            okButtonAvailable: false,
+            cancelButtonAvailable: false,
             selectedRowKeys: [],
             editingRecord: null,
             dataSource: [],
@@ -39,7 +41,7 @@ class LeaveAuthorization extends React.Component {
                 this.setState({
                     pagi_pageSize: pageSize,
                     pagi_current: page
-                }, ()=>{
+                }, () => {
                     this.loadData();
                 })
             }
@@ -178,10 +180,25 @@ class LeaveAuthorization extends React.Component {
         e.preventDefault();
     }
 
+    updateOkButtonAvailable = (value) => {
+        this.setState({
+            okButtonAvailable: value
+        })
+    }
+
+    updateCancelButtonAvailable = (value) => {
+        this.setState({
+            cancelButtonAvailable: value
+        })
+    }
+
     handleOkModal = () => {
         this.setState({
             modalShow: false
         });
+
+        let record = this.state.editingRecord;
+        console.log('handleOkModal-record:', record);
     };
 
     handleCancelModal = () => {
@@ -198,6 +215,15 @@ class LeaveAuthorization extends React.Component {
         this.setState({
             editingRecord: record,
             modalShow: true
+        })
+    }
+
+    updateEditingRecordState = (record) => {
+        console.log('updateEditingRecordState');
+        this.setState({
+            editingRecord: record
+        }, () => {
+            console.log('editingRecord:', this.state.editingRecord)
         })
     }
 
@@ -227,13 +253,13 @@ class LeaveAuthorization extends React.Component {
                                             const newRecord = {
                                                 key: (this.state.dataSource.length).toString(),
                                                 RowNum: this.state.dataSource.length + 1,
-                                                PersonalID: 'x',
-                                                userAD: 'x',
-                                                UserCname: 'x',
-                                                quanxianPersonalID: 'y',
-                                                quanxianAD: 'y',
-                                                quanxianCname: 'y',
-                                                valid: true
+                                                PersonalID: '',
+                                                userAD: '',
+                                                UserCname: '',
+                                                quanxianPersonalID: '',
+                                                quanxianAD: '',
+                                                quanxianCname: '',
+                                                valid: 'valid'
                                             };
                                             this.setState({
                                                 editingRecord: newRecord,
@@ -309,14 +335,23 @@ class LeaveAuthorization extends React.Component {
             </Layout>
             <Modal visible={this.state.modalShow}
                 title='编辑项目'
+                // okButtonDisabled={this.state.okButtonAvailable}
+                okButtonProps={{ disabled: !this.state.okButtonAvailable }}
+                // cancelButtonProps={{disabled: !this.state.cancelButtonAvailable}}
+                // okButtonProps={{}}
                 centered={true}
                 onOk={this.handleOkModal}
                 onCancel={this.handleCancelModal}
                 destroyOnClose={true}
                 forceRender={true}
-                maskClosable={false}>
+                maskClosable={false}
+                closable={false}>
 
-                <LeaveAuthorizationModal editingRecord={this.state.editingRecord}>
+                <LeaveAuthorizationModal
+                    editingRecord={this.state.editingRecord}
+                    updateParentState={(record) => this.updateEditingRecordState(record)}
+                    updateOkButtonAvailable={(value) => this.updateOkButtonAvailable(value)}
+                    updateCancelButtonAvailable={(value)=>this.updateCancelButtonAvailable(value)}>
 
                 </LeaveAuthorizationModal>
             </Modal>
