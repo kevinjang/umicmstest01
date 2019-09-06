@@ -76,6 +76,8 @@ class LeaveAuthorizationModal extends React.Component {
                 form.setFieldsValue({
                     'leave_ad': this.state.userAD
                 });
+
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -95,6 +97,7 @@ class LeaveAuthorizationModal extends React.Component {
                 form.setFieldsValue({
                     'auth_ad': this.state.quanxianAD
                 })
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -115,6 +118,7 @@ class LeaveAuthorizationModal extends React.Component {
                 form.setFieldsValue({
                     'leave_id': this.state.PersonalID
                 })
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -132,8 +136,9 @@ class LeaveAuthorizationModal extends React.Component {
             }, () => {
                 const { form } = this.props;
                 form.setFieldsValue({
-                    'leave_id': this.state.quanxianPersonalID
+                    'auth_id': this.state.quanxianPersonalID
                 })
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -151,8 +156,9 @@ class LeaveAuthorizationModal extends React.Component {
             }, () => {
                 const { form } = this.props;
                 form.setFieldsValue({
-                    'leave_id': this.state.UserCname
+                    'leave_name': this.state.UserCname
                 })
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -162,17 +168,15 @@ class LeaveAuthorizationModal extends React.Component {
 
     quanxianCnameOnBlur = (e) => {
         let val = (e.target.value || '').toString();
-        // if (!!val && val.indexOf('cofco\\') !== 0) {
-        //     val = "cofco\\" + val;
-        // }
         if (val !== "") {
             this.setState({
                 quanxianCname: val
             }, () => {
                 const { form } = this.props;
                 form.setFieldsValue({
-                    'leave_id': this.state.quanxianCname
+                    'auth_name': this.state.quanxianCname
                 })
+                this.updateParentStateUni();
                 this.setoffValidation();
             })
         } else {
@@ -204,6 +208,26 @@ class LeaveAuthorizationModal extends React.Component {
         })
     }
 
+    updateParentStateUni = () => {
+        const { PersonalID,
+            userAD,
+            UserCname,
+            quanxianPersonalID,
+            quanxianAD,
+            quanxianCname,
+            valid } = this.state;
+
+        // console.log('updateParentState-before-state:', this.state);
+        this.updateParentState({
+            PersonalID,
+            userAD,
+            UserCname,
+            quanxianPersonalID,
+            quanxianAD,
+            quanxianCname,
+            valid
+        })
+    }
     // ----------------------------------------------all blurs ---------------------------------------------------------------
 
     render() {
