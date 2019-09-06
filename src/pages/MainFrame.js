@@ -7,17 +7,15 @@ import styles from './MainFrame.css'
 
 import UserInfo from './user/userInfo'
 
-import { setAxios } from '../utils/setaxios'
-
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
 
 @connect(
-    state => ({ 
+    state => ({
         menus: state.menus,
         ERColumns: state.ERColumns
-     })
+    })
 )
 class KLayout extends React.Component {
     constructor(props) {
@@ -86,8 +84,8 @@ class KLayout extends React.Component {
         // setAxios();
     }
 
-    loadTest = (e) => {
-        const st = asyncComponent(() => import(e))
+    loadTest = (e, opts) => {
+        const st = asyncComponent(() => import(e),opts)
         return st
     };
 
@@ -100,8 +98,8 @@ class KLayout extends React.Component {
             </Header>
 
             <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
-                <Sider 
-                    width={200} 
+                <Sider
+                    width={200}
                     style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
                     collapsible>
                     <Menu
@@ -130,8 +128,10 @@ class KLayout extends React.Component {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px" }}>
-                        <div style={{ padding: "5px", background: "#fff" }}>
+                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
+
+                        <div >
+                            {/* style={{ padding: "5px", background: "#fff" }} */}
                             {
                                 this.state.openTabs.length > 0 &&
                                 <Tabs
@@ -141,11 +141,16 @@ class KLayout extends React.Component {
                                     hideAdd={true}
                                     onEdit={this.tabItemEdit}>
                                     {this.state.openTabs.map(item => {
-                                        return <TabPane tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
+                                        return <TabPane
+                                            tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
                                             key={item.id}
+                                            forceRender={false}
                                             closable={true}>
-                                            <Content>
-                                                <Route component={this.loadTest(item.nodeInfo)}></Route>
+                                            <Content >
+                                                <Route component={this.loadTest(item.nodeInfo,{
+                                                    activeKey: this.state.activeTabKey,
+                                                    selfID: item.id
+                                                })}></Route>
                                             </Content>
                                         </TabPane>
                                     })}
