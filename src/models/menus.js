@@ -104,6 +104,19 @@ export default {
                     nodeInfo: './OtherForms/PriceInput'
                 }
             ]
+        },
+        {
+            id: '18',
+            title: '官方模块测试',
+            icon: 'windows',
+            children: [
+                {
+                    id: '19',
+                    title: 'Spin测试',
+                    icon: 'windows',
+                    nodeInfo: './compoTests/spnningTest'
+                },
+            ]
         }
     ]
 }
