@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-export const asyncComponent = loadComponent =>(
+export const asyncComponent = (loadComponent, opts) =>(
     class AsyncComponent extends React.Component{
         constructor(props){
             super(props)
@@ -37,7 +37,8 @@ export const asyncComponent = loadComponent =>(
         render(){
             const {Component} = this.state
 
-            return Component?<Component {...this.props}></Component>:''
+            var propss = Object.assign({}, this.props, opts);
+            return Component?<Component { ...propss }></Component>:''
         }
     }
 )
