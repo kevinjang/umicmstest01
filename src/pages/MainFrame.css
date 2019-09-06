@@ -10,11 +10,13 @@
   
   .card-container > .ant-tabs-card > .ant-tabs-bar {
     border-color: #fff;
+    margin: 0;
   }
   
   .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
     border-color: transparent;
     background: transparent;
+    margin: 0;
   }
   
   .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
