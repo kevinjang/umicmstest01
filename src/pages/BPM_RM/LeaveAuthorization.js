@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     Form, Input, Button, Select, Layout, Row,
-    Col, Icon, Modal, Table, Popconfirm, message, Pagination
+    Col, Icon, Modal, Table, Popconfirm, message, Pagination, Spin
 } from 'antd'
 
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
@@ -12,11 +12,15 @@ const { Header } = Layout;
 
 const { Option } = Select;
 
+import { insert } from '../../utils/toserver/BasePeopleUtil'
+
 import styles from './LeaveAuthorization.css';
 
 class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
+
+        console.log('la-props:', props);
 
         this.state = {
             modalShow: false,
@@ -28,7 +32,8 @@ class LeaveAuthorization extends React.Component {
             allCount: 0,
             pagi_pageSize: 10,
             pagi_total: 0,
-            pagi_current: 0
+            pagi_current: 0,
+            spinning: false
         };
 
         this.pagination = {
@@ -125,10 +130,15 @@ class LeaveAuthorization extends React.Component {
         this.loadData();
     }
 
-    loadData = () => {
+    loadData = async () => {
+        const { activeKey, selfID } = this.props;
+        if(activeKey !== selfID) return false;
+        this.setState({
+            spinning: true
+        })
         var baseURL = axios.defaults.baseURL = "http://localhost:3000";
         console.log('baseURL:', baseURL)
-        axios.get(baseURL + '/getBasePeople', {
+        await axios.get(baseURL + '/getBasePeople', {
             headers: {
                 "Access-Control-Allow-Origin": "http://localhost:3000",
                 'Content-Type': 'application/json'
@@ -153,10 +163,22 @@ class LeaveAuthorization extends React.Component {
             this.setState({
                 dataSource: results,
                 allCount: response.data.allCount,
-                pagi_total: response.data.allCount
+                pagi_total: response.data.allCount,
+                // spinning: false
             })
+            if (response.data.message === 'succeeded') {
+                message.info('离职查询授权-加载成功')
+            }
+            else {
+                message.error(response.data.message)
+            }
         }).catch((err) => {
-            console.error(err)
+            console.log({ ...err })
+            message.error(err.message);
+        }).finally(() => {
+            this.setState({
+                spinning: false
+            })
         })
     }
 
@@ -198,7 +220,9 @@ class LeaveAuthorization extends React.Component {
         });
 
         let record = this.state.editingRecord;
-        console.log('handleOkModal-record:', record);
+        // console.log('handleOkModal-record:', record);
+        insert(record);
+        this.loadData();
     };
 
     handleCancelModal = () => {
@@ -219,11 +243,11 @@ class LeaveAuthorization extends React.Component {
     }
 
     updateEditingRecordState = (record) => {
-        console.log('updateEditingRecordState');
+        // console.log('updateEditingRecordState-record:', record);
         this.setState({
             editingRecord: record
         }, () => {
-            console.log('editingRecord:', this.state.editingRecord)
+            console.log('parent-editingRecord:', this.state.editingRecord)
         })
     }
 
@@ -240,131 +264,138 @@ class LeaveAuthorization extends React.Component {
             return `共计${this.state.allCount}条数据`
         }
 
-        return (<div className={styles.mainContainer}>
-            <Layout>
-                <Header style={{ background: 'whitesmoke', }}>
-                    <Form onSubmit={this.handleSubmit} style={{ paddingRight: '15px' }}>
-                        <Row gutter={10} style={{ float: 'right', width: '100%' }}>
-                            <Form.Item style={{ float: 'right' }}>
-                                {
-                                    getFieldDecorator('leaveauth_add_button')(
-                                        <Button type='primary' onClick={() => {
+        return (
+            <Spin tip="加载中..." spinning={this.state.spinning}>
+                <div className={styles.mainContainer}>
+                    <Layout>
+                        <Header style={{ background: 'whitesmoke', }}>
+                            <Form onSubmit={this.handleSubmit} style={{ paddingRight: '15px' }}>
+                                <div style={{ float: 'right', width: '100%' }}>
+                                    <Form.Item style={{ float: 'right' }}>
+                                        {
+                                            getFieldDecorator('leaveauth_add_button')(
+                                                <Button type='primary' onClick={() => {
 
-                                            const newRecord = {
-                                                key: (this.state.dataSource.length).toString(),
-                                                RowNum: this.state.dataSource.length + 1,
-                                                PersonalID: '',
-                                                userAD: '',
-                                                UserCname: '',
-                                                quanxianPersonalID: '',
-                                                quanxianAD: '',
-                                                quanxianCname: '',
-                                                valid: 'valid'
-                                            };
-                                            this.setState({
-                                                editingRecord: newRecord,
-                                                modalShow: true
-                                            })
-                                        }}>添加</Button>
-                                    )
-                                }
-                            </Form.Item>
-                            <Form.Item style={{ float: 'right' }}>
-                                {
-                                    getFieldDecorator('leaveauth_delete_button')(
-                                        <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
-                                    )
-                                }
-                            </Form.Item>
-                            <Form.Item style={{ float: 'right' }}>
-                                {
-                                    getFieldDecorator('leaveauth_filter_text')(
-                                        <div style={{ display: 'flex', paddingTop: '3px' }}>
-                                            <Input style={{ width: '120px' }}
-                                                suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
-                                            {/* <Button><Icon type='search' /></Button> */}
-                                        </div>
-                                    )
-                                }
-                            </Form.Item>
-                            <Form.Item style={{ float: 'right' }}>
-                                {
-                                    getFieldDecorator('leaveauth_filterKeyWord', {
-                                        initialValue: 'none'
-                                    })(
-                                        <Select style={{ width: '150px' }} >
-                                            <Option value='none'>请选择过滤字段</Option>
-                                            <Option value='PersonalID'>离职人员ID</Option>
-                                            <Option value='userAD'>离职人员AD</Option>
-                                            <Option value='UserCname'>离职人员姓名</Option>
-                                            <Option value='quanxianPersonalID'>授权人员ID</Option>
-                                            <Option value='quanxianAD'>授权人员AD</Option>
-                                            <Option value='quanxianCname'>授权人员姓名</Option>
-                                        </Select>
-                                    )}
-                            </Form.Item>
-                        </Row>
-                    </Form>
-                </Header>
-                <Layout>
-                    <Form style={{ padding: '0 15px' }}>
-                        <Row gutter={8}>
-                            <Form.Item>
-                                <Table columns={this.columns}
-                                    dataSource={this.state.dataSource}
-                                    bordered style={{ paddingBottom: '10px' }}
-                                    rowSelection={rowSelection}
-                                    onRow={
-                                        (record) => {
-                                            return {
-                                                onDoubleClick: (event) => {
-                                                    this.handleEditRecord(record);
+                                                    const newRecord = {
+                                                        key: (this.state.dataSource.length).toString(),
+                                                        RowNum: this.state.dataSource.length + 1,
+                                                        PersonalID: '',
+                                                        userAD: '',
+                                                        UserCname: '',
+                                                        quanxianPersonalID: '',
+                                                        quanxianAD: '',
+                                                        quanxianCname: '',
+                                                        valid: 'valid'
+                                                    };
+                                                    this.setState({
+                                                        editingRecord: newRecord,
+                                                        modalShow: true
+                                                    })
+                                                }}>添加</Button>
+                                            )
+                                        }
+                                    </Form.Item>
+                                    <Form.Item style={{ float: 'right' }}>
+                                        {
+                                            getFieldDecorator('leaveauth_delete_button')(
+                                                <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
+                                            )
+                                        }
+                                    </Form.Item>
+                                    <Form.Item style={{ float: 'right' }}>
+                                        {
+                                            getFieldDecorator('leaveauth_filter_text')(
+                                                <div style={{ display: 'flex', paddingTop: '3px' }}>
+                                                    <Input style={{ width: '120px' }}
+                                                        suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
+                                                    {/* <Button><Icon type='search' /></Button> */}
+                                                </div>
+                                            )
+                                        }
+                                    </Form.Item>
+                                    <Form.Item style={{ float: 'right' }}>
+                                        {
+                                            getFieldDecorator('leaveauth_filterKeyWord', {
+                                                initialValue: 'none'
+                                            })(
+                                                <Select style={{ width: '150px' }} >
+                                                    <Option value='none'>请选择过滤字段</Option>
+                                                    <Option value='PersonalID'>离职人员ID</Option>
+                                                    <Option value='userAD'>离职人员AD</Option>
+                                                    <Option value='UserCname'>离职人员姓名</Option>
+                                                    <Option value='quanxianPersonalID'>授权人员ID</Option>
+                                                    <Option value='quanxianAD'>授权人员AD</Option>
+                                                    <Option value='quanxianCname'>授权人员姓名</Option>
+                                                </Select>
+                                            )}
+                                    </Form.Item>
+                                </div>
+                            </Form>
+                        </Header>
+                        <Layout>
+                            <Form style={{ padding: '0 5px' }}>
+                                <Row gutter={8}>
+                                    <Form.Item>
+                                        <Table columns={this.columns}
+                                            dataSource={this.state.dataSource}
+                                            bordered style={{ paddingBottom: '10px' }}
+                                            rowSelection={rowSelection}
+                                            onRow={
+                                                (record) => {
+                                                    return {
+                                                        onDoubleClick: (event) => {
+                                                            this.handleEditRecord(record);
+                                                        }
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }
-                                    pagination={this.pagination}
-                                    footer={tableFooter}
-                                >
+                                            pagination={this.pagination}
+                                            footer={tableFooter}
+                                        >
 
-                                </Table>
-                            </Form.Item>
-                        </Row>
-                    </Form>
-                </Layout>
-            </Layout>
-            <Modal visible={this.state.modalShow}
-                title='编辑项目'
-                // okButtonDisabled={this.state.okButtonAvailable}
-                okButtonProps={{ disabled: !this.state.okButtonAvailable }}
-                // cancelButtonProps={{disabled: !this.state.cancelButtonAvailable}}
-                // okButtonProps={{}}
-                centered={true}
-                onOk={this.handleOkModal}
-                onCancel={this.handleCancelModal}
-                destroyOnClose={true}
-                forceRender={true}
-                maskClosable={false}
-                closable={false}>
+                                        </Table>
+                                    </Form.Item>
+                                </Row>
+                            </Form>
+                        </Layout>
+                    </Layout>
+                    <Modal visible={this.state.modalShow}
+                        title='编辑项目'
+                        // okButtonDisabled={this.state.okButtonAvailable}
+                        okButtonProps={{ disabled: !this.state.okButtonAvailable }}
+                        // cancelButtonProps={{disabled: !this.state.cancelButtonAvailable}}
+                        // okButtonProps={{}}
+                        centered={true}
+                        onOk={this.handleOkModal}
+                        onCancel={this.handleCancelModal}
+                        destroyOnClose={true}
+                        forceRender={true}
+                        maskClosable={false}
+                        closable={false}>
 
-                <LeaveAuthorizationModal
-                    editingRecord={this.state.editingRecord}
-                    updateParentState={(record) => this.updateEditingRecordState(record)}
-                    updateOkButtonAvailable={(value) => this.updateOkButtonAvailable(value)}
-                    updateCancelButtonAvailable={(value)=>this.updateCancelButtonAvailable(value)}>
+                        <LeaveAuthorizationModal
+                            editingRecord={this.state.editingRecord}
+                            updateParentState={(record) => this.updateEditingRecordState(record)}
+                            updateOkButtonAvailable={(value) => this.updateOkButtonAvailable(value)}
+                            updateCancelButtonAvailable={(value) => this.updateCancelButtonAvailable(value)}>
 
-                </LeaveAuthorizationModal>
-            </Modal>
-        </div >);
+                        </LeaveAuthorizationModal>
+                    </Modal>
+                </div >
+            </Spin>);
     }
 }
 
 const LeaveAuthorizationForm = Form.create({ name: 'leave_authorization' })(LeaveAuthorization);
 
 class LeaveAuthorizationFormComp extends React.Component {
+    constructor(props) {
+        console.log('la-form-props:', props);
+        super(props);
+    }
     render() {
         return (
-            <LeaveAuthorizationForm >
+            <LeaveAuthorizationForm {...this.props}>
 
             </LeaveAuthorizationForm>
         );
