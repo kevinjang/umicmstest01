@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {message} from 'antd'
-function insert(record) {
+function insert(record, callback) {
     axios.post('/insertBasePeople', {
         headers: {
             "Access-Control-Allow-Origin": "http://localhost:3000",
@@ -15,6 +15,10 @@ function insert(record) {
         }
         else {
             message.error(response.statusText);
+        }
+
+        if(callback){
+            callback();
         }
     }).catch(err => {
         if (err)

@@ -132,7 +132,7 @@ class LeaveAuthorization extends React.Component {
 
     loadData = async () => {
         const { activeKey, selfID } = this.props;
-        if(activeKey !== selfID) return false;
+        if (activeKey !== selfID) return false;
         this.setState({
             spinning: true
         })
@@ -221,8 +221,8 @@ class LeaveAuthorization extends React.Component {
 
         let record = this.state.editingRecord;
         // console.log('handleOkModal-record:', record);
-        insert(record);
-        this.loadData();
+        insert(record, this.loadData);
+        // ();
     };
 
     handleCancelModal = () => {
