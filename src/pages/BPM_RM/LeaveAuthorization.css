@@ -5,3 +5,10 @@
     /* padding-top: 15%; */
     /* padding-bottom: 15%; */
 }
+
+.mainContainer tbody td {
+    padding: 5px;
+}
+.mainContainer thead td {
+    padding: 5px;
+}
