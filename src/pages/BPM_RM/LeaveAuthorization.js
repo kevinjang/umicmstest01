@@ -130,20 +130,20 @@ class LeaveAuthorization extends React.Component {
         this.loadData();
     }
 
-    loadData = async () => {
+    loadData = async (condition) => {
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
             spinning: true
         })
         var baseURL = axios.defaults.baseURL = "http://localhost:3000";
-        console.log('baseURL:', baseURL)
+        // console.log('condition:', condition)
         await axios.get(baseURL + '/getBasePeople', {
             headers: {
                 "Access-Control-Allow-Origin": "http://localhost:3000",
                 'Content-Type': 'application/json'
             },
-            params: { pageSize: this.state.pagi_pageSize, startPage: this.state.pagi_current },
+            params: { pageSize: this.state.pagi_pageSize, startPage: this.state.pagi_current, condition },
             responseType: 'json'
         }).then((response) => {
             console.log('get-response-data:', response.data);
@@ -191,11 +191,18 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleSearch = (e) => {
+        // 放大镜-加载按钮
         e.preventDefault();
         // alert(e.target.value);
         const { getFieldValue } = this.props.form;
-        console.log(getFieldValue('leaveauth_filter_text'));
-        alert(getFieldValue('leaveauth_filter_text') || '请输入值');
+        var leaveauth_filterKeyWord = getFieldValue('leaveauth_filterKeyWord');
+        var leaveauth_filter_text = getFieldValue('leaveauth_filter_text');
+        // alert(getFieldValue('leaveauth_filter_text') || '请输入值');
+console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
+        this.loadData(leaveauth_filterKeyWord === 'none' ? null : {
+            name: leaveauth_filterKeyWord,
+            value: leaveauth_filter_text
+        });
     }
 
     handleSubmit = (e) => {
