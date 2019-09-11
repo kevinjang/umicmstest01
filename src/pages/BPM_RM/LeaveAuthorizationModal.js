@@ -14,7 +14,9 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid
+            valid,
+            RowNum,
+            key
         } = editingRecord;
 
         console.log('this.props:', this.props);
@@ -32,7 +34,9 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianAD,
             quanxianCname,
             valid,
-            okAvailable: true
+            okAvailable: true,
+            RowNum,
+            key
         }
     };
 
@@ -215,7 +219,10 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid } = this.state;
+            valid,
+            RowNum,
+            key
+        } = this.state;
 
         // console.log('updateParentState-before-state:', this.state);
         this.updateParentState({
@@ -225,7 +232,9 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid
+            valid,
+            RowNum,
+            key
         })
     }
     // ----------------------------------------------all blurs ---------------------------------------------------------------
