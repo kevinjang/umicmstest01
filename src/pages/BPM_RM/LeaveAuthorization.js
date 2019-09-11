@@ -12,7 +12,7 @@ const { Header } = Layout;
 
 const { Option } = Select;
 
-import { insert } from '../../utils/toserver/BasePeopleUtil'
+import { insert, update } from '../../utils/toserver/BasePeopleUtil'
 
 import styles from './LeaveAuthorization.css';
 
@@ -33,7 +33,8 @@ class LeaveAuthorization extends React.Component {
             pagi_pageSize: 10,
             pagi_total: 0,
             pagi_current: 0,
-            spinning: false
+            spinning: false,
+            operation: ''
         };
 
         this.pagination = {
@@ -60,6 +61,16 @@ class LeaveAuthorization extends React.Component {
                 visible: true,
                 editable: false
             },
+            // {
+            //     // title: '序号',
+            //     dataIndex: 'ID',
+            //     width: 0,
+            //     visible: false,
+            //     editable: false,
+            //     render:function(text, record){
+            //         return <div style={{display:'none'}}>text</div>
+            //     }
+            // },
             {
                 title: '离职人员ID',
                 dataIndex: 'PersonalID',
@@ -130,7 +141,15 @@ class LeaveAuthorization extends React.Component {
         this.loadData();
     }
 
-    loadData = async (condition) => {
+    loadData = async () => {
+        const { getFieldValue } = this.props.form;
+        var leaveauth_filterKeyWord = getFieldValue('leaveauth_filterKeyWord');
+        var leaveauth_filter_text = getFieldValue('leaveauth_filter_text');
+        const condition = leaveauth_filterKeyWord === 'none' ? null : {
+            name: leaveauth_filterKeyWord,
+            value: leaveauth_filter_text
+        }
+
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
@@ -194,15 +213,7 @@ class LeaveAuthorization extends React.Component {
         // 放大镜-加载按钮
         e.preventDefault();
         // alert(e.target.value);
-        const { getFieldValue } = this.props.form;
-        var leaveauth_filterKeyWord = getFieldValue('leaveauth_filterKeyWord');
-        var leaveauth_filter_text = getFieldValue('leaveauth_filter_text');
-        // alert(getFieldValue('leaveauth_filter_text') || '请输入值');
-console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
-        this.loadData(leaveauth_filterKeyWord === 'none' ? null : {
-            name: leaveauth_filterKeyWord,
-            value: leaveauth_filter_text
-        });
+        this.loadData();
     }
 
     handleSubmit = (e) => {
@@ -227,8 +238,21 @@ console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
         });
 
         let record = this.state.editingRecord;
-        // console.log('handleOkModal-record:', record);
-        insert(record, this.loadData);
+        const { operation } = this.state;
+        if (operation === 'insert')
+            insert(record, this.loadData);
+        else if (operation === 'update') {
+            const { RowNum } = record;
+            const item = this.state.dataSource.filter(it => it.new_id === RowNum)[0] || null;
+            const toUpdateRecord = {
+                ...record
+            }
+            console.log('update matched RowNum:', RowNum)
+            if (!!item) {
+                toUpdateRecord["ID"] = item.new_id;
+            }
+            update(toUpdateRecord, this.loadData)
+        }
         // ();
     };
 
@@ -250,7 +274,7 @@ console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
     }
 
     updateEditingRecordState = (record) => {
-        // console.log('updateEditingRecordState-record:', record);
+        console.log('updateEditingRecordState-record:', record);
         this.setState({
             editingRecord: record
         }, () => {
@@ -296,6 +320,7 @@ console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
                                                     };
                                                     this.setState({
                                                         editingRecord: newRecord,
+                                                        operation: 'insert',
                                                         modalShow: true
                                                     })
                                                 }}>添加</Button>
@@ -348,9 +373,13 @@ console.log('leaveauth_filterKeyWord:', leaveauth_filterKeyWord);
                                             bordered style={{ paddingBottom: '10px' }}
                                             rowSelection={rowSelection}
                                             onRow={
-                                                (record) => {
+                                                (record, index) => {
                                                     return {
                                                         onDoubleClick: (event) => {
+                                                            this.setState({
+                                                                operation: 'update'
+                                                            })
+                                                            console.log('dclick record:', record)
                                                             this.handleEditRecord(record);
                                                         }
                                                     }
