@@ -52,7 +52,7 @@ function update(record, callback) {
     })
 }
 
-function deleteItem(ID, callback){
+function deleteItem(ID, callback) {
     axios.post('/deleteSingleBasePeople', {
         headers: {
             "Access-Control-Allow-Origin": "http://localhost:3000",
@@ -78,4 +78,15 @@ function deleteItem(ID, callback){
     })
 }
 
-export { insert, update, deleteItem }
+async function deleteItems(IDs, callback) {
+    return axios.post('/deleteMultipleBasePeople', {
+        headers: {
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        params: { IDs },
+        responseType: 'json'
+    });
+}
+
+export { insert, update, deleteItem, deleteItems }

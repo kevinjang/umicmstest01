@@ -12,7 +12,10 @@ const { Header } = Layout;
 
 const { Option } = Select;
 
-import { insert, update, deleteItem } from '../../utils/toserver/BasePeopleUtil'
+import {
+    insert, update, deleteItem,
+    deleteItems
+} from '../../utils/toserver/BasePeopleUtil'
 
 import styles from './LeaveAuthorization.css';
 
@@ -207,11 +210,40 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleDeleteSelectedRecords = () => {
-        const { selectedRowKeys } = this.state.selectedRowKeys;
+        const { selectedRowKeys } = this.state;
+        console.log('selectedRowKeys:', selectedRowKeys);
         if (!selectedRowKeys || selectedRowKeys.length === 0) {
             message.info('请选择要删除的记录！');
             return;
         }
+
+        var toDeleteItemsIDs = [];
+        var toDeleteItems = this.state.dataSource.filter(it=> selectedRowKeys.includes(it.key));
+
+        toDeleteItems.forEach(it=>{
+            toDeleteItemsIDs.push(it.ID);
+        })
+
+        deleteItems(toDeleteItemsIDs, this.loadData).then((response) => {
+            console.log('delete multiple item result:', response.data.result.message)
+            if (response && response.data && response.data.result && response.data.result.message) {
+                message.success(response.data.result.message)
+                this.setState({
+                    selectedRowKeys:[]
+                })
+            }
+            else {
+                message.error(response.statusText);
+            }
+    
+            // if (callback) {
+            //     callback();
+            // }
+            this.loadData();
+        }).catch(err => {
+            if (err)
+                console.log('delete multiple item error:', err);
+        });
     }
 
     handleSearch = (e) => {
@@ -268,6 +300,7 @@ class LeaveAuthorization extends React.Component {
     };
 
     onTableRowSelectedChange = (selectedRowKeys) => {
+        // console.log('onchange selectedrowkeys:', selectedRowKeys)
         this.setState({ selectedRowKeys })
     }
 
