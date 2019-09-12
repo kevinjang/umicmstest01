@@ -52,4 +52,30 @@ function update(record, callback) {
     })
 }
 
-export { insert, update }
+function deleteItem(ID, callback){
+    axios.post('/deleteSingleBasePeople', {
+        headers: {
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        params: { ID },
+        responseType: 'json'
+    }).then((response) => {
+        console.log('delete single item result:', response.data.result.message)
+        if (response && response.data && response.data.result && response.data.result.message) {
+            message.success(response.data.result.message)
+        }
+        else {
+            message.error(response.statusText);
+        }
+
+        if (callback) {
+            callback();
+        }
+    }).catch(err => {
+        if (err)
+            console.log('delete single item error:', err);
+    })
+}
+
+export { insert, update, deleteItem }
