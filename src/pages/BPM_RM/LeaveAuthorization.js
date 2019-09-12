@@ -12,7 +12,7 @@ const { Header } = Layout;
 
 const { Option } = Select;
 
-import { insert, update } from '../../utils/toserver/BasePeopleUtil'
+import { insert, update, deleteItem } from '../../utils/toserver/BasePeopleUtil'
 
 import styles from './LeaveAuthorization.css';
 
@@ -132,9 +132,14 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleDeleteRecord = (record) => {
-        this.setState({
-            dataSource: this.state.dataSource.filter(item => item.key !== record.key)
-        })
+        // this.setState({
+        //     dataSource: this.state.dataSource.filter(item => item.key !== record.key)
+        // })
+
+        const item = this.state.dataSource.filter(it => it.key === record.key)[0] || null;
+        if (!!item) {
+            deleteItem(item.ID, this.loadData);
+        }
     }
 
     componentDidMount() {
@@ -247,9 +252,9 @@ class LeaveAuthorization extends React.Component {
             const toUpdateRecord = {
                 ...record
             }
-            console.log('update matched RowNum:', RowNum)
+            console.log('update matched item:', item)
             if (!!item) {
-                toUpdateRecord["ID"] = item.new_id;
+                toUpdateRecord["ID"] = item.ID;
             }
             update(toUpdateRecord, this.loadData)
         }
@@ -268,6 +273,7 @@ class LeaveAuthorization extends React.Component {
 
     handleEditRecord = (record) => {
         this.setState({
+            operation: 'update',
             editingRecord: record,
             modalShow: true
         })
