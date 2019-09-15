@@ -141,6 +141,9 @@ class LeaveAuthorization extends React.Component {
 
         const item = this.state.dataSource.filter(it => it.key === record.key)[0] || null;
         if (!!item) {
+            this.setState({
+                selectedRowKeys:[]
+            })
             deleteItem(item.ID, this.loadData);
         }
     }
