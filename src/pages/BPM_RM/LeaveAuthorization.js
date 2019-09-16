@@ -381,6 +381,7 @@ class LeaveAuthorization extends React.Component {
                                             getFieldDecorator('leaveauth_filter_text')(
                                                 <div style={{ display: 'flex', paddingTop: '3px' }}>
                                                     <Input style={{ width: '120px' }}
+                                                        onPressEnter={this.handleSearch}
                                                         suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
                                                     {/* <Button><Icon type='search' /></Button> */}
                                                 </div>
