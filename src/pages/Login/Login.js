@@ -50,7 +50,7 @@ class Login1 extends React.Component {
     }
 
     render() {
-        return <div style={{ paddingTop: '25vh', marginLeft: '15vw', marginRight: '15vw', maxWidth: '70vw', alignContent: 'middle' }}>
+        return <div style={{ paddingTop: '25vh', marginLeft: '37.5vw', marginRight: '15vw', maxWidth: '25vw', alignContent: 'middle' }}>
             <Login
                 defaultActiveKey="tab1"
                 onSubmit={this.onLoginSubmit}
