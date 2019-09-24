@@ -22,7 +22,7 @@ export default {
         {
             id: '2',
             title: 'Option 2',
-            icon: 'desktop',
+            icon: 'weibo',
             children: [
                 {
                     id: '6',
@@ -40,12 +40,12 @@ export default {
         {
             id: '3',
             title: '数据管理中心',
-            icon: 'inbox',
+            icon: 'weibo',
             children:[
                 {
                     id: '17',
                     title: '离职查询授权',
-                    icon: 'form',
+                    icon: 'weibo',
                     nodeInfo: './BPM_RM/LeaveAuthorization'
                 },
                 {
