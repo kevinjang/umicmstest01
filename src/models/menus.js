@@ -48,6 +48,12 @@ export default {
                     icon: 'form',
                     nodeInfo: './BPM_RM/LeaveAuthorization'
                 },
+                {
+                    id: '22',
+                    title: '员工BP号维护',
+                    icon: 'windows',
+                    nodeInfo: './BPM_RM/EmployeeBPMaintain'
+                },
             ]
         },
         {
@@ -115,6 +121,18 @@ export default {
                     title: 'Spin测试',
                     icon: 'windows',
                     nodeInfo: './compoTests/spnningTest'
+                },
+                {
+                    id: '20',
+                    title: 'TreeSelect',
+                    icon: 'windows',
+                    nodeInfo: './compoTests/treeSelectTest'
+                },
+                {
+                    id: '21',
+                    title: 'TreeAsync',
+                    icon: 'windows',
+                    nodeInfo: './compoTests/treeAsyncTest'
                 },
             ]
         }
