@@ -111,7 +111,7 @@ class KLayout extends React.Component {
                     >
                         {this.props.menus.map(item => {
                             if (item.children)
-                                return <SubMenu key={item.id} title={<span><Icon type="mail" /><span>{item.title}</span></span>}>
+                                return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
                                     {item.children.map(cItem => {
                                         return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
                                             <Icon type={cItem.icon}></Icon>
