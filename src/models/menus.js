@@ -135,6 +135,19 @@ export default {
                     nodeInfo: './compoTests/treeAsyncTest'
                 },
             ]
+        },
+        {
+            id: '23',
+            title: '嵌套路由测试',
+            icon: 'html5',
+            children:[
+                {
+                    id: '24',
+                    title: '员工BP号维护',
+                    icon: 'windows',
+                    nodeInfo: './test_layout/index'
+                },
+            ]
         }
     ]
 }
