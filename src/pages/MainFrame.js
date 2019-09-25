@@ -25,7 +25,8 @@ class KLayout extends React.Component {
             selectedKeys: ['1'],
             openTabs: [],
             seletedTabKeys: [],
-            activeTabKey: ''
+            activeTabKey: '',
+            theme: 'dark'
         }
     }
 
@@ -101,9 +102,10 @@ class KLayout extends React.Component {
                 <Sider
                     width={200}
                     style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
+                    theme={this.state.theme}
                     collapsible>
                     <Menu
-                        theme="dark"
+                        theme={this.state.theme}
                         defaultSelectedKeys={this.state.selectedKeys}
                         defaultOpenKeys={['sub1']}
                         mode='inline'
