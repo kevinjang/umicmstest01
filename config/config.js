@@ -30,6 +30,16 @@ export default {
                     path: '/treetest',
                     component: './treetest/treetest'
                 },
+                // {
+                //     path: '/test_layout',
+                //     component: './test_layout/_layout',
+                //     routes:[
+                //         {
+                //             path: '/test_layout/',
+                //             component: './test_layout/index',
+                //         }
+                //     ]
+                // },
                 { component: './404' }
             ]
         }
