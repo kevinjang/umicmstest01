@@ -13,6 +13,7 @@ const { Header } = Layout;
 const { Option } = Select;
 
 import {
+    getByPage,
     insert, update, deleteItem,
     deleteItems
 } from '../../utils/toserver/BasePeopleUtil'
@@ -45,7 +46,7 @@ class LeaveAuthorization extends React.Component {
             total: 0,
             current: 0,
             onChange: (page, pageSize) => {
-                console.log('pagination - page:', page);
+                // console.log('pagination - page:', page);
                 this.pagination.current = page;
                 this.setState({
                     pagi_pageSize: pageSize,
@@ -166,49 +167,30 @@ class LeaveAuthorization extends React.Component {
         this.setState({
             spinning: true
         })
-        var baseURL = axios.defaults.baseURL = "http://localhost:3000";
+        // var baseURL = axios.defaults.baseURL = "http://localhost:3000";
         // console.log('condition:', condition)
-        await axios.get(baseURL + '/getBasePeople', {
-            headers: {
-                "Access-Control-Allow-Origin": "http://localhost:3000",
-                'Content-Type': 'application/json'
-            },
-            params: { pageSize: this.state.pagi_pageSize, startPage: this.state.pagi_current, condition },
-            responseType: 'json'
-        }).then((response) => {
-            console.log('get-response-data:', response.data);
-            var results = response.data.results;
-            results = results.map((item, index) => {
-                return {
-                    key: item.new_id,
-                    RowNum: item.new_id,
-                    ...item,
-                    valid: 'valid'
-                }
-            });
+        // 此处调用查询函数
+        getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
+    }
 
-            // console.log(results[0]);
-            this.pagination.total = parseInt(response.data.allCount) || 0;
+    queryCallBack = (e) => {
+        const {
+            PaginationTotal,
+            dataSource,
+            allCount,
+            pagi_total,
+            spinning
+        } = e;
+        
+        this.pagination.total = PaginationTotal;
 
-            this.setState({
-                dataSource: results,
-                allCount: response.data.allCount,
-                pagi_total: response.data.allCount,
-                // spinning: false
-            })
-            if (response.data.message === 'succeeded') {
-                message.info('离职查询授权-加载成功')
-            }
-            else {
-                message.error(response.data.message)
-            }
-        }).catch((err) => {
-            console.log({ ...err })
-            message.error(err.message);
-        }).finally(() => {
-            this.setState({
-                spinning: false
-            })
+        this.setState({
+            dataSource,
+            allCount,
+            pagi_total,
+            spinning
+        },()=>{
+            console.log('dataSource:', this.state.dataSource)
         })
     }
 
