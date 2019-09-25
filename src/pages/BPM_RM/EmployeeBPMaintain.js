@@ -166,6 +166,9 @@ class EmployeeBPMaintain extends React.Component {
 
   render() {
     // const { getFieldDecorator } = this.props.form;
+        const tableFooter = () => {
+          return `共计${this.state.allCount}条数据`
+      }
     return <Spin spinning={this.state.spinning}>
       <div>
         <Header style={{ backgroundColor: 'whitesmoke' }}>
@@ -190,6 +193,7 @@ class EmployeeBPMaintain extends React.Component {
           <Table
             columns={this.columns}
             bordered
+            footer={tableFooter}
             dataSource={this.state.dataSource}
             pagination={this.pagination}>
 
