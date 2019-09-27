@@ -7,24 +7,94 @@ class EmployeeBPMaintainItemModal extends React.Component {
   constructor(props) {
     super(props);
 
+    const {
+      BPNo,
+      EmployeeName,
+      PriDept,
+      SecDept,
+      BankAccount,
+      BankName,
+      Email,
+      Remark,
+      ID
+    } = this.props.editingRecord;
+
     this.state = {
-      editingRecord: this.props.editingRecord
+      editingRecord: this.props.editingRecord,
+      BPNo,
+      EmployeeName,
+      PriDept,
+      SecDept,
+      BankAccount,
+      BankName,
+      Email,
+      Remark,
+      ID
     }
 
-    console.log('EmployeeBPMaintainItemModal-props:', props);
+    // console.log('EmployeeBPMaintainItemModal-props:', props);
   }
+  onBPNoBlur = (e) => {
+    let val = (e.target.value || '').toString();
+    const { form } = this.props;
+    if (val !== '') {
+      this.setState({
+        BPNo: val
+      }, () => {
+        form.setFieldsValue({
+          'ebmi_modal_bpNo': val
+        });
+
+
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  onEmployeeNameBlur = (e) => {
+    let val = (e.target.value || '').toString();
+    const { form } = this.props;
+    if (val !== '') {
+      this.setState({
+        EmployeeName: val
+      }, () => {
+        form.setFieldsValue({
+          'ebmi_modal_EmployeeName': val
+        });
+
+
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  setoffValidation = () => {
+    const { form } = this.props;
+    form.validateFields([
+      'ebmi_modal_bpNo',
+      'ebmi_modal_EmployeeName'
+    ], (err, values) => {
+
+    })
+  }
+
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const {
-        BPNo, 
-        EmployeeName, 
-        PriDept, 
-        SecDept, 
-        BankAccount,
-        BankName,
-        Email,
-        Remark
-      } = this.state.editingRecord;
+      BPNo,
+      EmployeeName,
+      PriDept,
+      SecDept,
+      BankAccount,
+      BankName,
+      Email,
+      Remark
+    } = this.state;
     return (
       <div>
         <Form>
@@ -41,7 +111,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
                     ],
                     initialValue: BPNo || ''
                   })(
-                    <Input />
+                    <Input onBlur={this.onBPNoBlur} />
                   )
                 }
               </FItem>
@@ -58,7 +128,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
                     ],
                     initialValue: EmployeeName || ''
                   })(
-                    <Input />
+                    <Input onBlur={this.onEmployeeNameBlur} />
                   )
                 }
               </FItem>
@@ -104,8 +174,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
             <Col span={12}>
               <FItem label="银行账号">
                 {
-                  getFieldDecorator('ebmi_modal_BankAccount',{
-                    rules:[
+                  getFieldDecorator('ebmi_modal_BankAccount', {
+                    rules: [
                       {
                         required: true,
                         message: '银行账号必填！'
@@ -121,8 +191,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
             <Col span={12}>
               <FItem label="开户行">
                 {
-                  getFieldDecorator('ebmi_modal_BankName',{
-                    rules:[
+                  getFieldDecorator('ebmi_modal_BankName', {
+                    rules: [
                       {
                         required: true,
                         message: '开户行必填！'
@@ -140,13 +210,13 @@ class EmployeeBPMaintainItemModal extends React.Component {
             <Col span={24}>
               <FItem label="Email">
                 {
-                  getFieldDecorator('ebmi_modal_email',{
-                    rules:[
+                  getFieldDecorator('ebmi_modal_email', {
+                    rules: [
                       {
                         required: true,
                         message: 'Email必填！'
-                      },{
-                        
+                      }, {
+
                       }
                     ],
                     initialValue: Email
@@ -160,13 +230,13 @@ class EmployeeBPMaintainItemModal extends React.Component {
             <Col span={24}>
               <FItem label="备注">
                 {
-                  getFieldDecorator('ebmi_modal_email',{
+                  getFieldDecorator('ebmi_modal_email', {
                     // rules:[
                     //   {
                     //     required: true,
                     //     message: 'Email必填！'
                     //   },{
-                        
+
                     //   }
                     // ],
                     initialValue: Remark
@@ -187,6 +257,7 @@ const EmployeeBPMaintainItemModalForm = Form.create('ebmi_modal')(EmployeeBPMain
 class EmployeeBPMaintainItemModalFormComp extends React.Component {
   constructor(props) {
     super(props);
+    console.log('EmployeeBPMaintainItemModalFormComp-props:', this.props);
   }
   render() {
     return (
