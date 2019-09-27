@@ -28,7 +28,8 @@ class EmployeeBPMaintain extends React.Component {
       pagi_current: 0,
       operation: '',
       // 编辑项
-      editingRecord: null
+      editingRecord: null,
+      okBtnAvailable:false
     }
 
     this.pagination = {
@@ -127,6 +128,8 @@ class EmployeeBPMaintain extends React.Component {
       });
 
     this.options.unshift(<Option value="-" key="-" >请选择</Option>);
+
+    this.myRef = React.createRef();
   }
 
   handleSearch = (e) => {
@@ -240,6 +243,8 @@ class EmployeeBPMaintain extends React.Component {
     //   })
     // }, 200);
 
+    this.myRef.current = this;
+
     this.loadData();
   }
 
@@ -351,6 +356,9 @@ class EmployeeBPMaintain extends React.Component {
         destroyOnClose={true}
         centered={true}
         onOk={this.onModalOK}
+        okButtonProps={{
+          disabled: !this.state.okBtnAvailable
+        }}
         onCancel={
           () => {
             this.setState({
@@ -358,7 +366,8 @@ class EmployeeBPMaintain extends React.Component {
             })
           }
         }>
-        <EmployeeBPMaintainItemModalFormComp
+        <EmployeeBPMaintainItemModalFormComp 
+          ref={this.myRef}
           editingRecord={this.state.editingRecord}
           operation={this.state.operation}>
 
@@ -373,6 +382,8 @@ const EmployeeBPMaintainForm = Form.create({ name: 'employee_bp_maintain' })(Emp
 class EmployeeBPMaintainFormComp extends React.Component {
   constructor(props) {
     super(props);
+
+    console.log('EmployeeBPMaintainFormComp-props:', props);
   }
 
   render() {
