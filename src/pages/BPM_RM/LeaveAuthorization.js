@@ -16,7 +16,9 @@ import {
     getByPage,
     insert, update, deleteItem,
     deleteItems
-} from '../../utils/toserver/BasePeopleUtil'
+} from '../../utils/toserver/BasePeopleUtil';
+
+import SearchSquare from '../../CommonUtility/BPM_RM/SearchSquare'
 
 import styles from './LeaveAuthorization.css';
 
@@ -38,7 +40,8 @@ class LeaveAuthorization extends React.Component {
             pagi_total: 0,
             pagi_current: 0,
             spinning: false,
-            operation: ''
+            operation: '',
+            filterCol: '-'
         };
 
         this.pagination = {
@@ -65,16 +68,6 @@ class LeaveAuthorization extends React.Component {
                 visible: true,
                 editable: false
             },
-            // {
-            //     // title: '序号',
-            //     dataIndex: 'ID',
-            //     width: 0,
-            //     visible: false,
-            //     editable: false,
-            //     render:function(text, record){
-            //         return <div style={{display:'none'}}>text</div>
-            //     }
-            // },
             {
                 title: '离职人员ID',
                 dataIndex: 'PersonalID',
@@ -132,6 +125,16 @@ class LeaveAuthorization extends React.Component {
                     </div>
                 }
             }
+        ];
+
+        this.options = [
+            <Option value='none'>请选择过滤字段</Option>,
+            <Option value='PersonalID'>离职人员ID</Option>,
+            <Option value='userAD'>离职人员AD</Option>,
+            <Option value='UserCname'>离职人员姓名</Option>,
+            <Option value='quanxianPersonalID'>授权人员ID</Option>,
+            <Option value='quanxianAD'>授权人员AD</Option>,
+            <Option value='quanxianCname'>授权人员姓名</Option>
         ]
     }
 
@@ -143,7 +146,7 @@ class LeaveAuthorization extends React.Component {
         const item = this.state.dataSource.filter(it => it.key === record.key)[0] || null;
         if (!!item) {
             this.setState({
-                selectedRowKeys:[]
+                selectedRowKeys: []
             })
             deleteItem(item.ID, this.loadData);
         }
@@ -161,6 +164,8 @@ class LeaveAuthorization extends React.Component {
             name: leaveauth_filterKeyWord,
             value: leaveauth_filter_text
         }
+
+        console.log('la-condition:', condition)
 
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
@@ -181,7 +186,7 @@ class LeaveAuthorization extends React.Component {
             pagi_total,
             spinning
         } = e;
-        
+
         this.pagination.total = PaginationTotal;
 
         this.setState({
@@ -189,7 +194,7 @@ class LeaveAuthorization extends React.Component {
             allCount,
             pagi_total,
             spinning
-        },()=>{
+        }, () => {
             console.log('dataSource:', this.state.dataSource)
         })
     }
@@ -203,9 +208,9 @@ class LeaveAuthorization extends React.Component {
         }
 
         var toDeleteItemsIDs = [];
-        var toDeleteItems = this.state.dataSource.filter(it=> selectedRowKeys.includes(it.key));
+        var toDeleteItems = this.state.dataSource.filter(it => selectedRowKeys.includes(it.key));
 
-        toDeleteItems.forEach(it=>{
+        toDeleteItems.forEach(it => {
             toDeleteItemsIDs.push(it.ID);
         })
 
@@ -214,13 +219,13 @@ class LeaveAuthorization extends React.Component {
             if (response && response.data && response.data.result && response.data.result.message) {
                 message.success(response.data.result.message)
                 this.setState({
-                    selectedRowKeys:[]
+                    selectedRowKeys: []
                 })
             }
             else {
                 message.error(response.statusText);
             }
-    
+
             // if (callback) {
             //     callback();
             // }
@@ -289,10 +294,36 @@ class LeaveAuthorization extends React.Component {
         this.setState({ selectedRowKeys })
     }
 
+    onFilterSelectChange = (e) => {
+        this.setState({
+            filterCol: e
+        });
+    }
+
+
     handleEditRecord = (record) => {
         this.setState({
             operation: 'update',
             editingRecord: record,
+            modalShow: true
+        })
+    }
+
+    handleAddRecord = () => {
+        const newRecord = {
+            key: (this.state.dataSource.length).toString(),
+            RowNum: this.state.dataSource.length + 1,
+            PersonalID: '',
+            userAD: '',
+            UserCname: '',
+            quanxianPersonalID: '',
+            quanxianAD: '',
+            quanxianCname: '',
+            valid: 'valid'
+        };
+        this.setState({
+            editingRecord: newRecord,
+            operation: 'insert',
             modalShow: true
         })
     }
@@ -323,72 +354,30 @@ class LeaveAuthorization extends React.Component {
             <Spin tip="加载中..." spinning={this.state.spinning}>
                 <div className={styles.mainContainer}>
                     <Layout>
-                        <Header style={{ background: 'whitesmoke', }}>
-                            <Form onSubmit={this.handleSubmit} style={{ paddingRight: '15px' }}>
-                                <div style={{ float: 'right', width: '100%' }}>
-                                    <Form.Item style={{ float: 'right' }}>
-                                        {
-                                            getFieldDecorator('leaveauth_add_button')(
-                                                <Button type='primary' onClick={() => {
+                        <SearchSquare
+                            form={this.props.form}
+                            items={
+                                [{
+                                    name: 'leaveauth_add_button',
+                                    obj: <Button type='primary' onClick={this.handleAddRecord}>添加</Button>
+                                }, {
+                                    name: 'leaveauth_delete_button',
+                                    obj: <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
+                                }, {
+                                    name: 'leaveauth_filter_text',
+                                    obj: <Input style={{ width: '120px' }}
+                                        onPressEnter={this.handleSearch}
+                                        suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
+                                }, {
+                                    name: 'leaveauth_filterKeyWord',
+                                    obj: <Select style={{ width: '150px' }} >
+                                        {this.options}
+                                    </Select>
+                                }]
+                            }
+                        >
 
-                                                    const newRecord = {
-                                                        key: (this.state.dataSource.length).toString(),
-                                                        RowNum: this.state.dataSource.length + 1,
-                                                        PersonalID: '',
-                                                        userAD: '',
-                                                        UserCname: '',
-                                                        quanxianPersonalID: '',
-                                                        quanxianAD: '',
-                                                        quanxianCname: '',
-                                                        valid: 'valid'
-                                                    };
-                                                    this.setState({
-                                                        editingRecord: newRecord,
-                                                        operation: 'insert',
-                                                        modalShow: true
-                                                    })
-                                                }}>添加</Button>
-                                            )
-                                        }
-                                    </Form.Item>
-                                    <Form.Item style={{ float: 'right' }}>
-                                        {
-                                            getFieldDecorator('leaveauth_delete_button')(
-                                                <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
-                                            )
-                                        }
-                                    </Form.Item>
-                                    <Form.Item style={{ float: 'right' }}>
-                                        {
-                                            getFieldDecorator('leaveauth_filter_text')(
-                                                <div style={{ display: 'flex', paddingTop: '3px' }}>
-                                                    <Input style={{ width: '120px' }}
-                                                        onPressEnter={this.handleSearch}
-                                                        suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
-                                                    {/* <Button><Icon type='search' /></Button> */}
-                                                </div>
-                                            )
-                                        }
-                                    </Form.Item>
-                                    <Form.Item style={{ float: 'right' }}>
-                                        {
-                                            getFieldDecorator('leaveauth_filterKeyWord', {
-                                                initialValue: 'none'
-                                            })(
-                                                <Select style={{ width: '150px' }} >
-                                                    <Option value='none'>请选择过滤字段</Option>
-                                                    <Option value='PersonalID'>离职人员ID</Option>
-                                                    <Option value='userAD'>离职人员AD</Option>
-                                                    <Option value='UserCname'>离职人员姓名</Option>
-                                                    <Option value='quanxianPersonalID'>授权人员ID</Option>
-                                                    <Option value='quanxianAD'>授权人员AD</Option>
-                                                    <Option value='quanxianCname'>授权人员姓名</Option>
-                                                </Select>
-                                            )}
-                                    </Form.Item>
-                                </div>
-                            </Form>
-                        </Header>
+                        </SearchSquare>
                         <Layout>
                             <Form style={{ padding: '0 5px' }}>
                                 <Row gutter={8}>
@@ -404,7 +393,7 @@ class LeaveAuthorization extends React.Component {
                                                             this.setState({
                                                                 operation: 'update'
                                                             })
-                                                            console.log('dclick record:', record)
+                                                            // console.log('dclick record:', record)
                                                             this.handleEditRecord(record);
                                                         }
                                                     }
