@@ -13,6 +13,10 @@ const { TabPane } = Tabs
 
 import Notification from './Notification/Notification'
 
+import { UserContext, UserOUInfo } from './UserContextMock';
+
+// const UserContextMock = UserContext
+
 @connect(
     state => ({
         menus: state.menus,
@@ -93,84 +97,86 @@ class KLayout extends React.Component {
     };
 
     render() {
-        return <Layout>
-            <Header style={{ color: 'white', fontSize: '32px' }}>
-                <Icon type="chrome" theme="filled" />
-                <span>导航</span>
-                <div className={styles.userInfoNode}>
-                    <Notification></Notification>
-                    <UserInfo style={{ marginTop: '10px' }}></UserInfo>
-                </div>
-            </Header>
+        return <UserContext.Provider value={UserOUInfo.UserInfo}>
+            <Layout>
+                <Header style={{ color: 'white', fontSize: '32px' }}>
+                    <Icon type="chrome" theme="filled" />
+                    <span>导航</span>
+                    <div className={styles.userInfoNode}>
+                        <Notification></Notification>
+                        <UserInfo style={{ marginTop: '10px' }}></UserInfo>
+                    </div>
+                </Header>
 
-            <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
-                <Sider
-                    width={200}
-                    style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
-                    theme={this.state.theme}
-                    collapsible>
-                    <Menu
+                <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
+                    <Sider
+                        width={200}
+                        style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
                         theme={this.state.theme}
-                        defaultSelectedKeys={this.state.selectedKeys}
-                        defaultOpenKeys={['sub1']}
-                        mode='inline'
-                        inlineCollapsed={this.state.collapsed}
-                    >
-                        {this.props.menus.map(item => {
-                            if (item.children)
-                                return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
-                                    {item.children.map(cItem => {
-                                        return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
-                                            <Icon type={cItem.icon}></Icon>
-                                            <span>{cItem.title}</span>
-                                        </Item>
-                                    })}
-                                </SubMenu>
-                            else
-                                return <Item key={item.id}>
-                                    <Icon type={item.icon}></Icon>
-                                    <span>{item.title}</span>
-                                </Item>
-                        })}
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
+                        collapsible>
+                        <Menu
+                            theme={this.state.theme}
+                            defaultSelectedKeys={this.state.selectedKeys}
+                            defaultOpenKeys={['sub1']}
+                            mode='inline'
+                            inlineCollapsed={this.state.collapsed}
+                        >
+                            {this.props.menus.map(item => {
+                                if (item.children)
+                                    return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
+                                        {item.children.map(cItem => {
+                                            return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
+                                                <Icon type={cItem.icon}></Icon>
+                                                <span>{cItem.title}</span>
+                                            </Item>
+                                        })}
+                                    </SubMenu>
+                                else
+                                    return <Item key={item.id}>
+                                        <Icon type={item.icon}></Icon>
+                                        <span>{item.title}</span>
+                                    </Item>
+                            })}
+                        </Menu>
+                    </Sider>
+                    <Layout>
+                        <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
 
-                        <div >
-                            {/* style={{ padding: "5px", background: "#fff" }} */}
-                            {
-                                this.state.openTabs.length > 0 &&
-                                <Tabs
-                                    activeKey={this.state.activeTabKey}
-                                    onChange={this.tabItemChange}
-                                    type="editable-card"
-                                    hideAdd={true}
-                                    onEdit={this.tabItemEdit}>
-                                    {this.state.openTabs.map(item => {
-                                        return <TabPane
-                                            tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
-                                            key={item.id}
-                                            forceRender={false}
-                                            closable={true}>
-                                            <Content >
-                                                <Route component={this.loadTest(item.nodeInfo, {
-                                                    activeKey: this.state.activeTabKey,
-                                                    selfID: item.id
-                                                })}></Route>
-                                            </Content>
-                                        </TabPane>
-                                    })}
-                                </Tabs>
-                            }
-                        </div>
-                    </Content>
-                    <Footer className={styles.footer}>
-                        <Icon type="copyright">  </Icon>KSNL
+                            <div >
+                                {/* style={{ padding: "5px", background: "#fff" }} */}
+                                {
+                                    this.state.openTabs.length > 0 &&
+                                    <Tabs
+                                        activeKey={this.state.activeTabKey}
+                                        onChange={this.tabItemChange}
+                                        type="editable-card"
+                                        hideAdd={true}
+                                        onEdit={this.tabItemEdit}>
+                                        {this.state.openTabs.map(item => {
+                                            return <TabPane
+                                                tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
+                                                key={item.id}
+                                                forceRender={false}
+                                                closable={true}>
+                                                <Content >
+                                                    <Route component={this.loadTest(item.nodeInfo, {
+                                                        activeKey: this.state.activeTabKey,
+                                                        selfID: item.id
+                                                    })}></Route>
+                                                </Content>
+                                            </TabPane>
+                                        })}
+                                    </Tabs>
+                                }
+                            </div>
+                        </Content>
+                        <Footer className={styles.footer}>
+                            <Icon type="copyright">  </Icon>KSNL
                     </Footer>
+                    </Layout>
                 </Layout>
             </Layout>
-        </Layout>
+        </UserContext.Provider>
     }
 }
 
