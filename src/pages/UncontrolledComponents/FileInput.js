@@ -20,7 +20,7 @@ class FileInput extends React.Component{
             <form onSubmit={this.handleSubmit}>
                 <label >
                     Upload File:
-                    <input type="file" ref={this.fileinput}/>
+                    <input type="file" ref={this.fileinput} accept="image/*" multiple/>
                 </label>
                 <br/>
                 <button type="submit">
