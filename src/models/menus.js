@@ -148,6 +148,19 @@ export default {
                     nodeInfo: './test_layout/index'
                 },
             ]
+        },
+        {
+            id: '25',
+            title: 'Uncontrolled Components',
+            icon: 'html5',
+            children:[
+                {
+                    id: '26',
+                    title: 'FileInput',
+                    icon: 'windows',
+                    nodeInfo: './UncontrolledComponents/FileInput'
+                },
+            ]
         }
     ]
 }
