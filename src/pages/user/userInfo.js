@@ -4,10 +4,14 @@ import { Avatar, Badge, Dropdown, Menu, Icon } from 'antd'
 import 'antd/lib/avatar/style/index.css'
 import 'antd/lib/badge/style/index.css'
 
+import { UserContext } from '../UserContextMock'
+
 class UserInfo extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // this.
         this.menus = (
             <Menu style={{ marginTop: '15px', width: '150px' }}>
                 <Menu.Item>
@@ -22,9 +26,14 @@ class UserInfo extends React.Component {
             </Menu>
         )
     }
+    static contextType = UserContext;// this.context;
     render() {
-        return <div>
-            <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>User Name</p>
+        return (<div>
+            <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
+                {/* User Name */}
+                {this.context.FirstName} {this.context.SurName}
+                {console.log('this.context:', this.context)}
+            </p>
             <Dropdown overlay={this.menus}>
                 <Avatar
                     style={{ float: 'right' }}
@@ -32,8 +41,10 @@ class UserInfo extends React.Component {
                     // shape='square'
                     src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
             </Dropdown>
-        </div>
+        </div>);
     }
 }
+
+// UserInfo.contextType = UserContext
 
 export default UserInfo
