@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Menu, Icon, Tabs } from 'antd'
+import { Layout, Menu, Icon, Tabs, Badge, Button } from 'antd'
 import { connect } from 'dva'
 import { Route } from 'react-router';
 import { asyncComponent } from '../utils/asyncComponent'
@@ -10,6 +10,8 @@ import UserInfo from './user/userInfo'
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
+
+import Notification from './Notification/Notification'
 
 @connect(
     state => ({
@@ -86,7 +88,7 @@ class KLayout extends React.Component {
     }
 
     loadTest = (e, opts) => {
-        const st = asyncComponent(() => import(e),opts)
+        const st = asyncComponent(() => import(e), opts)
         return st
     };
 
@@ -95,7 +97,10 @@ class KLayout extends React.Component {
             <Header style={{ color: 'white', fontSize: '32px' }}>
                 <Icon type="chrome" theme="filled" />
                 <span>导航</span>
-                <div style={{ float: 'right', marginTop: '-10px' }}> <UserInfo></UserInfo></div>
+                <div className={styles.userInfoNode}>
+                    <Notification></Notification>
+                    <UserInfo style={{ marginTop: '10px' }}></UserInfo>
+                </div>
             </Header>
 
             <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -149,7 +154,7 @@ class KLayout extends React.Component {
                                             forceRender={false}
                                             closable={true}>
                                             <Content >
-                                                <Route component={this.loadTest(item.nodeInfo,{
+                                                <Route component={this.loadTest(item.nodeInfo, {
                                                     activeKey: this.state.activeTabKey,
                                                     selfID: item.id
                                                 })}></Route>

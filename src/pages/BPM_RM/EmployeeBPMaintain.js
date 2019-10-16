@@ -8,6 +8,8 @@ import {
 
 import EmployeeBPMaintainItemModalFormComp from './EmployeeBPMaintainItemModal'
 
+import SearchSquare from '../../CommonUtility/BPM_RM/SearchSquare'
+
 const { Header } = Layout;
 const { Option } = Select;
 
@@ -29,7 +31,7 @@ class EmployeeBPMaintain extends React.Component {
       operation: '',
       // 编辑项
       editingRecord: null,
-      okBtnAvailable:false
+      okBtnAvailable: false
     }
 
     this.pagination = {
@@ -129,11 +131,12 @@ class EmployeeBPMaintain extends React.Component {
 
     this.options.unshift(<Option value="-" key="-" >请选择</Option>);
 
-    this.myRef = React.createRef();
+    // this.myRef = React.createRef();
   }
 
   handleSearch = (e) => {
     e.preventDefault();
+    this.loadData();
   }
 
   handleEditRecord = (e) => {
@@ -243,15 +246,30 @@ class EmployeeBPMaintain extends React.Component {
     //   })
     // }, 200);
 
-    this.myRef.current = this;
+    // this.myRef.current = this;
 
     this.loadData();
   }
 
-  loadData = () => {
+  loadData = async () => {
     const { activeKey, selfID } = this.props;
     if (activeKey !== selfID) return false;
-    getByPage(this.state.pagi_pageSize, this.state.pagi_current, null, this.callbackAfterQuery);
+
+    const condition = this.getQueryConditions();
+
+    getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.callbackAfterQuery);
+  }
+
+  getQueryConditions = () => {
+    const { getFieldValue } = this.props.form;
+    var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');
+    var ebm_filter_text = getFieldValue('ebm_filter_text');
+    const condition = ebm_filterKeyWord === 'none' ? null : {
+      name: ebm_filterKeyWord,
+      value: ebm_filter_text
+    }
+
+    return condition;
   }
 
   callbackAfterQuery = (e) => {
@@ -287,39 +305,27 @@ class EmployeeBPMaintain extends React.Component {
 
     return <Spin spinning={this.state.spinning}>
       <div>
-        <Header style={{ backgroundColor: 'whitesmoke' }}>
-          <Form>
-            <Form.Item style={{ float: 'right' }}>
-              {
-                getFieldDecorator('ebm_add_btn')(
-                  <Button type="primary" onClick={this.handleAddRecord}>添加</Button>
-                )
-              }
-            </Form.Item>
-            <Form.Item style={{ float: 'right' }}>
-              {
-                getFieldDecorator('ebm_delete_btn')(
-                  <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>)
-              }
-            </Form.Item>
-            <Form.Item style={{ float: 'right' }}>
-              {
-                getFieldDecorator('ebm_filter_text')(
-                  <Input suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} ></Input>
-                )
-              }
-            </Form.Item>
-            <Form.Item style={{ float: 'right' }}>
-              {
-                getFieldDecorator('ebm_filter_combo')(
-                  <Select style={{ minWidth: '100px' }} onChange={this.onFilterSelectChange}>
-                    {this.options}
-                  </Select>
-                )
-              }
-            </Form.Item>
-          </Form>
-        </Header>
+        <SearchSquare
+          form={this.form}
+          items={
+            [{
+              name: 'ebm_add_btn',
+              obj: <Button type="primary" onClick={this.handleAddRecord}>添加</Button>
+            }, {
+              name: 'ebm_delete_btn',
+              obj: <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
+            }, {
+              name: 'ebm_filter_text',
+              obj: <Input onPressEnter={this.handleSearch}
+                suffix={<a href="" onClick={this.handleSearch}
+                ><Icon type='search' /></a>} ></Input>
+            }, {
+              name: 'ebm_filter_combo',
+              obj: <Select style={{ minWidth: '100px' }} onChange={this.onFilterSelectChange}>
+                {this.options}
+              </Select>
+            }]
+          }></SearchSquare>
         <Layout>
           <Form>
             <Form.Item>
@@ -366,8 +372,8 @@ class EmployeeBPMaintain extends React.Component {
             })
           }
         }>
-        <EmployeeBPMaintainItemModalFormComp 
-          ref={this.myRef}
+        <EmployeeBPMaintainItemModalFormComp
+          // ref={this.myRef}
           editingRecord={this.state.editingRecord}
           operation={this.state.operation}>
 

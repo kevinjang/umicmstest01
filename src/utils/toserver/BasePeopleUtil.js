@@ -31,7 +31,7 @@ function getByPage(pageSize, startPage, condition, callback) {
             spinning: false
         })
         if (response.data.message === 'succeeded') {
-            message.info('离职查询授权-加载成功')
+            message.success('离职查询授权-加载成功')
         }
         else {
             message.error(response.data.message)

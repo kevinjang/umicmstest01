@@ -1,5 +1,6 @@
 export default {
     namespace: 'menus',
+    /* 25了*/
     state: [
         {
             id: '1',
@@ -54,6 +55,12 @@ export default {
                     icon: 'windows',
                     nodeInfo: './BPM_RM/EmployeeBPMaintain'
                 },
+                {
+                    id: '25',
+                    title: '员工年假标准维护',
+                    icon: 'twitter',
+                    nodeInfo: './BPM_RM/VacationStandardMaintain'
+                }
             ]
         },
         {
