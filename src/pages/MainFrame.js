@@ -11,6 +11,8 @@ const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
 
+import Notification from './Notification/Notification'
+
 @connect(
     state => ({
         menus: state.menus,
@@ -96,11 +98,7 @@ class KLayout extends React.Component {
                 <Icon type="chrome" theme="filled" />
                 <span>导航</span>
                 <div className={styles.userInfoNode}>
-                    <p style={{ float: 'left', marginTop: '-10px' }}>
-                        <Badge count={100} overflowCount={99} style={{marginTop: '-10px'}}>
-                            <Icon type="bell" className={styles.bellIcon}></Icon>
-                        </Badge>
-                    </p>
+                    <Notification></Notification>
                     <UserInfo style={{ marginTop: '10px' }}></UserInfo>
                 </div>
             </Header>
