@@ -104,7 +104,7 @@ class KLayout extends React.Component {
                     <span>导航</span>
                     <div className={styles.userInfoNode}>
                         <Notification></Notification>
-                        <UserInfo style={{ marginTop: '10px' }}></UserInfo>
+                        <UserInfo  style={{marginTop: '30px', left: '1000px'}}></UserInfo>
                     </div>
                 </Header>
 
