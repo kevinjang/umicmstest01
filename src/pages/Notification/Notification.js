@@ -2,7 +2,10 @@ import React from 'react'
 
 import styles from './Notification.css'
 
-import { Badge, Icon, Dropdown, Tabs, Menu, List, Avatar } from 'antd'
+import { Badge, Icon, Dropdown, Tabs, Menu, List, Avatar, Button } from 'antd'
+// import { Button } from 'antd/lib/radio'
+
+import ListItem from './ListItem'
 
 class Notification extends React.Component {
     constructor(props) {
@@ -23,8 +26,29 @@ class Notification extends React.Component {
                     description: 'second notification description'
                 }
             ],
-            messages: [],
-            todoList: []
+            messages: [
+                {
+                    // avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    title: 'first notification',
+                    description: 'first notification description',
+                    icon: 'user'
+                },
+                {
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    title: 'second notification',
+                    description: 'second notification description'
+                }],
+            todoList: [
+                {
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    title: 'first notification',
+                    description: 'first notification description'
+                },
+                {
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    title: 'second notification',
+                    description: 'second notification description'
+                }]
         }
 
 
@@ -54,9 +78,45 @@ class Notification extends React.Component {
                     // tabBarGutter={24}
                     onChange={this.handleTabChange}>
                     <Tabs.TabPane tab="通知(4)" key="T1" style={{ width: '100%' }}>
-                        <List split={true} style={{cursor:'pointer'}}
+                        <ListItem dataSource={this.state.notifications}>
+
+                        </ListItem>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="消息(4)" key="T2">
+                        {/* <List split={true} style={{ cursor: 'pointer' }}
+                            loadMore={
+                                <Button style={{ width: '100%', marginTop: '5px' }} type="default">
+                                    加载更多
+                                </Button>
+                            }
                             itemLayout="horizontal"
-                            dataSource={this.state.notifications}
+                            dataSource={this.state.messages}
+                            renderItem={(item) => {
+
+                                console.log('listitem:', item)
+                                return <List.Item>
+                                    <List.Item.Meta avatar={<Avatar 
+                                        src={item.avatar ? item.avatar : ''}
+                                        icon={item.icon?item.icon:''}></Avatar>}
+                                        title={item.title}
+                                        description={item.description}>
+
+                                    </List.Item.Meta>
+                                </List.Item>
+                            }}>
+
+                        </List> */}
+                        <ListItem dataSource={this.state.messages}></ListItem>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="待办(4)" key="T3">
+                        {/* <List split={true} style={{ cursor: 'pointer' }}
+                            loadMore={
+                                <Button style={{ width: '100%', marginTop: '5px' }} type="default">
+                                    加载更多
+                                </Button>
+                            }
+                            itemLayout="horizontal"
+                            dataSource={this.state.todoList}
                             renderItem={(item) => {
 
                                 console.log('listitem:', item)
@@ -69,14 +129,11 @@ class Notification extends React.Component {
                                 </List.Item>
                             }}>
 
-                        </List>
+                        </List> */}
+                        <ListItem dataSource={this.state.todoList}>
+
+                        </ListItem>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="消息(4)" key="T2">
-                        消息(4)
-                </Tabs.TabPane>
-                    <Tabs.TabPane tab="待办(4)" key="T3">
-                        待办(4)
-                </Tabs.TabPane>
                 </Tabs>
             </Menu>
         )
