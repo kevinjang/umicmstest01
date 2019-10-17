@@ -13,7 +13,7 @@ class UserInfo extends React.Component {
 
         // this.
         this.menus = (
-            <Menu style={{ marginTop: '15px', width: '150px' }}>
+            <Menu style={{ marginTop: '45px', width: '150px', marginLeft: '120px' }}>
                 <Menu.Item>
                     <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                         设置
@@ -29,17 +29,20 @@ class UserInfo extends React.Component {
     static contextType = UserContext;// this.context;
     render() {
         return (<div>
-            <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
-                {/* User Name */}
-                {this.context.FirstName} {this.context.SurName}
-                {console.log('this.context:', this.context)}
-            </p>
             <Dropdown overlay={this.menus}>
-                <Avatar
-                    style={{ float: 'right' }}
-                    size='normal'
-                    // shape='square'
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
+                <div>
+                    <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
+                        {/* User Name */}
+                        {this.context.FirstName} {this.context.SurName}
+                        {/* {console.log('this.context:', this.context)} */}
+                    </p>
+                    <Avatar
+                        style={{ float: 'right' }}
+                        size='normal'
+                        // shape='square'
+                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
+
+                </div>
             </Dropdown>
         </div>);
     }
