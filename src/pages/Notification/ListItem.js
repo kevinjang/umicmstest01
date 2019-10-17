@@ -11,6 +11,7 @@ class ListItem extends React.Component {
         return (
             <div>
                 <List split={true} style={{ cursor: 'pointer' }}
+                    
                     loadMore={
                         <Button style={{ width: '100%', marginTop: '5px' }} type="default">
                             加载更多
