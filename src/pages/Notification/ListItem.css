@@ -1,0 +1,9 @@
+.buttonGreen{
+    border: 1px solid lightgreen;
+}
+
+.buttonGreen:hover{
+    border: 1px solid yellowgreen;
+    background-color: green;
+    color: whitesmoke;
+}
