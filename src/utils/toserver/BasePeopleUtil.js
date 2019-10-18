@@ -21,8 +21,6 @@ function getByPage(pageSize, startPage, condition, callback) {
             }
         });
 
-        // console.log(results[0]);
-
         callback({
             PaginationTotal: parseInt(response.data.allCount) || 0,
             dataSource: results,
@@ -47,18 +45,6 @@ function getByPage(pageSize, startPage, condition, callback) {
         })
         message.error(err.message);
     });
-    // .finally(() => {
-    //     // this.setState({
-    //     //     spinning: false
-    //     // })
-    //     callback({
-    //         // PaginationTotal: 0,
-    //         // dataSource: [],
-    //         // allCount: 0,//response.data.allCount,
-    //         // pagi_total: 0,//response.data.allCount,
-    //         spinning: false
-    //     })
-    // })
 }
 
 function insert(record, callback) {
