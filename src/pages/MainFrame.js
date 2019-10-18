@@ -110,7 +110,7 @@ class KLayout extends React.Component {
         return <Spin spinning={this.state.spinning}>
             {UserContext?
             <UserContext.Provider value={MyUserData}>
-                {console.log('MyUserData:', MyUserData)}
+                {/* {console.log('MyUserData:', MyUserData)} */}
                 <Layout>
                     <Header style={{ color: 'white', fontSize: '32px' }}>
                         <Icon type="chrome" theme="filled" />
