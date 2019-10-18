@@ -18,40 +18,73 @@ class Notification extends React.Component {
                 {
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
                     title: 'first notification',
-                    description: 'first notification description'
+                    description: 'first notification description',
+                    type: 'notification'
                 },
                 {
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
                     title: 'second notification',
-                    description: 'second notification description'
+                    description: 'second notification description',
+                    type: 'notification'
                 }
             ],
             messages: [
                 {
                     // avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                    title: 'first notification',
+                    title: 'first message',
                     description: 'first notification description',
-                    icon: 'user'
+                    icon: 'user',
+                    type: 'message'
                 },
                 {
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                    title: 'second notification',
-                    description: 'second notification description'
+                    title: 'second message',
+                    description: 'second notification description',
+                    type: 'message'
                 }],
             todoList: [
                 {
+                    key: '1',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                    title: 'first notification',
-                    description: 'first notification description'
+                    title: 'first todo item',
+                    description: 'first notification description',
+                    type: 'todo',
+                    completed: false
                 },
                 {
+                    key: '2',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                    title: 'second notification',
-                    description: 'second notification description'
+                    title: 'second todo item',
+                    description: 'second notification description',
+                    type: 'todo',
+                    completed: true
                 }]
         }
 
 
+    }
+
+    updateTodoList = (item) => {
+        let todos = this.state.todoList;
+        let toUpdateItem = todos.find(e => e.key === item.key);
+        if (toUpdateItem) {
+            toUpdateItem = {
+                ...item
+            }
+
+            todos = todos.filter(e=>e.key !== item.key);
+            todos.push(toUpdateItem);
+        }else{
+            todos.push(item);
+        }
+
+        todos = todos.sort((a, b)=>{
+            return a.key - b.key;
+        });
+
+        this.setState({
+            todoList: todos
+        })
     }
 
     handleVisibleChange = flag => {
@@ -130,7 +163,9 @@ class Notification extends React.Component {
                             }}>
 
                         </List> */}
-                        <ListItem dataSource={this.state.todoList}>
+                        <ListItem 
+                            dataSource={this.state.todoList}
+                            callSetState={this.updateTodoList}>
 
                         </ListItem>
                     </Tabs.TabPane>
