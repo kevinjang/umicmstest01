@@ -33,7 +33,7 @@ class UserInfo extends React.Component {
                 <div>
                     <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
                         {/* User Name */}
-                        {this.context.FirstName} {this.context.SurName}
+                        {this.context.dataSource[0].Username} {/*this.context.SurName*/}
                         {/* {console.log('this.context:', this.context)} */}
                     </p>
                     <Avatar
