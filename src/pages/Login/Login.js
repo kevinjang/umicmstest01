@@ -32,9 +32,9 @@ class Login1 extends React.Component {
             })
 
             console.log('onLoginSubmit-router', router)
-            router.push('/mainframe')
+            router.push('/mainframe');
         }).catch(err=>{
-
+            router.push('/mainframe');
         });
     }
 
