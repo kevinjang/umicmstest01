@@ -1,22 +1,23 @@
 import React from 'react'
 
-import { getUserByPage } from '../utils/toserver/UserBaseInfoUtil'
+import { getUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
 
 let UserContext = null;
 let MyUserData = null;
 
-function GetData(userAD, cb) {
+async function GetData(userAD, cb) {
     if (!userAD.startsWith('cofco\\')) {
         userAD = "cofco\\" + userAD;
     }
 
-    getUserByPage(0, 1, {
-        name: 'UserAD',
-        value: userAD
-    }, (data) => {
+    await getUserBaseInfoByAD(userAD, (data) => {
         UserContext = React.createContext(data);
+        console.log('getUserBaseInfoByAD-data:', data);
         MyUserData = data;
-        if (cb) cb();
+        if (cb) {
+            cb();
+            console.log('cb:', cb);
+        }
     })
 }
 
