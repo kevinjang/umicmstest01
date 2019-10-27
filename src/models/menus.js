@@ -56,7 +56,7 @@ export default {
                     nodeInfo: './BPM_RM/EmployeeBPMaintain'
                 },
                 {
-                    id: '25',
+                    id: '27',
                     title: '员工年假标准维护',
                     icon: 'twitter',
                     nodeInfo: './BPM_RM/VacationStandardMaintain'
