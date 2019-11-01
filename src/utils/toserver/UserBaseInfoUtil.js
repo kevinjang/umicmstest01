@@ -11,30 +11,21 @@ async function getUserBaseInfoByAD(userAD, callback) {
         params: { userAD },
         responseType: 'json'
     }).then((response) => {
-        console.log('get-response-data:', response.data);
-        var row = response.data.row;
-        // results = results.map((item, index) => {
-        //     return {
-        //         key: item.new_id,
-        //         RowNum: item.new_id,
-        //         ...item,
-        //         valid: 'valid'
-        //     }
-        // });
+        // console.log('get-response-data:', response.data);
+        const { data, message: selfMessage } = response.data;
+        var row = {}
+        if (data && Array.isArray(data) && data.length > 0)
+            row = data[0][0];
 
         callback({
-            // PaginationTotal: parseInt(response.data.allCount) || 0,
-            // dataSource: results,
-            // allCount: response.data.allCount,
-            // pagi_total: response.data.allCount,
             userRow: row,
             spinning: false
         })
-        if (response.data.message === 'succeeded') {
-            // message.success('离职查询授权-加载成功')
+        if (selfMessage === 'succeeded') {
+            message.success('人员加载成功')
         }
         else {
-            message.error(response.data.message)
+            message.error(selfMessage)
         }
     }).catch((err) => {
         console.log({ ...err })
