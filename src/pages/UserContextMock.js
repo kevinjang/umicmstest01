@@ -12,11 +12,11 @@ async function GetData(userAD, cb) {
 
     await getUserBaseInfoByAD(userAD, (data) => {
         UserContext = React.createContext(data);
-        console.log('getUserBaseInfoByAD-data:', data);
+        // console.log('getUserBaseInfoByAD-data:', data);
         MyUserData = data;
         if (cb) {
             cb();
-            console.log('cb:', cb);
+            // console.log('cb:', cb);
         }
     })
 }
