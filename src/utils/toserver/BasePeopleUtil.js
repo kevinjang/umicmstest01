@@ -11,7 +11,9 @@ function getByPage(pageSize, startPage, condition, callback) {
         responseType: 'json'
     }).then((response) => {
         console.log('get-response-data:', response.data);
-        var results = response.data.results;
+        const {data, message: selfMessage} = response.data;
+        var results = data.recordsets[0];
+        var number = data.recordsets[1][0].count
         results = results.map((item, index) => {
             return {
                 key: item.new_id,
@@ -24,8 +26,8 @@ function getByPage(pageSize, startPage, condition, callback) {
         callback({
             PaginationTotal: parseInt(response.data.allCount) || 0,
             dataSource: results,
-            allCount: response.data.allCount,
-            pagi_total: response.data.allCount,
+            allCount: number,
+            pagi_total: number,
             spinning: false
         })
         if (response.data.message === 'succeeded') {
