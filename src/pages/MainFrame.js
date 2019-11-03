@@ -160,40 +160,42 @@ class KLayout extends React.Component {
                                 </Scrollbars>
                             </Sider>
                             <Layout>
-                                <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
+                                <Scrollbars>
+                                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
 
-                                    <div >
-                                        {/* style={{ padding: "5px", background: "#fff" }} */}
-                                        {
-                                            this.state.openTabs.length > 0 &&
-                                            <Tabs
-                                                activeKey={this.state.activeTabKey}
-                                                onChange={this.tabItemChange}
-                                                type="editable-card"
-                                                hideAdd={true}
-                                                onEdit={this.tabItemEdit}>
-                                                {this.state.openTabs.map(item => {
-                                                    return <TabPane
-                                                        tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
-                                                        key={item.id}
-                                                        forceRender={false}
-                                                        closable={true}>
-                                                        <Content >
-                                                            {console.log('item.nodeInfo:', item.nodeInfo)}
-                                                            <Route component={this.loadTest(item.nodeInfo, {
-                                                                activeKey: this.state.activeTabKey,
-                                                                selfID: item.id
-                                                            })}></Route>
-                                                        </Content>
-                                                    </TabPane>
-                                                })}
-                                            </Tabs>
-                                        }
-                                    </div>
-                                </Content>
+                                        <div >
+                                            {/* style={{ padding: "5px", background: "#fff" }} */}
+                                            {
+                                                this.state.openTabs.length > 0 &&
+                                                <Tabs
+                                                    activeKey={this.state.activeTabKey}
+                                                    onChange={this.tabItemChange}
+                                                    type="editable-card"
+                                                    hideAdd={true}
+                                                    onEdit={this.tabItemEdit}>
+                                                    {this.state.openTabs.map(item => {
+                                                        return <TabPane
+                                                            tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
+                                                            key={item.id}
+                                                            forceRender={false}
+                                                            closable={true}>
+                                                            <Content >
+                                                                {console.log('item.nodeInfo:', item.nodeInfo)}
+                                                                <Route component={this.loadTest(item.nodeInfo, {
+                                                                    activeKey: this.state.activeTabKey,
+                                                                    selfID: item.id
+                                                                })}></Route>
+                                                            </Content>
+                                                        </TabPane>
+                                                    })}
+                                                </Tabs>
+                                            }
+                                        </div>
+                                    </Content>
+                                </Scrollbars>
                                 <Footer className={styles.footer}>
                                     <Icon type="copyright">  </Icon>KSNL
-                    </Footer>
+                                </Footer>
                             </Layout>
                         </Layout>
                     </Layout>
