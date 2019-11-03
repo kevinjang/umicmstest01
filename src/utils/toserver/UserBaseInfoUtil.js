@@ -14,8 +14,11 @@ async function getUserBaseInfoByAD(userAD, callback) {
         // console.log('get-response-data:', response.data);
         const { data, message: selfMessage } = response.data;
         var row = {}
-        if (data && Array.isArray(data) && data.length > 0)
-            row = data[0][0];
+        // if (data && Array.isArray(data) && data.length > 0)
+        //     row = data[0][0];
+        row = data.recordsets[0][0];
+
+        console.log('row:', row);
 
         callback({
             userRow: row,
