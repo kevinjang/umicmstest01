@@ -11,6 +11,7 @@
   "author": "kevinjang",
   "license": "ISC",
   "devDependencies": {
+    "react-custom-scrollbars": "^4.2.1",
     "umi": "^2.6.1"
   },
   "dependencies": {
