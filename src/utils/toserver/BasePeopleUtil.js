@@ -11,7 +11,7 @@ function getByPage(pageSize, startPage, condition, callback) {
         responseType: 'json'
     }).then((response) => {
         console.log('get-response-data:', response.data);
-        const {data, message: selfMessage} = response.data;
+        const { data, message: selfMessage } = response.data;
         var results = data.recordsets[0];
         var number = data.recordsets[1][0].count
         results = results.map((item, index) => {
@@ -22,27 +22,23 @@ function getByPage(pageSize, startPage, condition, callback) {
                 valid: 'valid'
             }
         });
-
-        callback({
-            PaginationTotal: parseInt(response.data.allCount) || 0,
-            dataSource: results,
-            allCount: number,
-            pagi_total: number,
-            spinning: false
-        })
-        if (response.data.message === 'succeeded') {
+        if (callback)
+            callback({
+                PaginationTotal: parseInt(number) || 0,
+                dataSource: results,
+                allCount: number,
+                pagi_total: number,
+                spinning: false
+            })
+        if (selfMessage === 'succeeded') {
             message.success('离职查询授权-加载成功')
         }
         else {
-            message.error(response.data.message)
+            message.error(selfMessage)
         }
     }).catch((err) => {
         console.log({ ...err })
         callback({
-            // PaginationTotal: 0,
-            // dataSource: [],
-            // allCount: 0,//response.data.allCount,
-            // pagi_total: 0,//response.data.allCount,
             spinning: false
         })
         message.error(err.message);
