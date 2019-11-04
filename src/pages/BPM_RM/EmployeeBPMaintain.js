@@ -15,6 +15,8 @@ const { Option } = Select;
 
 import { getByPage, insert, update, deleteItem, deleteItems } from '../../utils/toserver/EmployeeBPUtil'
 
+import ModalFooter from '../../CommonUtility/ModalUtils/ModalFooter'
+
 class EmployeeBPMaintain extends React.Component {
   constructor(props) {
     super(props);
@@ -303,6 +305,8 @@ class EmployeeBPMaintain extends React.Component {
       onChange: this.onTableRowSelectedChange
     }
 
+    console.log('ModalFooter:', ModalFooter)
+
     return <Spin spinning={this.state.spinning}>
       <div>
         <SearchSquare
@@ -356,6 +360,7 @@ class EmployeeBPMaintain extends React.Component {
         </Layout>
       </div>
       <Modal
+        footer={<ModalFooter></ModalFooter>}
         visible={this.state.modalShow}
         title="编辑项目"
         maskClosable={false}
