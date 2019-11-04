@@ -11,7 +11,9 @@ function getByPage(pageSize, startPage, condition, callback) {
         responseType: 'json'
     }).then((response) => {
         console.log('get-response-data:', response.data);
-        var results = response.data.results;
+        const { data, message: selfMessage } = response.data;
+        var results = data.recordsets[0];
+        var number = data.recordsets[1][0].count
         results = results.map((item, index) => {
             return {
                 key: item.new_id,
@@ -20,21 +22,20 @@ function getByPage(pageSize, startPage, condition, callback) {
                 valid: 'valid'
             }
         });
-
         // console.log(results[0]);
 
         callback({
-            PaginationTotal: parseInt(response.data.allCount) || 0,
+            PaginationTotal: parseInt(number) || 0,
             dataSource: results,
-            allCount: response.data.allCount,
-            pagi_total: response.data.allCount,
+            allCount: number,
+            pagi_total: number,
             spinning: false
         })
-        if (response.data.message === 'succeeded') {
+        if (selfMessage === 'succeeded') {
             message.success('员工BP号-加载成功')
         }
         else {
-            message.error(response.data.message)
+            message.error(selfMessage)
         }
     }).catch((err) => {
         console.log({ ...err })
@@ -56,6 +57,10 @@ function insert(record, callback) {
         },
         responseType: 'json'
     }).then(response => {
+        const {data, message: selfMessage} = response.data;
+        var results = data.recordsets[0];
+        var number = data.recordsets[1][0].count;
+        results = results.map((item, index)=>{})
         if (response && response.data && response.data.result && response.data.result.message) {
             message.success(response.data.result.message)
         }
