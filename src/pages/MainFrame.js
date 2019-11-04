@@ -112,6 +112,7 @@ class KLayout extends React.Component {
     };
 
     render() {
+        document.title = 'KSNL';
         return <Spin spinning={this.state.spinning && !UserContext}>
             {UserContext ?
                 <UserContext.Provider value={MyUserData}>
