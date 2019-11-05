@@ -314,28 +314,30 @@ class EmployeeBPMaintain extends React.Component {
           items={
             [{
               name: 'ebm_add_btn',
-              obj: <Button type="primary" onClick={this.handleAddRecord}>添加</Button>
+              obj: <Button type="primary" style={{marginBottom: '0px'}} onClick={this.handleAddRecord}>添加</Button>
             }, {
               name: 'ebm_delete_btn',
-              obj: <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
+              obj: <Button type='danger' style={{marginBottom: '0px'}} onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
             }, {
               name: 'ebm_filter_text',
-              obj: <Input onPressEnter={this.handleSearch}
+              obj: <Input onPressEnter={this.handleSearch} style={{marginBottom: '0px'}} 
                 suffix={<a href="" onClick={this.handleSearch}
                 ><Icon type='search' /></a>} ></Input>
             }, {
               name: 'ebm_filter_combo',
-              obj: <Select style={{ minWidth: '100px' }} onChange={this.onFilterSelectChange}>
+              obj: <Select style={{ minWidth: '100px', marginBottom: '0px' }} onChange={this.onFilterSelectChange}>
                 {this.options}
               </Select>
             }]
           }></SearchSquare>
-        <Layout>
+        <Layout style={{width: '100%'}}>
           <Form>
             <Form.Item>
               <Table
                 columns={this.columns}
                 bordered
+                // style={{backgroundColor: 'orangered'}}
+                size={"small"}
                 footer={tableFooter}
                 dataSource={this.state.dataSource}
                 pagination={this.pagination}
@@ -360,7 +362,7 @@ class EmployeeBPMaintain extends React.Component {
         </Layout>
       </div>
       <Modal
-        footer={<ModalFooter></ModalFooter>}
+        // footer={<ModalFooter></ModalFooter>}
         visible={this.state.modalShow}
         title="编辑项目"
         maskClosable={false}
