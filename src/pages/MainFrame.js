@@ -160,7 +160,7 @@ class KLayout extends React.Component {
                                     </Menu>
                                 </Scrollbars>
                             </Sider>
-                            <Layout>
+                            <Layout style={{backgroundColor: '#f0f2f5'}}>
                                 <Scrollbars>
                                     <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
 
@@ -194,7 +194,7 @@ class KLayout extends React.Component {
                                         </div>
                                     </Content>
                                 </Scrollbars>
-                                <Footer className={styles.footer}>
+                                <Footer style={{backgroundColor: 'white', height: '48px', padding: '10px 50px'}}>
                                     <Icon type="copyright">  </Icon>KSNL
                                 </Footer>
                             </Layout>
