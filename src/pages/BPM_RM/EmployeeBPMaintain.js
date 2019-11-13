@@ -41,6 +41,7 @@ class EmployeeBPMaintain extends React.Component {
       total: 0,
       current: 0,
       showSizeChanger: true,
+      showQuickJumper:true,
       onChange: (page, pageSize) => {
         // console.log('pagination - page:', page);
         console.log(pageSize)
@@ -359,8 +360,8 @@ class EmployeeBPMaintain extends React.Component {
                 columns={this.columns}
                 bordered
                 // style={{backgroundColor: 'orangered'}}
-                size={"small"}
-                footer={tableFooter}
+                size={"default"}
+                // footer={tableFooter}
                 dataSource={this.state.dataSource}
                 pagination={this.pagination}
                 rowSelection={rowSelection}
