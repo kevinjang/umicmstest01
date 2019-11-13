@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tree, Modal, Button, message, Col, Row } from 'antd'
+import { Tree, Modal, Button, message, Col, Row, List, Skeleton } from 'antd'
 
 const { TreeNode, DirectoryTree } = Tree;
 
@@ -8,13 +8,20 @@ class TreeAsyncTest extends React.Component {
         super(props)
 
         this.state = {
-            modalShow: false
+            modalShow: false,
+            loading: true
         }
     }
 
     btnClick = () => {
         this.setState({
             modalShow: true
+        },()=>{
+            setTimeout(()=>{
+                this.setState({
+                    loading: false
+                })
+            }, 3000)
         })
     }
 
@@ -66,8 +73,22 @@ class TreeAsyncTest extends React.Component {
                         </DirectoryTree>
                     </Col>
                     <Col xs={4} style={{ border: '1px solid darkgray', height: '220px' }}>sdfasdfasdfasdfasdfasdf</Col>
-                    <Col xs={10} style={{ border: '1px solid darkgray', height: '220px' }}>已选fdsafasdfadsfasdfasdf
-                </Col>
+                    <Col xs={10} style={{ border: '1px solid darkgray', height: '220px' }}>
+                        <List 
+                            itemLayout="horizontal"
+                            dataSource={["已选fdsafasdfadsfasdfasdf"]}
+                            renderItem={item=>{
+                                return <List.Item>
+                                    <Skeleton title={false} active loading={this.state.loading}>
+                                        <List.Item.Meta description={item}>
+
+                                        </List.Item.Meta>
+                                    </Skeleton>
+                                </List.Item>
+                            }}>
+                            
+                        </List>
+                    </Col>
                 </Row>
             </Modal>
         </div>
