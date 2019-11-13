@@ -3,6 +3,8 @@ import { Tree, Modal, Button, message, Col, Row, List, Skeleton } from 'antd'
 
 const { TreeNode, DirectoryTree } = Tree;
 
+import styles from './treeAsyncTest.css'
+
 class TreeAsyncTest extends React.Component {
     constructor(props) {
         super(props)
@@ -80,7 +82,9 @@ class TreeAsyncTest extends React.Component {
                             renderItem={item=>{
                                 return <List.Item>
                                     <Skeleton title={false} active loading={this.state.loading}>
-                                        <List.Item.Meta description={item}>
+                                        <List.Item.Meta description={item} className={styles.listItemMeta} onClick={(e, i)=>{
+                                            console.log(e.target);
+                                        }}>
 
                                         </List.Item.Meta>
                                     </Skeleton>
