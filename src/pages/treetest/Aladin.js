@@ -4,6 +4,9 @@ import AddNewModal from './AddNewModal'
 import moment from 'moment'
 
 const dateFormat = 'YYYY/MM/DD';
+
+import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
+
 class Aladin extends React.Component {
     constructor(props) {
         super(props);
@@ -321,7 +324,7 @@ class Aladin extends React.Component {
     }
 
     EditClick = (record) => {
-        let index = this.state.dataSource.findIndex(item=>item.key === record.key);
+        let index = this.state.dataSource.findIndex(item => item.key === record.key);
         this.setState({
             editingRecord: record,
             editingRecordIndex: index,
@@ -435,7 +438,7 @@ class Aladin extends React.Component {
 
     previousRecord = () => {
         // 
-        if(this.state.editingRecordIndex === 0){
+        if (this.state.editingRecordIndex === 0) {
             message.info('已经是第一条记录', 3)
             return false;
         }
@@ -443,13 +446,13 @@ class Aladin extends React.Component {
         let index = this.state.editingRecordIndex - 1;
         let item = this.state.dataSource[index];
         this.setState({
-            editingRecord:item, 
+            editingRecord: item,
             editingRecordIndex: index
         })
     }
 
     nextRecord = () => {
-        if(this.state.editingRecordIndex === this.state.dataSource.length - 1){
+        if (this.state.editingRecordIndex === this.state.dataSource.length - 1) {
             message.info('已经是最后一条记录', 3);
             return false;
         }
@@ -457,10 +460,17 @@ class Aladin extends React.Component {
         let index = this.state.editingRecordIndex + 1;
         let item = this.state.dataSource[index];
         this.setState({
-            editingRecord:item, 
+            editingRecord: item,
             editingRecordIndex: index
         })
 
+    }
+
+    updateRecord = (record, index) => {
+        this.setState({
+            editingRecord: record,
+            editingRecordIndex: index
+        })
     }
 
     render() {
@@ -482,7 +492,7 @@ class Aladin extends React.Component {
                     record => {
                         return {
                             onDoubleClick: event => {
-                                let index = this.state.dataSource.findIndex(item=>item.key === record.key);
+                                let index = this.state.dataSource.findIndex(item => item.key === record.key);
                                 this.setState({
                                     editingRecord: record,
                                     editingRecordIndex: index,
@@ -496,7 +506,7 @@ class Aladin extends React.Component {
 
             </Table>
             <Button type='primary' onClick={this.handleAdd}>添加新项目</Button>
-            <Modal visible={this.state.modalOpen}
+            <ModalWithPrevNext visible={this.state.modalOpen}
                 title={this.state.modalTitle}
                 onOk={this.modalOkClick}
                 onCancel={this.modalCancelClick}
@@ -506,30 +516,22 @@ class Aladin extends React.Component {
                 width='700px'
                 bodyStyle={modalStyle}
                 forceRender={true}
+
+                updateRecord={this.updateRecord}
+                record={this.state.editingRecord}
+                currentIndex={this.state.editingRecordIndex}
+                dataSource={this.state.dataSource}
+
                 buttonClicked={this.state.modalButtonClicked}>
+                <AddNewModal
+                    record={this.state.editingRecord}
+                    currentIndex={this.state.editingRecordIndex}
+                    columns={this.columns}
+                    cabinTypeCodes={this.CabinTypeCodes}
+                    taxCodes={this.TaxCodes}></AddNewModal>
+            </ModalWithPrevNext>
 
-                {
-                   this.state.editingRecord ?
-                        (<div style={{ display: 'flex' }}>
-                            <div style={{ width: '50px', height: '370px',  paddingTop: '25%', position: 'relative', marginRight: '15px' }}>
-                                <Button type='link' onClick={this.previousRecord}>
-                                    <Icon type='double-left' />
-                                </Button>
-                            </div>
 
-                            <AddNewModal
-                                record={this.state.editingRecord}
-                                currentIndex={this.state.editingRecordIndex}
-                                columns={this.columns}
-                                cabinTypeCodes={this.CabinTypeCodes}
-                                taxCodes={this.TaxCodes}></AddNewModal>
-                            <div style={{ width: '50px', height: '370px',paddingTop: '25%', position: 'relative', marginLeft: '15px' }}>
-                                <Button type='link' onClick={this.nextRecord}>
-                                    <Icon type='double-right' />
-                                </Button>
-                            </div></div>) : null
-                }
-            </Modal>
         </div>
     }
 }
