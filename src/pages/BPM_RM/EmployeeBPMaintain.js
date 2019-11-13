@@ -37,11 +37,13 @@ class EmployeeBPMaintain extends React.Component {
     }
 
     this.pagination = {
-      pageSize: 10,
+      pageSize: this.state.pagi_pageSize,
       total: 0,
       current: 0,
+      showSizeChanger: true,
       onChange: (page, pageSize) => {
         // console.log('pagination - page:', page);
+        console.log(pageSize)
         this.pagination.current = page;
         this.setState({
           pagi_pageSize: pageSize,
@@ -49,6 +51,21 @@ class EmployeeBPMaintain extends React.Component {
         }, () => {
           this.loadData();
         })
+      },
+      onShowSizeChange: (current, size) => {
+        this.pagination.current = current;
+        console.log('showsizechanger-size:', size)
+        this.pagination.pageSize = size;
+        this.setState({
+          pagi_pageSize: size,
+          pagi_current: current
+        }, () => {
+
+          this.loadData()
+        })
+      },
+      showTotal: function(total, range){
+        return `11共计${total}条数据，当前显示${range.toString().replace(',','~')}`
       }
     }
 
@@ -78,7 +95,8 @@ class EmployeeBPMaintain extends React.Component {
         key: 'SecDept',
         dataIndex: 'SecDept',
         title: '二级部门',
-        width: '100px'
+        // width: '100px',
+        ellipsis: true
       },
       {
         key: 'BankAccount',
@@ -289,6 +307,10 @@ class EmployeeBPMaintain extends React.Component {
       allCount,
       pagi_total,
       spinning
+    }, () => {
+      console.log('this.pagination.pageSize:', this.pagination.pageSize);
+
+      console.log('this.state.pagi_pageSize-after reload:', this.state.pagi_pageSize);
     })
     // message.info('ok')
   }
@@ -305,7 +327,7 @@ class EmployeeBPMaintain extends React.Component {
       onChange: this.onTableRowSelectedChange
     }
 
-    console.log('ModalFooter:', ModalFooter)
+    console.log('pagination-size:', this.pagination.pageSize)
 
     return <Spin spinning={this.state.spinning}>
       <div>
@@ -314,13 +336,13 @@ class EmployeeBPMaintain extends React.Component {
           items={
             [{
               name: 'ebm_add_btn',
-              obj: <Button type="primary" style={{marginBottom: '0px'}} onClick={this.handleAddRecord}>添加</Button>
+              obj: <Button type="primary" style={{ marginBottom: '0px' }} onClick={this.handleAddRecord}>添加</Button>
             }, {
               name: 'ebm_delete_btn',
-              obj: <Button type='danger' style={{marginBottom: '0px'}} onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
+              obj: <Button type='danger' style={{ marginBottom: '0px' }} onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
             }, {
               name: 'ebm_filter_text',
-              obj: <Input onPressEnter={this.handleSearch} style={{marginBottom: '0px'}} 
+              obj: <Input onPressEnter={this.handleSearch} style={{ marginBottom: '0px' }}
                 suffix={<a href="" onClick={this.handleSearch}
                 ><Icon type='search' /></a>} ></Input>
             }, {
@@ -330,7 +352,7 @@ class EmployeeBPMaintain extends React.Component {
               </Select>
             }]
           }></SearchSquare>
-        <Layout style={{width: '100%'}}>
+        <Layout style={{ width: '100%' }}>
           <Form>
             <Form.Item>
               <Table
