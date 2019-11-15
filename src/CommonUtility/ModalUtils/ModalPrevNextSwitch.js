@@ -82,7 +82,7 @@ class ModalWithPrevNext extends React.Component {
                     paddingTop: '25%', position: 'relative',
                     marginRight: '15px'
                 }}>
-                    { this.props.record && this.props.record.key !== this.state.dataSource.length ?
+                    {this.props.record && this.props.record.key !== this.state.dataSource.length ?
                         <Button type='link' onClick={this.previousRecord}>
                             <Icon type='double-left' />
                         </Button>
@@ -94,7 +94,7 @@ class ModalWithPrevNext extends React.Component {
                     paddingTop: '25%', position: 'relative',
                     marginLeft: '15px', display: this.state.showButtons
                 }}>
-                    { this.props.record && this.props.record.key !== this.state.dataSource.length ?
+                    {this.props.record && this.props.record.key !== this.state.dataSource.length ?
                         <Button type='link' onClick={this.nextRecord}>
                             <Icon type='double-right' />
                         </Button>
