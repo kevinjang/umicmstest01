@@ -1,3 +1,14 @@
 .listItemMeta:hover{
-    background-color: purple;
+    background-color: lightblue;
+}
+.listItemMeta{
+    background-color: white;
+    width: '99%';
+    text-align: center;
+}
+.listItemMetaSelected {
+    background-color: lightblue;
+}
+.ant-list-item-main{
+    width: '100%'
 }
