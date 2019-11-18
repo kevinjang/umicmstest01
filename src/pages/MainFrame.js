@@ -35,7 +35,9 @@ class KLayout extends React.Component {
             seletedTabKeys: [],
             activeTabKey: '',
             theme: 'dark',
-            spinning: false
+            spinning: false,
+            textAlign: 'center',
+            paddingTop: '25%'
         }
     }
 
@@ -97,7 +99,9 @@ class KLayout extends React.Component {
         }, () => {
             GetData("zhanghaoming", () => {
                 this.setState({
-                    spinning: false
+                    spinning: false,
+                    textAlign: 'initial',
+                    paddingTop: '0'
                 })
             });
         })
@@ -113,96 +117,100 @@ class KLayout extends React.Component {
 
     render() {
         document.title = 'KSNL';
-        return <Spin spinning={this.state.spinning && !UserContext}>
-            {UserContext ?
-                <UserContext.Provider value={MyUserData}>
-                    {console.log('mf-MyUserData:', MyUserData)}
-                    <Layout>
-                        <Header style={{ color: 'white', fontSize: '32px' }}>
-                            <Icon type="chrome" theme="filled" />
-                            <span>导航</span>
-                            <div className={styles.userInfoNode}>
-                                <Notification></Notification>
-                                <UserInfo style={{ marginTop: '30px', left: '1000px' }}></UserInfo>
-                            </div>
-                        </Header>
+        return <div style={{ width: '100%', height: 'calc(100vh - 0px)'
+        , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}` }}>
+            <Spin spinning={this.state.spinning && !UserContext}
+                size="large" >
+                {UserContext ?
+                    <UserContext.Provider value={MyUserData}>
+                        {console.log('mf-MyUserData:', MyUserData)}
+                        <Layout>
+                            <Header style={{ color: 'white', fontSize: '32px' }}>
+                                <Icon type="chrome" theme="filled" />
+                                <span>导航</span>
+                                <div className={styles.userInfoNode}>
+                                    <Notification></Notification>
+                                    <UserInfo style={{ marginTop: '30px', left: '1000px' }}></UserInfo>
+                                </div>
+                            </Header>
 
-                        <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
-                            <Sider
-                                width={200}
-                                style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
-                                theme={this.state.theme}
-                                collapsible>
-                                <Scrollbars>
-                                    <Menu
-                                        theme={this.state.theme}
-                                        defaultSelectedKeys={this.state.selectedKeys}
-                                        defaultOpenKeys={['sub1']}
-                                        mode='inline'
-                                        inlineCollapsed={this.state.collapsed}
-                                    >
-                                        {this.props.menus.map(item => {
-                                            if (item.children)
-                                                return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
-                                                    {item.children.map(cItem => {
-                                                        return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
-                                                            <Icon type={cItem.icon}></Icon>
-                                                            <span>{cItem.title}</span>
-                                                        </Item>
-                                                    })}
-                                                </SubMenu>
-                                            else
-                                                return <Item key={item.id}>
-                                                    <Icon type={item.icon}></Icon>
-                                                    <span>{item.title}</span>
-                                                </Item>
-                                        })}
-                                    </Menu>
-                                </Scrollbars>
-                            </Sider>
-                            <Layout style={{backgroundColor: '#f0f2f5'}}>
-                                <Scrollbars>
-                                    <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
+                            <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
+                                <Sider
+                                    width={200}
+                                    style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
+                                    theme={this.state.theme}
+                                    collapsible>
+                                    <Scrollbars>
+                                        <Menu
+                                            theme={this.state.theme}
+                                            defaultSelectedKeys={this.state.selectedKeys}
+                                            defaultOpenKeys={['sub1']}
+                                            mode='inline'
+                                            inlineCollapsed={this.state.collapsed}
+                                        >
+                                            {this.props.menus.map(item => {
+                                                if (item.children)
+                                                    return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
+                                                        {item.children.map(cItem => {
+                                                            return <Item key={cItem.id + '_' + cItem.nodeInfo} onClick={this.menuItemClick}>
+                                                                <Icon type={cItem.icon}></Icon>
+                                                                <span>{cItem.title}</span>
+                                                            </Item>
+                                                        })}
+                                                    </SubMenu>
+                                                else
+                                                    return <Item key={item.id}>
+                                                        <Icon type={item.icon}></Icon>
+                                                        <span>{item.title}</span>
+                                                    </Item>
+                                            })}
+                                        </Menu>
+                                    </Scrollbars>
+                                </Sider>
+                                <Layout style={{ backgroundColor: '#f0f2f5' }}>
+                                    <Scrollbars>
+                                        <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
 
-                                        <div >
-                                            {/* style={{ padding: "5px", background: "#fff" }} */}
-                                            {
-                                                this.state.openTabs.length > 0 &&
-                                                <Tabs
-                                                    activeKey={this.state.activeTabKey}
-                                                    onChange={this.tabItemChange}
-                                                    type="editable-card"
-                                                    hideAdd={true}
-                                                    onEdit={this.tabItemEdit}>
-                                                    {this.state.openTabs.map(item => {
-                                                        return <TabPane
-                                                            tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
-                                                            key={item.id}
-                                                            forceRender={false}
-                                                            closable={true}>
-                                                            <Content >
-                                                                {console.log('item.nodeInfo:', item.nodeInfo)}
-                                                                <Route component={this.loadTest(item.nodeInfo, {
-                                                                    activeKey: this.state.activeTabKey,
-                                                                    selfID: item.id
-                                                                })}></Route>
-                                                            </Content>
-                                                        </TabPane>
-                                                    })}
-                                                </Tabs>
-                                            }
-                                        </div>
-                                    </Content>
-                                </Scrollbars>
-                                <Footer style={{backgroundColor: 'white', height: '48px', padding: '10px 50px'}}>
-                                    <Icon type="copyright">  </Icon>KSNL
+                                            <div >
+                                                {/* style={{ padding: "5px", background: "#fff" }} */}
+                                                {
+                                                    this.state.openTabs.length > 0 &&
+                                                    <Tabs
+                                                        activeKey={this.state.activeTabKey}
+                                                        onChange={this.tabItemChange}
+                                                        type="editable-card"
+                                                        hideAdd={true}
+                                                        onEdit={this.tabItemEdit}>
+                                                        {this.state.openTabs.map(item => {
+                                                            return <TabPane
+                                                                tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
+                                                                key={item.id}
+                                                                forceRender={false}
+                                                                closable={true}>
+                                                                <Content >
+                                                                    {console.log('item.nodeInfo:', item.nodeInfo)}
+                                                                    <Route component={this.loadTest(item.nodeInfo, {
+                                                                        activeKey: this.state.activeTabKey,
+                                                                        selfID: item.id
+                                                                    })}></Route>
+                                                                </Content>
+                                                            </TabPane>
+                                                        })}
+                                                    </Tabs>
+                                                }
+                                            </div>
+                                        </Content>
+                                    </Scrollbars>
+                                    <Footer style={{ backgroundColor: 'white', height: '48px', padding: '10px 50px' }}>
+                                        <Icon type="copyright">  </Icon>KSNL
                                 </Footer>
+                                </Layout>
                             </Layout>
                         </Layout>
-                    </Layout>
-                </UserContext.Provider>
-                : ''}
-        </Spin>
+                    </UserContext.Provider>
+                    : ''}
+            </Spin>
+        </div>
     }
 }
 
