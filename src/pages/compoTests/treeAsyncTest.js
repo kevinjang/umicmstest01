@@ -10,20 +10,21 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import styles from './treeAsyncTest.css'
 import ButtonGroup from 'antd/lib/button/button-group';
 
+import { UserContext } from '../../pages/UserContextMock'
+
 class TreeAsyncTest extends React.Component {
+    static contextType = UserContext
     constructor(props) {
         super(props)
 
-        // var setss = new Set([]);
-
-        var setselected = new Set([])
+        // var setselected = new Set([])
 
         this.state = {
             modalShow: false,
             loading: true,
             listItemMetaSelected: null,
             chosenOnes: [],
-            selectedItems: setselected,
+            // selectedItems: setselected,
             dataSource: [],
             defaultExpandAll: false
         }
@@ -31,6 +32,8 @@ class TreeAsyncTest extends React.Component {
         this.allData = [];
 
         this.loaded = false;
+
+        this.placeholder = '可输入员工姓名、AD账号、分机号码、手机号码进行模糊查询';
     }
 
     btnClick = () => {
@@ -46,7 +49,7 @@ class TreeAsyncTest extends React.Component {
             console.log(data);
             this.setState(data)
         }).then(response => {
-            console.log('get-response-data:', response.data);
+            // console.log('get-response-data:', response.data);
 
             const { data, message: selfMessage } = response.data;
 
@@ -61,7 +64,7 @@ class TreeAsyncTest extends React.Component {
                     this.allData.push(newItem);
                 });
 
-                console.log('initial load:', dataSource);
+                // console.log('initial load:', dataSource);
 
                 this.setState({
                     spinning: false,
@@ -77,7 +80,7 @@ class TreeAsyncTest extends React.Component {
             }
         }).catch(err => {
             message.error(err.message);
-            console.log(err.message)
+            // console.log(err.message)
             this.setState({
                 spinning: false,
                 loading: false
@@ -100,15 +103,15 @@ class TreeAsyncTest extends React.Component {
     }
 
     onLoadData = treeNode => {
-        console.log('treeNode.props.dataRef:', treeNode.props.dataRef);
+        // console.log('treeNode.props.dataRef:', treeNode.props.dataRef);
 
         const orgID = treeNode ? treeNode.props.eventKey : 6798;
         return getPersonSelectFullData(orgID, () => { }).then(response => {
-            console.log('get-response-data:', response.data);
+            // console.log('get-response-data:', response.data);
 
             const { data, message: selfMessage } = response.data;
 
-            console.log('data:', data[0]);
+            // console.log('data:', data[0]);
             if (selfMessage === 'succeeded') {
                 let dataSource = this.state.dataSource || [];
 
@@ -139,7 +142,7 @@ class TreeAsyncTest extends React.Component {
             }
         }).catch(err => {
             message.error(err.message);
-            console.log(err.message)
+            // console.log(err.message)
             this.setState({
                 spinning: false,
                 loading: false
@@ -150,35 +153,23 @@ class TreeAsyncTest extends React.Component {
 
     onSearchData = () => {
         const { getFieldValue } = this.props.form;
-        console.log(`getFieldValue('userfilter_ps'):`, getFieldValue('userfilter_ps'))
+        console.log(`getFieldValue('userfilter_ps'):`, getFieldValue('userfilter_ps') || '')
+        console.log('this.context.userRow.UserAD:',this.context.userRow.UserAD);
         getPersonSelectSearchData({
             OrgID: 6798,
-            UserFilter: getFieldValue('userfilter_ps'),
-            UserID: 'zhanghaoming',
+            UserFilter: getFieldValue('userfilter_ps') || '',
+            UserID: this.context.userRow.UserAD,
             Plus: ''
         }).then(response => {
             const { data, message: selfMessage } = response.data;
-            console.log(selfMessage, data);
+            // console.log(selfMessage, data);
             let dataSource = [];
             let originalDataSource = data[0]
             if (selfMessage === 'succeeded') {
 
-                // for(let i =0; i < originalDataSource.filter(v => v.isleaf === 1).length; i++){
-
-                //     let last = this.formatItem([0]);
-                //     originalDataSource = originalDataSource.filter(v => v.id !== last.key)
-                //     if (last) {
-                //         while (originalDataSource.length > 0) {
-                //             last = this.formATreeSack(last, originalDataSource);
-                //             originalDataSource = originalDataSource.filter(v => v.id !== last.key)
-                //         }
-                //     }
-
-                //     dataSource.push(last);
-                // }
-                // 麻蛋，还是得自顶向下
-                let root = originalDataSource.find(v=>v.id === 6798);
-                if(root){
+                // 自顶向下
+                let root = originalDataSource.find(v => v.id === 6798);
+                if (root) {
                     root = this.findAllChildren(this.formatItem(root), originalDataSource);
                     dataSource.push(root);
                 }
@@ -197,8 +188,9 @@ class TreeAsyncTest extends React.Component {
     }
 
     formatItem = (item) => {
+        // 将原始数据行，按照树形node结构整理后返回。
         return {
-            title: item.name + (item.isleaf === 1 ? `(${item.userad})` : ''),
+            title: item.name + (item.isleaf === 1 ? `[${item.userad.replace('cofco\\', '')}]` : ''),
             key: item.id,
             isLeaf: item.isleaf === 1,
             gender: item.sex,
@@ -208,14 +200,10 @@ class TreeAsyncTest extends React.Component {
         }
     }
 
-    // findOwnSon = (key, dataSource) => {
-    //     return dataSource.find(item => item.parent === key);
-    // }
-
-    findAllChildren = (parentItem, dataSource)=>{
-        parentItem.children = dataSource.filter(v=>v.parentid === parentItem.key).map(v=>this.formatItem(v));
-        if(parentItem.children && parentItem.children.length>0){
-            for(let child of parentItem.children){
+    findAllChildren = (parentItem, dataSource) => {
+        parentItem.children = dataSource.filter(v => v.parentid === parentItem.key).map(v => this.formatItem(v));
+        if (parentItem.children && parentItem.children.length > 0) {
+            for (let child of parentItem.children) {
                 this.findAllChildren(child, dataSource);
             }
         }
@@ -238,7 +226,7 @@ class TreeAsyncTest extends React.Component {
                     {this.renderTreeNodeItems(item.children)}
                 </TreeNode>)
             }
-            console.log('typeof item.isleaf:', item.isLeaf);
+            // console.log('typeof item.isleaf:', item.isLeaf);
             return (
                 <TreeNode title={
                     <Tooltip title={item.userad}>
@@ -253,7 +241,7 @@ class TreeAsyncTest extends React.Component {
     }
 
     onSelect = (keys, event) => {
-        message.info('Trigger Select:keys-' + keys + ";event-" + event);
+        // message.info('Trigger Select:keys-' + keys + ";event-" + event);
 
         // console.log('event:', event);
         if (event.node.isLeaf()) {
@@ -263,7 +251,9 @@ class TreeAsyncTest extends React.Component {
             let setExsits = setss.filter(item => item.propKey === keys[0]);
             if (!setExsits || setExsits.length == 0) {
                 // 不存在的
-                setss.push({ propKey: keys[0], title: event.node.props.title });
+                // console.log('event.node.props:', event.node.props)
+                const dataRef = event.node.props.dataRef;
+                setss.push({ propKey: keys[0], title: dataRef.name + `[${dataRef.userad}]` });
                 this.setState({
                     chosenOnes: setss
                 }, () => {
@@ -278,11 +268,24 @@ class TreeAsyncTest extends React.Component {
     }
 
     onExpand = (expandedKeys, { expanded: bool, node }) => {
-        message.info('Trigger Expand:' + expandedKeys);
+        // message.info('Trigger Expand:' + expandedKeys);
+    }
+
+    clearChosenOnes = () => {
+        this.setState({
+            chosenOnes: []
+        })
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
+
+        const modalFooter = (<div style={{ width: '100%', height: '35px', direction: 'flex' }}>
+            <Button type="danger" style={{ float: 'left' }} onClick={this.clearChosenOnes}>清空已选</Button>
+            <Button type="primary" style={{ float: 'right' }} onClick={this.modalConfirm}>确定</Button>
+            <Button type="default" style={{ float: 'right' }} onClick={this.modalCancel}>取消</Button>
+        </div>)
+
         return <div id="treeAsyncContainer">
             <Button onClick={this.btnClick} type="primary">打开</Button>
             <Modal
@@ -294,32 +297,43 @@ class TreeAsyncTest extends React.Component {
                 onCancel={this.modalCancel}
                 centered
                 // width={"400px"}
+                footer={modalFooter}
                 closable={true}>
                 <Row style={{ height: '50px', marginBottom: '10px' }}>
-                    <Col xs={16} style={{ height: '100%', padding: '0 5px 0 5px' }}>
+                    <Col xs={16} className={styles.filterCol}>
+                        {/* style={{ height: '100%', padding: '0 5px 0 5px', border:'1px solid blue'  }}> */}
                         <Form>
                             <Form.Item>
                                 {getFieldDecorator('userfilter_ps')(
-                                    <Input style={{ width: '100%' }} size="default"></Input>
+                                    <Tooltip title={this.placeholder}>
+                                        <Input style={{ width: '100%' }} size="default"
+                                            placeholder={this.placeholder}></Input>
+                                    </Tooltip>
                                 )}
                             </Form.Item>
                         </Form>
                     </Col>
-                    <Col xs={8} style={{ height: '100%', padding: '0 5px 0 5px' }}>
-                        <ButtonGroup>
-                            <Button icon={<Icon type="scope"></Icon>} size="middle" type="primary" onClick={() => { this.onSearchData() }}>查找</Button>
-                            <Button icon={<Icon type="scope"></Icon>} size="middle" onClick={() => { this.getFullOuUsersData() }}>全部</Button>
+                    <Col xs={8} className={styles.buttonGroupCol}>
+                        {/* style={{ height: '100%', padding: '0 7px 0 5px' }}> */}
+                        <ButtonGroup className={styles.buttonGroup}>
+                            {/* style={{ marginTop: '2px'}} */}
+                            <Button icon={<Icon type="scope"></Icon>} size="default" type="primary"
+                                onClick={() => { this.onSearchData() }}>查找</Button>
+                            <Button icon={<Icon type="scope"></Icon>} size="default"
+                                onClick={() => { this.getFullOuUsersData() }}>全部</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
                 <Row gutter={12}>
-                    <Col xs={12} style={{ height: '220px' }}>
+                    <Col xs={12} className={styles.treeCol}>
+                        {/* style={{ height: '220px', borderRight: '1px dotted darkgray' }}> */}
                         {/* border: '1px solid darkgray', */}
                         <Skeleton title={false} active loading={this.state.loading}>
                             <Scrollbars>
                                 <DirectoryTree
                                     multiple
-                                    style={{ padding: '0 5px' }}
+                                    // style={{ }}
+                                    className={styles.directoryTree}
                                     defaultExpandAll={this.state.defaultExpandAll}
                                     onSelect={this.onSelect}
                                     onExpand={this.onExpand}
@@ -330,22 +344,8 @@ class TreeAsyncTest extends React.Component {
                             </Scrollbars>
                         </Skeleton>
                     </Col>
-                    {/* <Col xs={4} style={{
-                        border: '1px solid darkgray', height: '220px', alignContent: 'center',
-                        verticalAlign: 'middle', margin: '0 auto', textAlign: 'center', lineHeight: '50px', paddingTop: '60px'
-                    }}>
-                        <Button size={"small"} type="default">
-                            移除
-                        </Button>
-                        <Button size={"small"} type="danger" onClick={() => {
-                            this.setState({
-                                chosenOnes: []
-                            })
-                        }}>
-                            清空
-                        </Button>
-                    </Col> */}
-                    <Col xs={12} style={{ height: '220px' }}>
+                    <Col xs={12} className={styles.listCol}>
+                        {/* style={{ height: '220px' }}> */}
                         <Scrollbars>
                             <List
                                 locale={""}
@@ -355,7 +355,9 @@ class TreeAsyncTest extends React.Component {
                                 dataSource={this.state.chosenOnes}
                                 split={false}
                                 renderItem={item => {
-                                    let nodeIcon = <Icon type="delete" style={{ cursor: 'pointer' }}
+                                    let nodeIcon = <Icon type="delete"
+                                        // style={{ cursor: 'pointer' }}
+                                        className={styles.nodeIcon}
                                         data-item={item.propKey}
                                         key={item.propKey}
                                         onClick={(e) => {
@@ -371,7 +373,9 @@ class TreeAsyncTest extends React.Component {
                                     // console.log('nodeIcon:', nodeIcon);
                                     return <List.Item
                                         actions={[nodeIcon]}
-                                        style={{ width: '100%' }}>
+                                        // style={{ width: '100%' }}
+                                        className={styles.listItem}
+                                    >
                                         <List.Item.Meta //title={item.title}
                                             description={item.title}
                                             className={styles.listItemMeta}
