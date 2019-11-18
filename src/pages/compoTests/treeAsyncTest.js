@@ -34,6 +34,13 @@ class TreeAsyncTest extends React.Component {
         this.loaded = false;
 
         this.placeholder = '可输入员工姓名、AD账号、分机号码、手机号码进行模糊查询';
+
+        // this.Tree = ()
+
+    }
+
+    componentDidMount() {
+
     }
 
     btnClick = () => {
@@ -112,11 +119,11 @@ class TreeAsyncTest extends React.Component {
     }
 
     onLoadData = treeNode => {
-        // console.log('treeNode.props.dataRef:', treeNode.props.dataRef);
+        console.log('treeNode.props.dataRef:', treeNode);
 
         const orgID = treeNode ? treeNode.props.eventKey : 6798;
         return getPersonSelectFullData(orgID, () => { }).then(response => {
-            // console.log('get-response-data:', response.data);
+            console.log('get-response-data:', response.data);
 
             const { data, message: selfMessage } = response.data;
 
