@@ -45,45 +45,54 @@ class TreeAsyncTest extends React.Component {
     }
 
     getFullOuUsersData = () => {
-        getPersonSelectFullData(6798, (data) => {
-            console.log(data);
-            this.setState(data)
-        }).then(response => {
-            // console.log('get-response-data:', response.data);
 
-            const { data, message: selfMessage } = response.data;
+        let dataSource = this.state.dataSource.filter(v => v.key !== 6798);
+        this.setState({
+            dataSource
+        }, () => {
+            this.allData = [];
+            getPersonSelectFullData(6798, (data) => {
+                console.log(data);
+                this.setState(data)
+            }).then(response => {
+                // console.log('get-response-data:', response.data);
 
-            // console.log('data:', data[0]);
-            if (selfMessage === 'succeeded') {
-                message.success(selfMessage);
-                this.loaded = true;
-                let dataSource = [];
-                data[0].forEach((item, index) => {
-                    const newItem = this.formatItem(item); // { title: item.name + (item.isleaf === 1 ? `(${item.userad})` : ''), key: item.id, isLeaf: (item.isleaf === 1), gender: item.sex, dataRef: item };
-                    dataSource.push(newItem);
-                    this.allData.push(newItem);
-                });
+                const { data, message: selfMessage } = response.data;
 
-                // console.log('initial load:', dataSource);
+                // console.log('data:', data[0]);
+                if (selfMessage === 'succeeded') {
+                    message.success(selfMessage);
+                    this.loaded = true;
+                    let dataSource = this.state.dataSource || [];
+                    data[0].forEach((item, index) => {
+                        const newItem = this.formatItem(item); // { title: item.name + (item.isleaf === 1 ? `(${item.userad})` : ''), key: item.id, isLeaf: (item.isleaf === 1), gender: item.sex, dataRef: item };
+                        if (!dataSource.find(v => v.key === item.id))
+                            dataSource.push(newItem);
+                        if (!this.allData.find(v => v.key === item.id))
+                            this.allData.push(newItem);
+                    });
 
-                this.setState({
-                    spinning: false,
-                    loading: false,
-                    dataSource
-                })
-            } else {
-                message.error(selfMessage);
+                    // console.log('initial load:', dataSource);
+
+                    this.setState({
+                        spinning: false,
+                        loading: false,
+                        dataSource
+                    })
+                } else {
+                    message.error(selfMessage);
+                    this.setState({
+                        spinning: false,
+                        loading: false
+                    })
+                }
+            }).catch(err => {
+                message.error(err.message);
+                // console.log(err.message)
                 this.setState({
                     spinning: false,
                     loading: false
                 })
-            }
-        }).catch(err => {
-            message.error(err.message);
-            // console.log(err.message)
-            this.setState({
-                spinning: false,
-                loading: false
             })
         })
     }
@@ -123,7 +132,8 @@ class TreeAsyncTest extends React.Component {
                     data[0].forEach((item) => {
                         const newItem = this.formatItem(item); // { title: item.name + (item.isleaf === 1 ? `(${item.userad})` : ''), key: item.id, isLeaf: (item.isleaf === 1), gender: item.sex, dataRef: item }
                         filteredItem.children.push(newItem);
-                        this.allData.push(newItem);
+                        if (!this.allData.find(v => v.key === item.id))
+                            this.allData.push(newItem);
                     })
                 }
                 message.success(selfMessage);
