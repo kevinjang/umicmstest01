@@ -2,11 +2,46 @@
 .listItemMeta{
     background-color: white;
     width: '99%';
-    text-align: center;
+    text-align: left;
 }
 .listItemMetaSelected {
     background-color: lightblue;
 }
 .ant-list-item-main{
     width: '100%'
+}
+.filterCol {
+    height: 100%;
+    padding: 0 5px 0 5px;
+    /* border:1px solid blue; */
+}
+
+.buttonGroupCol{
+    height: 100%;
+    padding: 0 7px 0 5px;
+}
+.buttonGroup{
+    margin-top: 4px;
+    margin-left: 3px;
+}
+
+.treeCol {
+    height: 220px;
+    border-right: 1px dotted darkgray;
+}
+
+.directoryTree{
+    padding: 0 5px;
+}
+
+.listCol {
+    height: 220px;
+}
+
+.nodeIcon {
+    cursor: pointer;
+}
+
+.listItem {
+    width: 100%;
 }
