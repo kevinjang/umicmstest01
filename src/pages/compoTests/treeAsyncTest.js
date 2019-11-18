@@ -154,7 +154,7 @@ class TreeAsyncTest extends React.Component {
     onSearchData = () => {
         const { getFieldValue } = this.props.form;
         console.log(`getFieldValue('userfilter_ps'):`, getFieldValue('userfilter_ps') || '')
-        console.log('this.context.userRow.UserAD:',this.context.userRow.UserAD);
+        console.log('this.context.userRow.UserAD:', this.context.userRow.UserAD);
         getPersonSelectSearchData({
             OrgID: 6798,
             UserFilter: getFieldValue('userfilter_ps') || '',
@@ -302,16 +302,18 @@ class TreeAsyncTest extends React.Component {
                 <Row style={{ height: '50px', marginBottom: '10px' }}>
                     <Col xs={16} className={styles.filterCol}>
                         {/* style={{ height: '100%', padding: '0 5px 0 5px', border:'1px solid blue'  }}> */}
-                        <Form>
-                            <Form.Item>
-                                {getFieldDecorator('userfilter_ps')(
-                                    <Tooltip title={this.placeholder}>
+                        <Tooltip title={this.placeholder}>
+                            <Form>
+                                <Form.Item>
+                                    {getFieldDecorator('userfilter_ps')(
                                         <Input style={{ width: '100%' }} size="default"
-                                            placeholder={this.placeholder}></Input>
-                                    </Tooltip>
-                                )}
-                            </Form.Item>
-                        </Form>
+                                            placeholder={this.placeholder}>
+
+                                        </Input>
+                                    )}
+                                </Form.Item>
+                            </Form>
+                        </Tooltip>
                     </Col>
                     <Col xs={8} className={styles.buttonGroupCol}>
                         {/* style={{ height: '100%', padding: '0 7px 0 5px' }}> */}
