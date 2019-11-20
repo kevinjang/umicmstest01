@@ -30,6 +30,7 @@ class TreeAsyncTest extends React.Component {
         }
 
         this.allData = [];
+        this.loadedFullData = []
 
         this.loaded = false;
 
@@ -57,7 +58,7 @@ class TreeAsyncTest extends React.Component {
         this.setState({
             dataSource
         }, () => {
-            this.allData = [];
+            // this.allData = [];
             getPersonSelectFullData(6798, (data) => {
                 console.log(data);
                 this.setState(data)
@@ -70,11 +71,11 @@ class TreeAsyncTest extends React.Component {
                 if (selfMessage === 'succeeded') {
                     message.success(selfMessage);
                     this.loaded = true;
-                    let dataSource = this.state.dataSource || [];
+                    // let dataSource = this.loadedFullData; //this.state.dataSource;// || [];
                     data[0].forEach((item, index) => {
                         const newItem = this.formatItem(item); // { title: item.name + (item.isleaf === 1 ? `(${item.userad})` : ''), key: item.id, isLeaf: (item.isleaf === 1), gender: item.sex, dataRef: item };
-                        if (!dataSource.find(v => v.key === item.id))
-                            dataSource.push(newItem);
+                        if (!this.loadedFullData.find(v => v.key === item.id))
+                            this.loadedFullData.push(newItem);
                         if (!this.allData.find(v => v.key === item.id))
                             this.allData.push(newItem);
                     });
@@ -84,7 +85,7 @@ class TreeAsyncTest extends React.Component {
                     this.setState({
                         spinning: false,
                         loading: false,
-                        dataSource
+                        dataSource: this.loadedFullData
                     })
                 } else {
                     message.error(selfMessage);
@@ -273,8 +274,6 @@ class TreeAsyncTest extends React.Component {
                 setss.push({ propKey: keys[0], title: dataRef.name + `[${dataRef.userad}]` });
                 this.setState({
                     chosenOnes: setss
-                }, () => {
-                    console.log('chosenOnes:', this.state.chosenOnes)
                 })
             }
             else {
@@ -286,6 +285,8 @@ class TreeAsyncTest extends React.Component {
 
     onExpand = (expandedKeys, { expanded: bool, node }) => {
         // message.info('Trigger Expand:' + expandedKeys);
+        // message.info(node)
+        // console.log("node:", node.props.children)
     }
 
     clearChosenOnes = () => {
@@ -317,7 +318,7 @@ class TreeAsyncTest extends React.Component {
                 footer={modalFooter}
                 closable={true}>
                 <Row style={{ height: '50px', marginBottom: '10px' }}>
-                    <Col xs={16} className={styles.filterCol}>
+                    <Col xs={14} className={styles.filterCol}>
                         {/* style={{ height: '100%', padding: '0 5px 0 5px', border:'1px solid blue'  }}> */}
                         <Tooltip title={this.placeholder}>
                             <Form>
@@ -332,14 +333,16 @@ class TreeAsyncTest extends React.Component {
                             </Form>
                         </Tooltip>
                     </Col>
-                    <Col xs={8} className={styles.buttonGroupCol}>
+                    <Col xs={10} className={styles.buttonGroupCol}>
                         {/* style={{ height: '100%', padding: '0 7px 0 5px' }}> */}
                         <ButtonGroup className={styles.buttonGroup}>
                             {/* style={{ marginTop: '2px'}} */}
-                            <Button icon={<Icon type="scope"></Icon>} size="default" type="primary"
-                                onClick={() => { this.onSearchData() }}>查找</Button>
-                            <Button icon={<Icon type="scope"></Icon>} size="default"
-                                onClick={() => { this.getFullOuUsersData() }}>全部</Button>
+                            <Button  size="default" type="primary"
+                                onClick={() => { this.onSearchData() }}>
+                                    <Icon type="monitor"></Icon>查找</Button>
+                            <Button size="default"
+                                onClick={() => { this.getFullOuUsersData() }}>
+                                    <Icon type="redo"></Icon>全部</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
