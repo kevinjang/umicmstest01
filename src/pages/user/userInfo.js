@@ -62,8 +62,7 @@ class UserInfo extends React.Component {
                                     {/* User Name */}
                                     {/* {console.log('UserContext:', UserContext)} */}
                                     {value.userRow.Username}
-                                    {//let value = this.context; 
-                                        console.log('usercontext-consumer-value:', value)}
+                                    {/* {let value = this.context; console.log('usercontext-consumer-value:', value)} */}
                                 </p>
                                 <Avatar
                                     style={{ float: 'right' }}
