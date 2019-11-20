@@ -123,7 +123,7 @@ class KLayout extends React.Component {
                 size="large" >
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
-                        {console.log('mf-MyUserData:', MyUserData)}
+                        {/* {console.log('mf-MyUserData:', MyUserData)} */}
                         <Layout>
                             <Header style={{ color: 'white', fontSize: '32px' }}>
                                 <Icon type="chrome" theme="filled" />
@@ -188,7 +188,7 @@ class KLayout extends React.Component {
                                                                 forceRender={false}
                                                                 closable={true}>
                                                                 <Content >
-                                                                    {console.log('item.nodeInfo:', item.nodeInfo)}
+                                                                    {/* {console.log('item.nodeInfo:', item.nodeInfo)} */}
                                                                     <Route component={this.loadTest(item.nodeInfo, {
                                                                         activeKey: this.state.activeTabKey,
                                                                         selfID: item.id
