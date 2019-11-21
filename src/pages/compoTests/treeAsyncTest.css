@@ -1,26 +1,30 @@
-
-.listItemMeta{
-    background-color: white;
-    width: '99%';
+.listItemMeta {
+    /* background-color: white; */
+    width: 99%;
     text-align: left;
+    margin-left: 5px;
 }
+
 .listItemMetaSelected {
     background-color: lightblue;
 }
-.ant-list-item-main{
+
+.ant-list-item-main {
     width: '100%'
 }
+
 .filterCol {
     height: 100%;
     padding: 0 5px 0 5px;
     /* border:1px solid blue; */
 }
 
-.buttonGroupCol{
+.buttonGroupCol {
     height: 100%;
     padding: 0 7px 0 5px;
 }
-.buttonGroup{
+
+.buttonGroup {
     margin-top: 4px;
     margin-left: 3px;
 }
@@ -30,7 +34,7 @@
     border-right: 1px dotted darkgray;
 }
 
-.directoryTree{
+.directoryTree {
     padding: 0 5px;
 }
 
@@ -43,5 +47,15 @@
 }
 
 .listItem {
+    width: 100%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.listItemSelected {
+    background-color: #e6f7ff;
+    border: 1px solid white;
+    padding-top: 0px;
+    padding-bottom: 0px;
     width: 100%;
 }
