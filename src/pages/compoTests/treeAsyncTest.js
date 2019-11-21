@@ -36,6 +36,7 @@ class TreeAsyncTest extends React.Component {
 
         this.placeholder = '可输入员工姓名、AD账号、分机号码、手机号码进行模糊查询';
 
+        this.selectedChosenOnes = [];
         // this.Tree = ()
 
     }
@@ -56,11 +57,12 @@ class TreeAsyncTest extends React.Component {
 
         let dataSource = this.state.dataSource.filter(v => v.key !== 6798);
         this.setState({
-            dataSource
+            dataSource,
+            defaultExpandAll: false
         }, () => {
             // this.allData = [];
             getPersonSelectFullData(6798, (data) => {
-                console.log(data);
+                // console.log(data);
                 this.setState(data)
             }).then(response => {
                 // console.log('get-response-data:', response.data);
@@ -120,11 +122,11 @@ class TreeAsyncTest extends React.Component {
     }
 
     onLoadData = treeNode => {
-        console.log('treeNode.props.dataRef:', treeNode);
+        // console.log('treeNode.props.dataRef:', treeNode);
 
         const orgID = treeNode ? treeNode.props.eventKey : 6798;
         return getPersonSelectFullData(orgID, () => { }).then(response => {
-            console.log('get-response-data:', response.data);
+            // console.log('get-response-data:', response.data);
 
             const { data, message: selfMessage } = response.data;
 
@@ -171,37 +173,49 @@ class TreeAsyncTest extends React.Component {
 
     onSearchData = () => {
         const { getFieldValue } = this.props.form;
-        console.log(`getFieldValue('userfilter_ps'):`, getFieldValue('userfilter_ps') || '')
-        console.log('this.context.userRow.UserAD:', this.context.userRow.UserAD);
-        getPersonSelectSearchData({
-            OrgID: 6798,
-            UserFilter: getFieldValue('userfilter_ps') || '',
-            UserID: this.context.userRow.UserAD,
-            Plus: ''
-        }).then(response => {
-            const { data, message: selfMessage } = response.data;
-            // console.log(selfMessage, data);
-            let dataSource = [];
-            let originalDataSource = data[0]
-            if (selfMessage === 'succeeded') {
+        const filterValue = getFieldValue('userfilter_ps');
+        if (filterValue === "" || filterValue === undefined) {
+            message.info("请输入筛选条件！");
+            return;
+        }
+        this.setState({
+            loading: true
+        }, () => {
 
-                // 自顶向下
-                let root = originalDataSource.find(v => v.id === 6798);
-                if (root) {
-                    root = this.findAllChildren(this.formatItem(root), originalDataSource);
-                    dataSource.push(root);
+            getPersonSelectSearchData({
+                OrgID: 6798,
+                UserFilter: getFieldValue('userfilter_ps') || '',
+                UserID: this.context.userRow.UserAD,
+                Plus: ''
+            }).then(response => {
+                const { data, message: selfMessage } = response.data;
+                // console.log(selfMessage, data);
+                let dataSource = [];
+                let originalDataSource = data[0]
+                if (selfMessage === 'succeeded') {
+
+                    // 自顶向下
+                    let root = originalDataSource.find(v => v.id === 6798);
+                    if (root) {
+                        root = this.findAllChildren(this.formatItem(root), originalDataSource);
+                        dataSource.push(root);
+                    }
+
+                    this.setState({
+                        dataSource,
+                        defaultExpandAll: true,
+                        loading: false
+                    })
+
+                } else {
+                    message.error(selfMessage);
                 }
-
+            }).catch(err => {
                 this.setState({
-                    dataSource,
-                    defaultExpandAll: true
+                    loading: false
                 })
-
-            } else {
-                message.error(selfMessage);
-            }
-        }).catch(err => {
-            message.error(err.message)
+                message.error(err.message)
+            })
         })
     }
 
@@ -214,6 +228,7 @@ class TreeAsyncTest extends React.Component {
             gender: item.sex,
             parent: item.parentid,
             children: item.children || [],
+            listItem: null,
             dataRef: item
         }
     }
@@ -261,7 +276,6 @@ class TreeAsyncTest extends React.Component {
     onSelect = (keys, event) => {
         // message.info('Trigger Select:keys-' + keys + ";event-" + event);
 
-        // console.log('event:', event);
         if (event.node.isLeaf()) {
             // 如果是叶子节点，加入到set对象中
             let setss = this.state.chosenOnes;
@@ -271,7 +285,7 @@ class TreeAsyncTest extends React.Component {
                 // 不存在的
                 // console.log('event.node.props:', event.node.props)
                 const dataRef = event.node.props.dataRef;
-                setss.push({ propKey: keys[0], title: dataRef.name + `[${dataRef.userad}]` });
+                setss.push({ propKey: keys[0], title: dataRef.name + `[${dataRef.userad}]`, selected: false, className: '' });
                 this.setState({
                     chosenOnes: setss
                 })
@@ -290,8 +304,46 @@ class TreeAsyncTest extends React.Component {
     }
 
     clearChosenOnes = () => {
+        this.selectedChosenOnes = [];
         this.setState({
             chosenOnes: []
+        })
+    }
+
+    moveUp = () => {
+        let chosenOnes = this.state.chosenOnes;
+        this.selectedChosenOnes.forEach(key => {
+            let index = chosenOnes.findIndex(item => item.propKey === key);
+            if (index !== 0) {
+                let toMoveItem = chosenOnes.find(item => item.propKey === key);
+                let prevItem = chosenOnes[index - 1];
+                chosenOnes[index - 1] = toMoveItem;
+                chosenOnes[index] = prevItem;
+            }
+        })
+
+        this.setState({
+            chosenOnes
+        })
+    }
+
+    moveDown = () => {
+        let chosenOnes = this.state.chosenOnes;
+        let reverseSelectedChosenOnes = [...this.selectedChosenOnes].reverse();
+        reverseSelectedChosenOnes.forEach(key => {
+            let index = chosenOnes.findIndex(item => item.propKey === key);
+            if (index !== chosenOnes.length - 1) {
+                let toMoveItem = chosenOnes.find(item => item.propKey === key);
+                let nextItem = chosenOnes[index + 1];
+                if (this.selectedChosenOnes.indexOf(nextItem.propKey) < 0) {
+                    chosenOnes[index + 1] = toMoveItem;
+                    chosenOnes[index] = nextItem;
+                }
+            }
+        })
+
+        this.setState({
+            chosenOnes
         })
     }
 
@@ -300,7 +352,13 @@ class TreeAsyncTest extends React.Component {
 
         const modalFooter = (<div style={{ width: '100%', height: '35px', direction: 'flex' }}>
             <Button type="danger" style={{ float: 'left' }} onClick={this.clearChosenOnes}>清空已选</Button>
-            <Button type="primary" style={{ float: 'right' }} onClick={this.modalConfirm}>确定</Button>
+            {this.selectedChosenOnes.length > 0 ? (
+                <ButtonGroup style={{ float: 'left', marginLeft: '5px' }}>
+                    <Button type="default" onClick={() => this.moveUp()}><Icon type="up" />上移</Button>
+                    <Button type="default" onClick={() => this.moveDown()}><Icon type="down" />下移</Button>
+                </ButtonGroup>
+            ) : null}
+            <Button type="primary" style={{ float: 'right', marginLeft: '5px' }} onClick={this.modalConfirm}>确定</Button>
             <Button type="default" style={{ float: 'right' }} onClick={this.modalCancel}>取消</Button>
         </div>)
 
@@ -337,12 +395,12 @@ class TreeAsyncTest extends React.Component {
                         {/* style={{ height: '100%', padding: '0 7px 0 5px' }}> */}
                         <ButtonGroup className={styles.buttonGroup}>
                             {/* style={{ marginTop: '2px'}} */}
-                            <Button  size="default" type="primary"
+                            <Button size="default" type="primary"
                                 onClick={() => { this.onSearchData() }}>
-                                    <Icon type="monitor"></Icon>查找</Button>
+                                <Icon type="monitor"></Icon>查找</Button>
                             <Button size="default"
                                 onClick={() => { this.getFullOuUsersData() }}>
-                                    <Icon type="redo"></Icon>全部</Button>
+                                <Icon type="redo"></Icon>全部</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
@@ -386,28 +444,49 @@ class TreeAsyncTest extends React.Component {
                                             var key = e.currentTarget.getAttribute('data-item');
                                             // console.log(Object.entries(e))
                                             var chosenOnes = this.state.chosenOnes;
+                                            this.selectedChosenOnes = this.selectedChosenOnes.filter(v => v !== key);
                                             chosenOnes = chosenOnes.filter(v => v.propKey !== key);
                                             this.setState({
                                                 chosenOnes
                                             })
                                         }}></Icon>;
-                                    // Reflect.set(nodeIcon, 'dataItem', item);
-                                    // console.log('nodeIcon:', nodeIcon);
                                     return <List.Item
                                         actions={[nodeIcon]}
-                                        // style={{ width: '100%' }}
-                                        className={styles.listItem}
+                                        style={{ padding: '0px' }}
+                                        className={(item.selected ? styles.listItemSelected : styles.listItem)}
                                     >
                                         <List.Item.Meta //title={item.title}
                                             description={item.title}
                                             className={styles.listItemMeta}
-                                        // onClick={(e, i) => {
-                                        //     let { listItemMetaSelected: limsCurr } = this.state;
-                                        //     console.log('limsCurr:', limsCurr);
-                                        //     this.setState({
-                                        //         listItemMetaSelected: limsCurr === styles.listItemMetaSelected ? '' : styles.listItemMetaSelected
-                                        //     })
-                                        // }}
+                                            onClick={(e, i) => {
+                                                console.log('lim-e,i, item:', e, i, item);
+                                                if (!this.selectedChosenOnes.find(v => v === item.propKey)) {
+                                                    this.selectedChosenOnes.push(item.propKey);
+                                                } else {
+                                                    this.selectedChosenOnes = this.selectedChosenOnes.filter(v => v !== item.propKey);
+                                                }
+                                                let chosenOnes = this.state.chosenOnes;
+
+                                                chosenOnes.forEach(ite => {
+                                                    if (this.selectedChosenOnes.find(v => v === ite.propKey)) {
+                                                        ite.selected = true;
+                                                        ite.className = 'listItemSelected';
+                                                    } else {
+                                                        ite.selected = false;
+                                                        ite.className = '';
+                                                    }
+                                                })
+
+                                                this.setState({
+                                                    chosenOnes
+                                                })
+
+                                                // this.state.chosenOnes.find(v => v.propKey === item.propKey).selected =
+                                                //     !this.state.chosenOnes.find(v => v.propKey === item.propKey).selected;
+                                                // console.log(' this.state.chosenOnes.find(v => v.propKey === item.propKey).selected:',
+                                                //     this.state.chosenOnes.find(v => v.propKey === item.propKey).selected);
+                                                console.log("this.selectedChosenOnes:", this.selectedChosenOnes);
+                                            }}
                                         >
                                         </List.Item.Meta>
                                     </List.Item>
