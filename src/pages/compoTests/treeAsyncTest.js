@@ -317,8 +317,10 @@ class TreeAsyncTest extends React.Component {
             if (index !== 0) {
                 let toMoveItem = chosenOnes.find(item => item.propKey === key);
                 let prevItem = chosenOnes[index - 1];
-                chosenOnes[index - 1] = toMoveItem;
-                chosenOnes[index] = prevItem;
+                if (this.selectedChosenOnes.indexOf(prevItem.propKey) < 0) {
+                    chosenOnes[index - 1] = toMoveItem;
+                    chosenOnes[index] = prevItem;
+                }
             }
         })
 
