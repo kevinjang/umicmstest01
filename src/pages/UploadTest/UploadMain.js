@@ -20,6 +20,7 @@ class UploadMain extends Component {
 
 
     handleChange = ({ fileList }) => {
+        console.log(fileList[0])
         this.setState({
             fileList
         })
