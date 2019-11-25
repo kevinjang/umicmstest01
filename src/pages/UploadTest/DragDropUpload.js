@@ -7,6 +7,8 @@ import { UserContext } from '../UserContextMock'
 
 const { Dragger } = Upload;
 
+import { upload } from '../../utils/toserver/FileUpload'
+
 const BaseMB = Math.pow(1024, 2);
 const BaseKB = Math.pow(1024, 1);
 
@@ -23,6 +25,7 @@ class DragDropUpload extends Component {
             name: 'file',
             multiple: true,
             showUploadList: false,
+            accept: 'image/*',
             action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
             onChange: (info) => {
                 console.log('onChange-info.status:', info.status)
@@ -65,6 +68,10 @@ class DragDropUpload extends Component {
                     return false;
                 }
                 this.formAllItem(file, fileList)
+            },
+            customRequest: (file, fileList) => {
+                upload(file);
+                console.log('customRequest:', file, fileList);
             }
         };
     }
