@@ -153,18 +153,6 @@ export default {
                     icon: 'windows',
                     nodeInfo: './UploadTest/DragDropUpload'
                 },
-                {
-                    id: '28',
-                    title: '照片墙',
-                    icon: 'windows',
-                    nodeInfo: './UploadTest/UploadMain'
-                },
-                {
-                    id: '29',
-                    title: '拖拽上传',
-                    icon: 'windows',
-                    nodeInfo: './UploadTest/DragDropUpload'
-                },
             ]
         },
         {
