@@ -116,7 +116,9 @@ class LeaveAuthorization extends React.Component {
                 render: (text, record) => {
                     // console.log('render-this', this)
                     return <div>
-                        <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <Icon type='file'></Icon></a>
+                        <a href='javascript:;' onClick={() => this.handleEditRecord(record)}>
+                            <Icon type='file'></Icon>
+                        </a>
                         <Popconfirm title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
                             <a href='javascript:;'>
                                 <Icon type='delete'>
