@@ -70,8 +70,39 @@ class DragDropUpload extends Component {
                 this.formAllItem(file, fileList)
             },
             customRequest: (file, fileList) => {
-                upload(file);
+                upload(file.file, (res) => {
+                    const { message } = res;
+                    console.log('res', res);
+                    if (res.message === "succeeded") {
+                        let { dataSource } = this.state;
+
+                        let item = dataSource.find(v => v.fileName === file.file.name)
+                        if (item) {
+                            let itemIndex = dataSource.findIndex(v => v.fileName === file.file.name);
+                            dataSource[itemIndex].status = 'done';
+                        }
+
+                        this.setState({
+                            dataSource
+                        })
+                    } else {
+                        let { dataSource } = this.state;
+
+                        let item = dataSource.find(v => v.fileName === file.file.name)
+                        if (item) {
+                            let itemIndex = dataSource.findIndex(v => v.fileName === file.file.name);
+                            dataSource[itemIndex].status = 'error';
+                        }
+
+                        this.setState({
+                            dataSource
+                        })
+                    }
+                });
                 console.log('customRequest:', file, fileList);
+            },
+            onDownload: (file) => {
+                console.log('onDownload-file:', file)
             }
         };
     }
