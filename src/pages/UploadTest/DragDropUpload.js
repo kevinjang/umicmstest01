@@ -8,7 +8,7 @@ import { UserContext } from '../UserContextMock'
 const { Dragger } = Upload;
 
 import { upload } from '../../utils/toserver/FileUpload'
-
+import { download } from '../../utils/toserver/DownloadFile'
 const BaseMB = Math.pow(1024, 2);
 const BaseKB = Math.pow(1024, 1);
 
@@ -168,6 +168,10 @@ class DragDropUpload extends Component {
         console.log("selectedRowKeys:", selectedRowKeys);
     }
 
+    downloadFile = () => {
+        download();
+    }
+
     render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -255,7 +259,7 @@ class DragDropUpload extends Component {
                                                         <Icon type="delete"></Icon>
                                                     </a>
                                                 </Popconfirm>
-                                                <a href="javascript:;">
+                                                <a href="javascript:;" onClick={() => this.downloadFile()}>
                                                     <Icon type="download"></Icon>
                                                 </a>
                                             </div>
@@ -264,6 +268,7 @@ class DragDropUpload extends Component {
                                 ]}>
 
                         </Table>
+                        <Button type="primary" onClick={()=>this.downloadFile()}>测试下载</Button>
                     </div>)
                 }}
             </UserContext.Consumer>
