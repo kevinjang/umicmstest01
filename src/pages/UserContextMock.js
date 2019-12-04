@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
+import { getUserBaseInfoByAD, getOULongNameUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
 
 let UserContext = null;
 let MyUserData = null;
@@ -10,7 +10,8 @@ async function GetData(userAD, cb) {
         userAD = "cofco\\" + userAD;
     }
 
-    await getUserBaseInfoByAD(userAD, (data) => {
+    //getUserBaseInfoByAD getOULongNameUserBaseInfoByAD
+    await getOULongNameUserBaseInfoByAD(userAD, (data) => {
         UserContext = React.createContext(data);
         // console.log('getUserBaseInfoByAD-data:', data);
         MyUserData = data;
