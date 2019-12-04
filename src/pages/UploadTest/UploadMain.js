@@ -62,7 +62,10 @@ class UploadMain extends Component {
             >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload>
-            <Modal visible={this.state.previewVisible} footer={null}
+            <Modal 
+                visible={this.state.previewVisible} 
+                width={800}                
+                footer={null}
                 onCancel={this.handleCancel}>
                     <img alt="example" style={{width: '100%'}} src={this.state.previewImage} />
             </Modal>
