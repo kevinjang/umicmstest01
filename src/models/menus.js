@@ -137,7 +137,7 @@ export default {
                 },
                 {
                     id: '21',
-                    title: 'TreeAsync',
+                    title: '异步加载树形',
                     icon: 'windows',
                     nodeInfo: './compoTests/treeAsyncTest'
                 },                
