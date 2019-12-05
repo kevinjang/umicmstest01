@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'querystring'
 var baseURL = axios.defaults.baseURL = "http://localhost:3000";
 
-async function upload(file, callback) {
+async function upload(file, userAD, callback) {
     let formData = new FormData();
     formData.append('avatar', file, file.name);
     console.log('qs:', qs)
@@ -11,9 +11,9 @@ async function upload(file, callback) {
             "Access-Control-Allow-Origin": "http://localhost:3000",
             'Content-Type': 'multipart/form-data'
         },
-        // params:{
-        //     fileData: file
-        // },
+        params:{
+            userAD
+        },
         responseType: 'json'
     }).then(response => {
         console.log('file upload response:', response)
