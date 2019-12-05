@@ -70,7 +70,7 @@ class DragDropUpload extends Component {
                 this.formAllItem(file, fileList)
             },
             customRequest: (file, fileList) => {
-                upload(file.file, (res) => {
+                upload(file.file, this.context.UserAD, (res) => {
                     const { message } = res;
                     console.log('res', res);
                     if (res.message === "succeeded") {
@@ -268,7 +268,7 @@ class DragDropUpload extends Component {
                                 ]}>
 
                         </Table>
-                        <Button type="primary" onClick={()=>this.downloadFile()}>测试下载</Button>
+                        <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
                     </div>)
                 }}
             </UserContext.Consumer>
