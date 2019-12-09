@@ -1,7 +1,7 @@
 import React from 'react'
 const { Component } = React;
 
-import { Upload, message, Icon, Table, Button, Popconfirm } from 'antd'
+import { Upload, message, Icon, Table, Button, Popconfirm, Modal } from 'antd'
 
 import { UserContext } from '../UserContextMock'
 
@@ -9,6 +9,8 @@ const { Dragger } = Upload;
 
 import { upload } from '../../utils/toserver/FileUpload'
 import { download } from '../../utils/toserver/DownloadFile'
+import { deleteFileItem } from '../../utils/toserver/FileDelete'
+
 const BaseMB = Math.pow(1024, 2);
 const BaseKB = Math.pow(1024, 1);
 
@@ -18,7 +20,8 @@ class DragDropUpload extends Component {
 
         this.state = {
             dataSource: [],
-            selectedRowKeys: []
+            selectedRowKeys: [],
+            modalVisible: false
         }
 
         this.propsX = {
@@ -71,15 +74,16 @@ class DragDropUpload extends Component {
             },
             customRequest: (file, fileList) => {
                 upload(file.file, this.context.UserAD, (res) => {
-                    const { message } = res;
+                    const { message: messageX, fileID } = res;
                     console.log('res', res);
-                    if (res.message === "succeeded") {
+                    if (messageX === "succeeded") {
                         let { dataSource } = this.state;
 
                         let item = dataSource.find(v => v.fileName === file.file.name)
                         if (item) {
                             let itemIndex = dataSource.findIndex(v => v.fileName === file.file.name);
                             dataSource[itemIndex].status = 'done';
+                            dataSource[itemIndex].fileID = fileID;
                         }
 
                         this.setState({
@@ -129,12 +133,27 @@ class DragDropUpload extends Component {
         })
     }
 
-    handleDeleteItem = (record) => {
-        let { dataSource } = this.state;
-        dataSource = dataSource.filter(v => v.fileName !== record.fileName);
-        this.setState({
-            dataSource
-        })
+    handleDeleteItem = async (record) => {
+        console.log('handleDeleteItem-record:', record);
+        const { fileID } = record;
+        const result = await deleteFileItem(fileID, (result) => {
+            const { messageX } = result;
+            if (messageX === 'succeeded') {
+                message.success(messageX);
+            } else {
+                message.error(messageX)
+            }
+            let { dataSource } = this.state;
+            dataSource = dataSource.filter(v => v.fileName !== record.fileName);
+            this.setState({
+                dataSource
+            })
+        });
+
+        console.log(`handleDeleteItem-result:${result}`)
+        // 删除文件数据记录成功后才能清掉表格里的数据
+
+
     }
 
     getCalculatedSize = (size) => {
@@ -253,13 +272,23 @@ class DragDropUpload extends Component {
                                             return <div>
                                                 <Popconfirm title="确定删除吗？"
                                                     okText="确定"
+                                                    style={{ margin: '0 5px' }}
                                                     onConfirm={() => this.handleDeleteItem(record)}
                                                     cancelText="取消">
                                                     <a href="javascript:;">
                                                         <Icon type="delete"></Icon>
                                                     </a>
                                                 </Popconfirm>
-                                                <a href="javascript:;" onClick={() => this.downloadFile()}>
+                                                <a href="javascript:;" onClick={() => {
+                                                    this.setState({
+                                                        modalVisible: true
+                                                    })
+                                                }}
+                                                    style={{ margin: '0 5px' }}>
+                                                    <Icon type="eye"></Icon>
+                                                </a>
+                                                <a href="javascript:;" onClick={() => this.downloadFile()}
+                                                    style={{ margin: '0 5px' }}>
                                                     <Icon type="download"></Icon>
                                                 </a>
                                             </div>
@@ -269,6 +298,15 @@ class DragDropUpload extends Component {
 
                         </Table>
                         <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
+                        <Modal visible={this.state.modalVisible}
+                            onCancel={() => {
+                                this.setState({
+                                    modalVisible: false
+                                })
+                            }}
+                            closable
+                            destroyOnClose>
+                        </Modal>
                     </div>)
                 }}
             </UserContext.Consumer>
