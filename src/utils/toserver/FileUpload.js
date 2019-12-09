@@ -5,7 +5,7 @@ var baseURL = axios.defaults.baseURL = "http://localhost:3000";
 async function upload(file, userAD, callback) {
     let formData = new FormData();
     formData.append('avatar', file, file.name);
-    console.log('qs:', qs)
+    // console.log('qs:', qs)
     return await axios.post('/fileupload', formData, {
         headers: {
             "Access-Control-Allow-Origin": "http://localhost:3000",
@@ -18,8 +18,10 @@ async function upload(file, userAD, callback) {
     }).then(response => {
         console.log('file upload response:', response)
         const message = response.data.message;
+        const fileID = response.data.fileID;
         callback({
-            message
+            message,
+            fileID
         });
     }).catch(error => {
         console.log('upload error:', error)
