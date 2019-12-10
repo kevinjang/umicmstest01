@@ -9,7 +9,7 @@ const { Dragger } = Upload;
 
 import { upload } from '../../utils/toserver/FileUpload'
 import { download } from '../../utils/toserver/DownloadFile'
-import { deleteFileItem } from '../../utils/toserver/FileDelete'
+import { deleteFileItem, deleteFileItems } from '../../utils/toserver/FileDelete'
 
 const BaseMB = Math.pow(1024, 2);
 const BaseKB = Math.pow(1024, 1);
@@ -26,7 +26,7 @@ class DragDropUpload extends Component {
 
         this.propsX = {
             name: 'file',
-            multiple: true,
+            multiple: false,
             showUploadList: false,
             accept: 'image/*',
             action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -139,7 +139,7 @@ class DragDropUpload extends Component {
         const result = await deleteFileItem(fileID, (result) => {
             const { messageX } = result;
             if (messageX === 'succeeded') {
-                message.success(messageX);
+                message.success('删除成功');
             } else {
                 message.error(messageX)
             }
@@ -150,10 +150,8 @@ class DragDropUpload extends Component {
             })
         });
 
-        console.log(`handleDeleteItem-result:${result}`)
+        // console.log(`handleDeleteItem-result:${result}`)
         // 删除文件数据记录成功后才能清掉表格里的数据
-
-
     }
 
     getCalculatedSize = (size) => {
@@ -176,15 +174,20 @@ class DragDropUpload extends Component {
     deleteSelectedRowKeys = () => {
         let { selectedRowKeys, dataSource } = this.state;
 
-        dataSource = dataSource.filter(v => selectedRowKeys.indexOf(v.key) < 0);
+        const fileIDs = selectedRowKeys.map(item => {
+            return dataSource[item].fileID;
+        });
 
-        selectedRowKeys = [];
-        this.setState({
-            dataSource,
-            selectedRowKeys
-        })
+        deleteFileItems(fileIDs, (result) => {
+            const { message: messageX } = result;
+            message.info(messageX);
 
-        console.log("selectedRowKeys:", selectedRowKeys);
+            dataSource = dataSource.filter(v => selectedRowKeys.indexOf(v.key) < 0);
+
+            selectedRowKeys = [];
+
+            console.log("batch delete dataSource:", dataSource);
+        });
     }
 
     downloadFile = () => {
