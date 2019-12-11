@@ -44,11 +44,9 @@ async function deleteFileItems(fileIDs, cb) {
         console.log('files delete response data:', data)
         const { message: messageX } = data;
         if (cb) {
-            cb({
-                messageX
-            })
+            cb(data.data)
         }
-    }).catch(error=>{
+    }).catch(error => {
         console.log(`deleting files ${fileIDs} failed, error:${error.message}`)
     })
 }
