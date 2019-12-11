@@ -179,14 +179,46 @@ class DragDropUpload extends Component {
         });
 
         deleteFileItems(fileIDs, (result) => {
-            const { message: messageX } = result;
-            message.info(messageX);
+            console.log('deleteFileItems-callback-result:', result);
+            // result is an array
+            const succeeded = result.filter(item => item.dbDeleted);
+            if (succeeded.length === fileIDs.length) {
+                message.success("删除成功！");
+                dataSource = dataSource.filter(v => selectedRowKeys.indexOf(v.key) < 0);
+                selectedRowKeys = [];
+                this.setState({
+                    dataSource,
+                    selectedRowKeys
+                })
+            } else {
+                // 整理删除失败的条目
+                const failed = result.filter(item => (!item.dbDeleted));
+                var text = '';
+                // failed.forEach((fa, index) => {
 
-            dataSource = dataSource.filter(v => selectedRowKeys.indexOf(v.key) < 0);
+                // })
+                for (var i = 0; i < failed.length; i++) {
+                    var fa = failed[i];
+                    var item = dataSource.find(w => w.fileID === fa.fileID);
+                    if (item)
+                        text += `${item.Filename} 删除失败；`;
+                }
 
-            selectedRowKeys = [];
+                if (text !== '')
+                    message.error(text);
 
-            console.log("batch delete dataSource:", dataSource);
+                for (var i = 0; i < succeeded.length; i++) {
+                    var item = succeeded[i];
+                    var index = dataSource.findIndex(w=>w.fileID === item.fileID);
+                    dataSource = dataSource.filter(w=>w.fileID !== item.fileID);
+                    selectedRowKeys = selectedRowKeys.filter(ind=>ind !== index);
+                    this.setState({
+                        dataSource,
+                        selectedRowKeys
+                    })
+                }
+
+            }
         });
     }
 
