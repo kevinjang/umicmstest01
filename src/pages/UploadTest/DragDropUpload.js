@@ -10,9 +10,19 @@ const { Dragger } = Upload;
 import { upload } from '../../utils/toserver/FileUpload'
 import { download } from '../../utils/toserver/DownloadFile'
 import { deleteFileItem, deleteFileItems } from '../../utils/toserver/FileDelete'
+import { getFilesByDocID } from '../../utils/toserver/FileObtain'
 
 const BaseMB = Math.pow(1024, 2);
 const BaseKB = Math.pow(1024, 1);
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+    })
+}
 
 class DragDropUpload extends Component {
     constructor(props) {
@@ -21,7 +31,8 @@ class DragDropUpload extends Component {
         this.state = {
             dataSource: [],
             selectedRowKeys: [],
-            modalVisible: false
+            modalVisible: false,
+            previewImage: ''
         }
 
         this.propsX = {
@@ -31,7 +42,7 @@ class DragDropUpload extends Component {
             accept: 'image/*',
             action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
             onChange: (info) => {
-                console.log('onChange-info.status:', info.status)
+                console.log('onChange-info:', info)
                 const { status } = info.file;
                 if (status !== "uploading") {
                     console.log('status:', status);
@@ -84,6 +95,7 @@ class DragDropUpload extends Component {
                             let itemIndex = dataSource.findIndex(v => v.fileName === file.file.name);
                             dataSource[itemIndex].status = 'done';
                             dataSource[itemIndex].fileID = fileID;
+                            dataSource[itemIndex].file = file;
                         }
 
                         this.setState({
@@ -107,7 +119,10 @@ class DragDropUpload extends Component {
             },
             onDownload: (file) => {
                 console.log('onDownload-file:', file)
-            }
+            },
+            // onPreview: async file => {
+            //     console.log('onPreview file:', file)
+            // }
         };
     }
 
@@ -152,6 +167,18 @@ class DragDropUpload extends Component {
 
         // console.log(`handleDeleteItem-result:${result}`)
         // 删除文件数据记录成功后才能清掉表格里的数据
+    }
+
+    handlePreview = async file => {
+        console.log('handlePreview - file:', file)
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file);
+        }
+
+        this.setState({
+            modalVisible: true,
+            previewImage: file.preview
+        })
     }
 
     getCalculatedSize = (size) => {
@@ -209,9 +236,9 @@ class DragDropUpload extends Component {
 
                 for (var i = 0; i < succeeded.length; i++) {
                     var item = succeeded[i];
-                    var index = dataSource.findIndex(w=>w.fileID === item.fileID);
-                    dataSource = dataSource.filter(w=>w.fileID !== item.fileID);
-                    selectedRowKeys = selectedRowKeys.filter(ind=>ind !== index);
+                    var index = dataSource.findIndex(w => w.fileID === item.fileID);
+                    dataSource = dataSource.filter(w => w.fileID !== item.fileID);
+                    selectedRowKeys = selectedRowKeys.filter(ind => ind !== index);
                     this.setState({
                         dataSource,
                         selectedRowKeys
@@ -314,11 +341,7 @@ class DragDropUpload extends Component {
                                                         <Icon type="delete"></Icon>
                                                     </a>
                                                 </Popconfirm>
-                                                <a href="javascript:;" onClick={() => {
-                                                    this.setState({
-                                                        modalVisible: true
-                                                    })
-                                                }}
+                                                <a href="javascript:;" onClick={() => this.handlePreview(record.file.file)}
                                                     style={{ margin: '0 5px' }}>
                                                     <Icon type="eye"></Icon>
                                                 </a>
@@ -333,6 +356,11 @@ class DragDropUpload extends Component {
 
                         </Table>
                         <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
+                        <Button type="default" onClick={() => {
+                           getFilesByDocID('1e6146c0-1ca3-11ea-b715-8d05801b9e23',({message, files})=>{
+                               console.log('obtain files:', files)
+                           })
+                        }}>测试获取</Button>
                         <Modal visible={this.state.modalVisible}
                             onCancel={() => {
                                 this.setState({
@@ -341,6 +369,7 @@ class DragDropUpload extends Component {
                             }}
                             closable
                             destroyOnClose>
+                            <img src={this.state.previewImage} style={{ width: '100%' }}></img>
                         </Modal>
                     </div>)
                 }}
