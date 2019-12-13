@@ -126,6 +126,10 @@ class DragDropUpload extends Component {
         };
     }
 
+    componentDidMount() {
+        this.getFiles('x');
+    }
+
     formAllItem = (info, fileList) => {
         let { dataSource } = this.state;
         let userName = this.context.Username + ` [${this.context.UserAD}]`
@@ -253,6 +257,51 @@ class DragDropUpload extends Component {
         download();
     }
 
+    getFiles = (docID) => {
+        docID = '1e6146c0-1ca3-11ea-b715-8d05801b9e23';
+        getFilesByDocID(docID, ({ message: messageX, files }) => {
+            if (messageX === 'succeeded') {
+                var { dataSource } = this.state;
+                if (files && files.length > 0) {
+                    files.forEach((dbItem, index) => {
+                        var item = dataSource.find(it => it.fileID === dbItem.ID);
+                        var itemIndex = dataSource.findIndex(it => it.fileID === dbItem.ID);
+                        if (item) {
+                            item = {
+                                ...item,
+                                ...dbItem
+                            }
+
+                            dataSource[itemIndex] = item;
+                        } else {
+                            item = {
+                                fileID: dbItem.Id,
+                                fileName: dbItem.Filename,
+                                key: dataSource.length,
+                                version: dbItem.CurrentVersion,
+                                type: dbItem.Extension,
+                                size: dbItem.ContentLength,
+                                uploader: dbItem.OperatorAD,
+                                uploadTime: dbItem.RecordCreationTime,
+                                updateTime: dbItem.LastUpdateTime,
+                                file: {
+                                    file: new Blob([dbItem.file.file], {type:`image/jpeg`})
+                                },
+                                status: 'done'
+                            }
+
+                            dataSource.push(item);
+                        }
+                    })
+
+                    this.setState({
+                        dataSource
+                    })
+                }
+            }
+        })
+    }
+
     render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -357,9 +406,9 @@ class DragDropUpload extends Component {
                         </Table>
                         <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
                         <Button type="default" onClick={() => {
-                           getFilesByDocID('1e6146c0-1ca3-11ea-b715-8d05801b9e23',({message, files})=>{
-                               console.log('obtain files:', files)
-                           })
+                            getFilesByDocID('1e6146c0-1ca3-11ea-b715-8d05801b9e23', ({ message, files }) => {
+                                console.log('obtain files:', files)
+                            })
                         }}>测试获取</Button>
                         <Modal visible={this.state.modalVisible}
                             onCancel={() => {
