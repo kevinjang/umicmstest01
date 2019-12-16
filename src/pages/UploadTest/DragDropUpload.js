@@ -18,12 +18,23 @@ const BaseKB = Math.pow(1024, 1);
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
+        console.log('getbase64 file:', file)
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
         reader.onerror = (err) => reject(err);
     })
 }
+function getBase64FromBuffer(file) {
+    var binary = '';
+    var bytes = new Uint8Array(file.data);
+    var len = bytes.length;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
 
+    console.log('getBase64FromBuffer binary:', window.btoa(binary));
+    return window.btoa(binary);
+}
 class DragDropUpload extends Component {
     constructor(props) {
         super(props);
@@ -173,11 +184,19 @@ class DragDropUpload extends Component {
         // 删除文件数据记录成功后才能清掉表格里的数据
     }
 
-    handlePreview = async file => {
+    handlePreview = async (file, record) => {
         console.log('handlePreview - file:', file)
         if (!file.url && !file.preview) {
-            file.preview = await getBase64(file);
+            if (file && file.type === 'Buffer') {
+                file.preview = 'data:image/jpeg;base64,' + getBase64FromBuffer(file);
+            } else {
+                file.preview = await getBase64(file);
+            }
         }
+
+        console.log('file.preview:', file.preview);
+
+
 
         this.setState({
             modalVisible: true,
@@ -258,7 +277,7 @@ class DragDropUpload extends Component {
     }
 
     getFiles = (docID) => {
-        docID = '1e6146c0-1ca3-11ea-b715-8d05801b9e23';
+        docID = 'a23e2390-1f1f-11ea-b55c-af886f46fab6';
         getFilesByDocID(docID, ({ message: messageX, files }) => {
             if (messageX === 'succeeded') {
                 var { dataSource } = this.state;
@@ -285,8 +304,9 @@ class DragDropUpload extends Component {
                                 uploadTime: dbItem.RecordCreationTime,
                                 updateTime: dbItem.LastUpdateTime,
                                 file: {
-                                    file: new Blob([dbItem.file.file], {type:`image/jpeg`})
+                                    file: dbItem.file.file//new Blob([dbItem.file.file], {type:`application/octet-binary`})
                                 },
+                                filex: dbItem,
                                 status: 'done'
                             }
 
@@ -390,7 +410,7 @@ class DragDropUpload extends Component {
                                                         <Icon type="delete"></Icon>
                                                     </a>
                                                 </Popconfirm>
-                                                <a href="javascript:;" onClick={() => this.handlePreview(record.file.file)}
+                                                <a href="javascript:;" onClick={() => this.handlePreview(record.file.file, record)}
                                                     style={{ margin: '0 5px' }}>
                                                     <Icon type="eye"></Icon>
                                                 </a>
