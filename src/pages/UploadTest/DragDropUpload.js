@@ -8,7 +8,7 @@ import { UserContext } from '../UserContextMock'
 const { Dragger } = Upload;
 
 import { upload } from '../../utils/toserver/FileUpload'
-import { download } from '../../utils/toserver/DownloadFile'
+import { download, downloadAppointedFile } from '../../utils/toserver/DownloadFile'
 import { deleteFileItem, deleteFileItems } from '../../utils/toserver/FileDelete'
 import { getFilesByDocID } from '../../utils/toserver/FileObtain'
 
@@ -276,8 +276,13 @@ class DragDropUpload extends Component {
         download();
     }
 
+    downloadAppointedFile = (record) => {
+        // console.log('downloadAppointedFile record:', record)
+        downloadAppointedFile(record.fileID);
+    }
+
     getFiles = (docID) => {
-        docID = 'a23e2390-1f1f-11ea-b55c-af886f46fab6';
+        docID = '1a7c3000-1fa6-11ea-a53b-970a95aef356';
         getFilesByDocID(docID, ({ message: messageX, files }) => {
             if (messageX === 'succeeded') {
                 var { dataSource } = this.state;
@@ -414,7 +419,7 @@ class DragDropUpload extends Component {
                                                     style={{ margin: '0 5px' }}>
                                                     <Icon type="eye"></Icon>
                                                 </a>
-                                                <a href="javascript:;" onClick={() => this.downloadFile()}
+                                                <a href="javascript:;" onClick={() => this.downloadAppointedFile(record)}
                                                     style={{ margin: '0 5px' }}>
                                                     <Icon type="download"></Icon>
                                                 </a>
@@ -424,12 +429,12 @@ class DragDropUpload extends Component {
                                 ]}>
 
                         </Table>
-                        <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
+                        {/* <Button type="primary" onClick={() => this.downloadFile()}>测试下载</Button>
                         <Button type="default" onClick={() => {
                             getFilesByDocID('1e6146c0-1ca3-11ea-b715-8d05801b9e23', ({ message, files }) => {
                                 console.log('obtain files:', files)
                             })
-                        }}>测试获取</Button>
+                        }}>测试获取</Button> */}
                         <Modal visible={this.state.modalVisible}
                             onCancel={() => {
                                 this.setState({
