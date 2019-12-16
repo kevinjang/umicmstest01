@@ -78,3 +78,11 @@ dist/umi.css
 src/pages/.umi/*.js
 src/pages/.umi/*.jsx
 umicmstest01.rar
+dist/umi.css
+src/pages/.umi/DvaContainer.js
+src/pages/.umi/initDva.js
+src/pages/.umi/initHistory.js
+src/pages/.umi/LocaleWrapper.jsx
+src/pages/.umi/polyfills.js
+src/pages/.umi/router.js
+src/pages/.umi/umi.js
