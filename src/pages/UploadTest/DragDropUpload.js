@@ -277,8 +277,8 @@ class DragDropUpload extends Component {
     }
 
     downloadAppointedFile = (record) => {
-        // console.log('downloadAppointedFile record:', record)
-        downloadAppointedFile(record.fileID);
+        console.log('downloadAppointedFile record:', record)
+        downloadAppointedFile(record.fileID, record.fileName);
     }
 
     getFiles = (docID) => {
