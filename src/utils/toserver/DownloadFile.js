@@ -59,7 +59,7 @@ async function download(url) {
     // })
 }
 
-async function downloadAppointedFile(fileID) {
+async function downloadAppointedFile(fileID, fileName) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', baseURL + `/DownloadFile`, true);
     xhr.responseType = 'blob';
@@ -69,7 +69,7 @@ async function downloadAppointedFile(fileID) {
         if (this.status == 200) {
             var content = this.response;
             var a = document.createElement('a');
-            var fileName = Date.now() + '.jpg';
+            // var fileName = Date.now() + '.jpg';
             a.download = fileName;
             a.href = URL.createObjectURL(content);
             a.click();
