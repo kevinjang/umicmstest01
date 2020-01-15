@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react'
 import { Layout, Menu, Icon, Tabs, Badge, Button, Spin, Breadcrumb } from 'antd'
 import { connect } from 'dva'
-import { Route, Router, hashHistory } from 'react-router';
-import { BrowserRouter, Link, Switch } from 'react-router-dom'
+// import { Route, Router, hashHistory } from 'react-router';
+import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
 import { asyncComponent } from '../utils/asyncComponent'
 import styles from './MainFrame.css'
 
@@ -119,17 +119,19 @@ class KLayout extends React.Component {
     render() {
         document.title = 'KSNL';
 
-        const Home = ({routes, params, children}) => {
-            <div>
-                <Link to="/">主页</Link>
-                {children|| '主页'}
-                <Breadcrumb routes={routes} params={params} />
-            </div>
-        }
+        // const Home = ({ routes, params, children }) => {
+        //     <div>
+        //         <Link to="/">主页</Link>
+        //         {children || '主页'}
+        //         <Breadcrumb routes={routes} params={params} />
+        //     </div>
+        // }
 
 
-        return <div style={{ width: '100%', height: 'calc(100vh - 0px)'
-        , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}` }}>
+        return <div style={{
+            width: '100%', height: 'calc(100vh - 0px)'
+            , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}`
+        }}>
             <Spin spinning={this.state.spinning && !UserContext}
                 size="large" >
                 {UserContext ?
@@ -184,9 +186,14 @@ class KLayout extends React.Component {
                                             <div>
                                                 <BrowserRouter>
                                                     <Link to="/" >登录</Link>
+                                                    <Link to="/path1">Path1</Link>
                                                     <Switch>
                                                         <Route path="/">
                                                             {/* {children} */}
+                                                            <Home />
+                                                        </Route>
+                                                        <Route path="/path1">
+                                                            <About />
                                                         </Route>
                                                     </Switch>
                                                 </BrowserRouter>
@@ -207,4 +214,10 @@ class KLayout extends React.Component {
     }
 }
 
+function Home() {
+    return <h2>Home</h2>;
+}
+function About() {
+  return <h2>About</h2>;
+}
 export default KLayout
