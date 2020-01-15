@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react'
-import { Layout, Menu, Icon, Tabs, Badge, Button, Spin, Breadcrumb } from 'antd'
+import { Layout, Menu, Icon, Tabs, Badge, Button, Spin } from 'antd'
 import { connect } from 'dva'
-import { Route, Router, hashHistory } from 'react-router';
-import { BrowserRouter, Link, Switch } from 'react-router-dom'
+import { Route } from 'react-router';
 import { asyncComponent } from '../utils/asyncComponent'
 import styles from './MainFrame.css'
 
@@ -118,16 +117,6 @@ class KLayout extends React.Component {
 
     render() {
         document.title = 'KSNL';
-
-        const Home = ({routes, params, children}) => {
-            <div>
-                <Link to="/">主页</Link>
-                {children|| '主页'}
-                <Breadcrumb routes={routes} params={params} />
-            </div>
-        }
-
-
         return <div style={{ width: '100%', height: 'calc(100vh - 0px)'
         , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}` }}>
             <Spin spinning={this.state.spinning && !UserContext}
@@ -181,16 +170,34 @@ class KLayout extends React.Component {
                                 <Layout style={{ backgroundColor: '#f0f2f5' }}>
                                     <Scrollbars>
                                         <Content style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px', maxHeight: "90vh - 10px", overflow: 'overlay' }}>
-                                            <div>
-                                                <BrowserRouter>
-                                                    <Link to="/" >登录</Link>
-                                                    <Switch>
-                                                        <Route path="/">
-                                                            {/* {children} */}
-                                                        </Route>
-                                                    </Switch>
-                                                </BrowserRouter>
-                                                {/* {console.log(Router)} */}
+
+                                            <div >
+                                                {/* style={{ padding: "5px", background: "#fff" }} */}
+                                                {
+                                                    this.state.openTabs.length > 0 &&
+                                                    <Tabs
+                                                        activeKey={this.state.activeTabKey}
+                                                        onChange={this.tabItemChange}
+                                                        type="editable-card"
+                                                        hideAdd={true}
+                                                        onEdit={this.tabItemEdit}>
+                                                        {this.state.openTabs.map(item => {
+                                                            return <TabPane
+                                                                tab={<span><Icon type={item.icon}></Icon>{item.title}</span>}
+                                                                key={item.id}
+                                                                forceRender={false}
+                                                                closable={true}>
+                                                                <Content >
+                                                                    {/* {console.log('item.nodeInfo:', item.nodeInfo)} */}
+                                                                    <Route component={this.loadTest(item.nodeInfo, {
+                                                                        activeKey: this.state.activeTabKey,
+                                                                        selfID: item.id
+                                                                    })}></Route>
+                                                                </Content>
+                                                            </TabPane>
+                                                        })}
+                                                    </Tabs>
+                                                }
                                             </div>
                                         </Content>
                                     </Scrollbars>

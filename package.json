@@ -20,6 +20,8 @@
     "axios": "^0.18.0",
     "moment": "^2.24.0",
     "react-app-rewired": "^2.0.2-next.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "umi-plugin-react": "^1.6.0"
   }
 }
