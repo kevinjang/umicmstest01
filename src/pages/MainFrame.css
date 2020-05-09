@@ -45,3 +45,40 @@
   /* border: 1px solid white; */
   width: 250px
 }
+.bannerHeader {
+  color:white;
+  font-size: 32px;
+}
+
+.bannerHeaderUserInfo{
+  margin-top: 30px;
+  left: 1000px;
+}
+
+.sidebarLayout{
+  max-height: calc(100vh - 64px);
+}
+
+.siderbar{
+  min-height: 91.5vh;
+  color: white;
+  padding-top: 16px;
+}
+
+.contentLayout{
+  background-color: #f0f2f5;
+}
+
+.content{
+  margin-top: 16px;
+  margin-left: 16px;
+  margin-right: 16px;
+  max-height: calc(90vh - 10px);
+  overflow: overlay;
+}
+
+.footer{
+  background-color: white;
+  height: 48px;
+  padding: 10px 50px;
+}
