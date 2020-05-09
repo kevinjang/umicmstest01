@@ -32,9 +32,6 @@ class KLayout extends React.Component {
         this.state = {
             collapsed: false,
             selectedKeys: ['1'],
-            // openTabs: [],
-            // seletedTabKeys: [],
-            // activeTabKey: '',
             theme: 'dark',
             spinning: false,
             textAlign: 'center',
@@ -80,7 +77,6 @@ class KLayout extends React.Component {
                 size="large" >
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
-                        {/* {console.log('mf-MyUserData:', MyUserData)} */}
                         <Layout>
                             <Header className={styles.bannerHeader}>
                                 <Icon type="chrome" theme="filled" />
@@ -146,12 +142,5 @@ class KLayout extends React.Component {
             </Spin>
         </div>
     }
-}
-
-function Home() {
-    return <h2>Home</h2>;
-}
-function About() {
-    return <h2>About</h2>;
 }
 export default KLayout
