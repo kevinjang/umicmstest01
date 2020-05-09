@@ -32,9 +32,9 @@ class KLayout extends React.Component {
         this.state = {
             collapsed: false,
             selectedKeys: ['1'],
-            openTabs: [],
-            seletedTabKeys: [],
-            activeTabKey: '',
+            // openTabs: [],
+            // seletedTabKeys: [],
+            // activeTabKey: '',
             theme: 'dark',
             spinning: false,
             textAlign: 'center',
@@ -43,63 +43,7 @@ class KLayout extends React.Component {
         }
     }
 
-    // menuItemClick = (e,x) => {
-    //     console.log('menuItemClick-x:', x);
-
-    //     const id = e.key.split('_')[0]
-
-    //     // const blockUrl = e.key.split('_')[1]
-
-    //     // 此处防止反复点击同一菜单时页面闪烁
-    //     if (this.state.activeTabKey !== id)
-    //         this.setState({
-    //             activeTabKey: id
-    //         })
-
-    //     let allMenus = [].concat(...this.props.menus)
-    //     this.props.menus.map(item => {
-    //         if (item.children) {
-    //             allMenus = allMenus.concat(...item.children)
-    //         }
-    //     })
-
-    //     const selectedExists = this.state.openTabs.find(item => item.id === id)
-    //     if (!selectedExists) {
-    //         const selectedTab = allMenus.find(item => item.id === id);
-    //         this.setState({
-    //             openTabs: [...this.state.openTabs, selectedTab]
-    //         })
-    //     }
-    // }
-
-    menuItemClick = (item) => {
-        console.log('menuItemClick-item:', item);
-
-        // const id = item.id; //e.key.split('_')[0]
-
-        // const blockUrl = e.key.split('_')[1]
-
-        // 此处防止反复点击同一菜单时页面闪烁
-        // if (this.state.activeTabKey !== id)
-        //     this.setState({
-        //         activeTabKey: id
-        //     })
-
-        // let allMenus = [].concat(...this.props.menus)
-        // this.props.menus.map(item => {
-        //     if (item.children) {
-        //         allMenus = allMenus.concat(...item.children)
-        //     }
-        // })
-
-        // const selectedExists = this.state.openTabs.find(item => item.id === id)
-        // if (!selectedExists) {
-        //     const selectedTab = allMenus.find(item => item.id === id);
-        //     this.setState({
-        //         openTabs: [...this.state.openTabs, selectedTab]
-        //     })
-        // }
-
+    menuItemClick = (item) => {        
         const pathname = item.nodeInfo;
 
         this.setState({
@@ -107,33 +51,7 @@ class KLayout extends React.Component {
         })
     }
 
-    tabItemChange = (e) => {
-        this.setState({
-            activeTabKey: e
-        })
-    }
-
-    tabItemEdit = (e) => {
-        // 获取打开的倒数第二个id并设定activeTabKey
-        if (this.state.openTabs.length > 1) {
-            let id = this.state.openTabs[this.state.openTabs.length - 2].id
-            this.setState({
-                activeTabKey: id
-            })
-        }
-        // 将当前活动的tab移除
-        let openedtabs = this.state.openTabs;
-        let itemIndex = openedtabs.findIndex(rc => rc.id === e);
-        if (itemIndex > -1) {
-            openedtabs.splice(itemIndex, 1)
-            this.setState({
-                openTabs: openedtabs
-            })
-        }
-    }
-
     componentWillMount() {
-        // setAxios();
         this.setState({
             spinning: true
         }, () => {
@@ -147,18 +65,8 @@ class KLayout extends React.Component {
         })
     }
 
-    componentDidMount() {
-    }
-
-    loadTest = (e, opts) => {
-        const st = asyncComponent(() => import(e), opts)
-        return st
-    };
-
     render() {
         document.title = 'KSNL';
-
-
         const LoadableComponent = Loadable({
             loader: () => import(`${this.state.pathname}`),
             loading: () => <div>{'loading'}</div>
