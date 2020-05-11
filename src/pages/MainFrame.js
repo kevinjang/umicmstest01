@@ -36,12 +36,67 @@ class KLayout extends React.Component {
             spinning: false,
             textAlign: 'center',
             paddingTop: '25%',
-            pathname: './Index'
+            pathname: './Index',
+            linkArrForBreadCrumb: [{ title: 'KSNL', level: 0, icon: 'chrome' }]
         }
     }
 
-    menuItemClick = (item) => {        
+    getTrace = (item) => {
+        console.log('getTrace item:', item)
+        let parentItem = null;
+        let { linkArrForBreadCrumb } = this.state;
+        // console.log('getTrace linkArrForBreadCrumb:', linkArrForBreadCrumb)
+        const menus = this.props.menus;
+        let dealed = false;
+        for (let i = 0; i < menus.length; i++) {
+            parentItem = menus[i];
+
+            console.log('getTrace parentItem:', parentItem);
+
+            if (parentItem.children) {
+                for (let j = 0; j < parentItem.children.length; j++) {
+                    if (parentItem.children[j].id === item.id) {
+                        let secondLink = {
+                            title: parentItem.title,
+                            level: 1,
+                            icon: parentItem.icon
+                        };
+
+                        // console.log('parentItem.children[j].id:', parentItem.children[j]);
+                        console.log('linkArrForBreadCrumb.slice(0):', linkArrForBreadCrumb.slice(0));
+
+                        linkArrForBreadCrumb = linkArrForBreadCrumb.slice(0, 1);
+                        linkArrForBreadCrumb.push(secondLink);
+
+                        let thirdLink = {
+                            title: item.title,
+                            level: 2,
+                            icon: item.icon
+                        }
+
+                        linkArrForBreadCrumb.push(thirdLink);
+
+                        dealed = true;
+
+                        this.setState({
+                            linkArrForBreadCrumb
+                        });
+
+                        break;
+                    }
+                }
+            }
+
+            if (dealed) {
+                break;
+            }
+        }
+    }
+
+    menuItemClick = (item) => {
         const pathname = item.nodeInfo;
+
+        this.getTrace(item);
 
         this.setState({
             pathname
@@ -64,6 +119,11 @@ class KLayout extends React.Component {
 
     render() {
         document.title = 'KSNL';
+        // const linkss = [
+        //     { text: 'KSNL',level: 0 },
+        //     { text: 'HaHa', level: 1 },
+        //     { text: 'MainFrame', level: 2 }
+        // ]
         const LoadableComponent = Loadable({
             loader: () => import(`${this.state.pathname}`),
             loading: () => <div>{'loading'}</div>
@@ -102,21 +162,21 @@ class KLayout extends React.Component {
                                                 mode='inline'
                                                 inlineCollapsed={this.state.collapsed}
                                             >
+                                                {console.log('this.props.menus:', this.props.menus)}
                                                 {this.props.menus.map(item => {
                                                     if (item.children)
                                                         return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
                                                             {item.children.map(cItem => {
                                                                 return <Item key={cItem.id + '_' + cItem.nodeInfo}>
                                                                     <Icon type={cItem.icon}></Icon>
-                                                                    {/* {console.log(cItem.urlPath+ '_' + cItem.id)} */}
-                                                                    <span><Link style={{color: 'white'}} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} onClick={()=>this.menuItemClick(cItem)}> {cItem.title}</Link></span>
+                                                                    <span><Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} onClick={() => this.menuItemClick(cItem)}> {cItem.title}</Link></span>
                                                                 </Item>
                                                             })}
                                                         </SubMenu>
                                                     else
                                                         return <Item key={item.id}>
                                                             <Icon type={item.icon}></Icon>
-                                                            <span>{item.title}</span>
+                                                            <span><Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} onClick={() => this.menuItemClick(cItem)}> {cItem.title}</Link></span>
                                                         </Item>
                                                 })}
                                             </Menu>
@@ -124,11 +184,15 @@ class KLayout extends React.Component {
                                     </Scrollbars>
                                 </Sider>
                                 <Layout className={styles.contentLayout}>
+                                    <Breadcrumb style={{ paddingLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
+                                        {this.state.linkArrForBreadCrumb.map((item) => {
+                                            return <Breadcrumb.Item>{<Icon type={item.icon} />} {item.title}</Breadcrumb.Item>
+                                        })}
+                                    </Breadcrumb>
                                     <Scrollbars>
-                                        <Content className={styles.content}>
-                                            <div>
-                                                <LoadableComponent />
-                                            </div>
+                                        <Content className={styles.content} style={{minHeight: 'calc(100vh - 153px)'}}>
+                                            {/**Content的style必须这么写，不然就会被css的优先级干掉，无法正常显示高度 */}
+                                            <LoadableComponent />
                                         </Content>
                                     </Scrollbars>
                                     <Footer className={styles.footer}>
