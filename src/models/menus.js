@@ -1,6 +1,6 @@
 export default {
     namespace: 'menus',
-    /* 29了*/
+    /* 32了*/
     state: [
         {
             id: '1',
@@ -246,6 +246,14 @@ export default {
                     icon: 'windows',
                     urlPath: 'CardDragNDrop',
                     nodeInfo: './DragNDrop/CardDND'
+                },                
+                {
+                    id: '32',
+                    level:2,
+                    title: 'CreateNewComponent',
+                    icon: 'windows',
+                    urlPath: 'CreateNewComponent',
+                    nodeInfo: './compoTests/createNewComponent'
                 }
             ]
         }
