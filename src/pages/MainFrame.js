@@ -42,7 +42,7 @@ class KLayout extends React.Component {
     }
 
     getTrace = (item) => {
-        console.log('getTrace item:', item)
+        // console.log('getTrace item:', item)
         let parentItem = null;
         let { linkArrForBreadCrumb } = this.state;
         // console.log('getTrace linkArrForBreadCrumb:', linkArrForBreadCrumb)
@@ -51,7 +51,7 @@ class KLayout extends React.Component {
         for (let i = 0; i < menus.length; i++) {
             parentItem = menus[i];
 
-            console.log('getTrace parentItem:', parentItem);
+            // console.log('getTrace parentItem:', parentItem);
 
             if (parentItem.children) {
                 for (let j = 0; j < parentItem.children.length; j++) {
@@ -63,7 +63,7 @@ class KLayout extends React.Component {
                         };
 
                         // console.log('parentItem.children[j].id:', parentItem.children[j]);
-                        console.log('linkArrForBreadCrumb.slice(0):', linkArrForBreadCrumb.slice(0));
+                        // console.log('linkArrForBreadCrumb.slice(0):', linkArrForBreadCrumb.slice(0));
 
                         linkArrForBreadCrumb = linkArrForBreadCrumb.slice(0, 1);
                         linkArrForBreadCrumb.push(secondLink);
@@ -162,7 +162,7 @@ class KLayout extends React.Component {
                                                 mode='inline'
                                                 inlineCollapsed={this.state.collapsed}
                                             >
-                                                {console.log('this.props.menus:', this.props.menus)}
+                                                {/* {console.log('this.props.menus:', this.props.menus)} */}
                                                 {this.props.menus.map(item => {
                                                     if (item.children)
                                                         return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
