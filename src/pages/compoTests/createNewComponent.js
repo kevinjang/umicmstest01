@@ -17,7 +17,7 @@ function createNewComponent() {
                     //     setComponents(componentsX)
                     // });
                     const componentsX = components;
-                    componentsX.push((props) => { return <Input {...props} /> });
+                    componentsX.push((props) => { return <Input {...props}  key={"selfmade_" + (componentsX.length - 1)} /> });
                     setComponents([...componentsX]);
                     // console.log('after pushed:', components)
                     // setTests(['0', '1'])
