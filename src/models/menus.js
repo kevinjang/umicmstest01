@@ -10,14 +10,14 @@ export default {
             children: [
                 {
                     id: '4',
-                    level:2,
+                    level: 2,
                     title: 'Table数据展示',
                     icon: 'pie-chart',
                     urlPath: 'dashboard',
                     nodeInfo: './dashboard/dashboard'
                 }, {
                     id: '5',
-                    level:2,
+                    level: 2,
                     title: 'Option 5',
                     icon: 'pie-chart',
                     urlPath: 'treetest',
@@ -33,14 +33,14 @@ export default {
             children: [
                 {
                     id: '6',
-                    level:2,
+                    level: 2,
                     title: '弹窗编辑示例',
                     icon: 'weibo-square',
                     urlPath: 'aladin',
                     nodeInfo: './treetest/Aladin'
                 }, {
                     id: '7',
-                    level:2,
+                    level: 2,
                     title: '网格内编辑示例',
                     icon: 'pie-chart',
                     urlPath: 'formtest',
@@ -56,7 +56,7 @@ export default {
             children: [
                 {
                     id: '17',
-                    level:2,
+                    level: 2,
                     title: '离职查询授权',
                     icon: 'weibo',
                     urlPath: 'LeaveAuthorization',
@@ -64,7 +64,7 @@ export default {
                 },
                 {
                     id: '22',
-                    level:2,
+                    level: 2,
                     title: '员工BP号维护',
                     icon: 'windows',
                     urlPath: 'EmployeeBPMaintain',
@@ -72,7 +72,7 @@ export default {
                 },
                 {
                     id: '27',
-                    level:2,
+                    level: 2,
                     title: '员工年假标准维护',
                     icon: 'twitter',
                     urlPath: 'VacationStandardMaintain',
@@ -88,7 +88,7 @@ export default {
             children: [
                 {
                     id: '9',
-                    level:2,
+                    level: 2,
                     title: '水平排列登陆表单',
                     icon: 'form',
                     urlPath: 'HorizontalLoginForm',
@@ -96,16 +96,16 @@ export default {
                 },
                 {
                     id: '10',
-                    level:2,
+                    level: 2,
                     title: '正常登录表单',
                     icon: 'form',
-                    level:2,
+                    level: 2,
                     urlPath: 'NormalLoginForm',
                     nodeInfo: './treetest/NormalLoginForm'
                 },
                 {
                     id: '11',
-                    level:2,
+                    level: 2,
                     title: '注册新用户',
                     icon: 'form',
                     urlPath: 'NewUserRegistration',
@@ -113,7 +113,7 @@ export default {
                 },
                 {
                     id: '12',
-                    level:2,
+                    level: 2,
                     title: '高级搜索',
                     icon: 'form',
                     urlPath: 'MultiConditionSearch',
@@ -121,7 +121,7 @@ export default {
                 },
                 {
                     id: '13',
-                    level:2,
+                    level: 2,
                     title: '弹出层中的新建表单',
                     icon: 'form',
                     urlPath: 'CollectionCreateForm',
@@ -129,7 +129,7 @@ export default {
                 },
                 {
                     id: '14',
-                    level:2,
+                    level: 2,
                     title: '动态增减表单项',
                     icon: 'form',
                     urlPath: 'DynamicFieldSet',
@@ -137,7 +137,7 @@ export default {
                 },
                 {
                     id: '15',
-                    level:2,
+                    level: 2,
                     title: '时间类控件',
                     icon: 'form',
                     urlPath: 'TimeRelatedForm',
@@ -145,7 +145,7 @@ export default {
                 },
                 {
                     id: '16',
-                    level:2,
+                    level: 2,
                     title: '自定义表单控件',
                     icon: 'form',
                     urlPath: 'PriceInput',
@@ -161,7 +161,7 @@ export default {
             children: [
                 {
                     id: '19',
-                    level:2,
+                    level: 2,
                     title: 'Spin测试',
                     icon: 'windows',
                     urlPath: 'spnningTest',
@@ -169,7 +169,7 @@ export default {
                 },
                 {
                     id: '20',
-                    level:2,
+                    level: 2,
                     title: 'TreeSelect',
                     icon: 'windows',
                     urlPath: 'treeSelectTest',
@@ -177,7 +177,7 @@ export default {
                 },
                 {
                     id: '21',
-                    level:2,
+                    level: 2,
                     title: '异步加载树形',
                     icon: 'windows',
                     urlPath: 'treeAsyncTest',
@@ -185,7 +185,7 @@ export default {
                 },
                 {
                     id: '28',
-                    level:2,
+                    level: 2,
                     title: '照片墙',
                     icon: 'windows',
                     urlPath: 'UploadMain',
@@ -193,7 +193,7 @@ export default {
                 },
                 {
                     id: '29',
-                    level:2,
+                    level: 2,
                     title: '拖拽上传',
                     icon: 'windows',
                     urlPath: 'DragDropUpload',
@@ -209,7 +209,7 @@ export default {
             children: [
                 {
                     id: '24',
-                    level:2,
+                    level: 2,
                     title: '员工BP号维护',
                     icon: 'windows',
                     urlPath: 'test_layout_index',
@@ -225,7 +225,7 @@ export default {
             children: [
                 {
                     id: '26',
-                    level:2,
+                    level: 2,
                     title: 'FileInput',
                     icon: 'windows',
                     urlPath: 'FileInput',
@@ -241,19 +241,43 @@ export default {
             children: [
                 {
                     id: '31',
-                    level:2,
+                    level: 2,
                     title: 'Card Drag N Drop',
                     icon: 'windows',
                     urlPath: 'CardDragNDrop',
                     nodeInfo: './DragNDrop/CardDND'
-                },                
+                },
                 {
                     id: '32',
-                    level:2,
+                    level: 2,
                     title: 'CreateNewComponent',
                     icon: 'windows',
                     urlPath: 'CreateNewComponent',
                     nodeInfo: './compoTests/createNewComponent'
+                }
+            ]
+        },
+        {
+            id: '33',
+            level: 1,
+            title: '上传测试',
+            icon: 'file',
+            children: [
+                {
+                    id: '34',
+                    level: 2,
+                    title: 'ImageUploadTest',
+                    icon: 'windows',
+                    urlPath: 'ImageUploadTest',
+                    nodeInfo: './FileUploadTest/ImageUploadTest1'
+                },
+                {
+                    id: '35',
+                    level: 2,
+                    title: 'FileUploadTest',
+                    icon: 'windows',
+                    urlPath: 'FileUploadTest',
+                    nodeInfo: './FileUploadTest/FileUploadTest1'
                 }
             ]
         }
