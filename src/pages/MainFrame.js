@@ -134,7 +134,7 @@ class KLayout extends React.Component {
                                 </div>
                             </Header>
 
-                            <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
+                            <Layout style={{ maxHeight: 'calc(100vh - 64px)', height: 'calc(100vh - 64px)' }}>
                                 <Sider
                                     width={200}
                                     style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
