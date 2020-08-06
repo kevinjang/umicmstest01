@@ -7,6 +7,8 @@ import styles from './MainFrame.css'
 
 import UserInfo from './user/userInfo'
 
+import { CopyrightOutline } from '@ant-design/icons'
+
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
@@ -16,6 +18,9 @@ import Notification from './Notification/Notification'
 import { UserContext, GetData, MyUserData } from './UserContextMock';
 
 import { Scrollbars } from 'react-custom-scrollbars'
+
+
+import moment from 'moment'
 
 // const UserContextMock = UserContext
 
@@ -117,8 +122,10 @@ class KLayout extends React.Component {
 
     render() {
         document.title = 'KSNL';
-        return <div style={{ width: '100%', height: 'calc(100vh - 0px)'
-        , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}` }}>
+        return <div style={{
+            width: '100%', height: 'calc(100vh - 0px)'
+            , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}`
+        }}>
             <Spin spinning={this.state.spinning && !UserContext}
                 size="large" >
                 {UserContext ?
@@ -202,7 +209,7 @@ class KLayout extends React.Component {
                                         </Content>
                                     </Scrollbars>
                                     <Footer style={{ backgroundColor: 'white', height: '48px', padding: '10px 50px' }}>
-                                        <Icon type="copyright">  </Icon>KSNL
+                                        <Icon type="copyright" />KSNL {moment().year()}
                                 </Footer>
                                 </Layout>
                             </Layout>
