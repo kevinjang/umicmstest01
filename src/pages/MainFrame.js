@@ -4,23 +4,17 @@ import { connect } from 'dva'
 import { Route } from 'react-router';
 import { asyncComponent } from '../utils/asyncComponent'
 import styles from './MainFrame.css'
-
 import UserInfo from './user/userInfo'
+import Notification from './Notification/Notification'
+import { UserContext, GetData, MyUserData } from './UserContextMock';
+import { Scrollbars } from 'react-custom-scrollbars'
+import moment from 'moment'
 
-import { CopyrightOutline } from '@ant-design/icons'
+import {withBreadcrumbs} from 'react-router-breadcrumbs-hoc'
 
 const { Header, Footer, Sider, Content } = Layout
 const { Item, SubMenu } = Menu
 const { TabPane } = Tabs
-
-import Notification from './Notification/Notification'
-
-import { UserContext, GetData, MyUserData } from './UserContextMock';
-
-import { Scrollbars } from 'react-custom-scrollbars'
-
-
-import moment from 'moment'
 
 // const UserContextMock = UserContext
 
