@@ -33,9 +33,19 @@ class Login1 extends React.Component {
                 msgType: data.code
             })
 
+            if(!hasAliveCookie()){
+                // 如果没有
+                dealCookie();
+            }
+
             console.log('onLoginSubmit-router', router)
             router.push('/mainframe');
         }).catch(err => {
+
+            if(!hasAliveCookie()){
+                // 如果没有
+                dealCookie();
+            }
             router.push('/mainframe');
         });
     }
@@ -48,11 +58,11 @@ class Login1 extends React.Component {
     }
 
     getCaptcha = () => {
-        console.log('get Captcha')
+        // console.log('get Captcha')
     }
 
     render() {
-        console.log(window.location)
+        // console.log(window.location)
         return <div style={{
             paddingTop: '25vh',
             marginLeft: '37.5vw',
@@ -95,6 +105,31 @@ class Login1 extends React.Component {
             }
         </div >
     }
+}
+
+
+function hasAliveCookie(username){
+    username= 'kevinjang'
+    if(!localStorage.getItem(username)) return false;
+    else{
+        const cookie = JSON.parse(localStorage.getItem(username));
+        if(parseInt(cookie.expires)> Date.now()){
+            return false;;
+        }
+
+        return true;
+    }
+}
+
+function dealCookie(username){
+    username= 'kevinjang'
+    const maxAge = 604800000;
+    const expires = Date.now() + maxAge;
+    localStorage.setItem(username, JSON.stringify({
+        username,
+        maxAge,
+        expires
+    }))
 }
 
 export default Login1

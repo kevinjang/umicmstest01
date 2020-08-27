@@ -18,6 +18,8 @@ import { Scrollbars } from 'react-custom-scrollbars'
 
 import Loadable from 'react-loadable';
 
+import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
+
 // const UserContextMock = UserContext
 
 @connect(
@@ -142,7 +144,8 @@ class KLayout extends React.Component {
                                 <Icon type="chrome" theme="filled" />
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
-                                    <Notification></Notification>
+                                    {/* <Notification></Notification> */}
+                                    <GlobalHeaderDropdown />
                                     <UserInfo className={styles.bannerHeaderUserInfo}></UserInfo>
                                 </div>
                             </Header>
