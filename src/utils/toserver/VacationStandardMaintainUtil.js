@@ -11,9 +11,7 @@ function getByPage(pageSize, startPage, condition, callback) {
         params: { pageSize, startPage, condition },
         responseType: 'json'
     }).then(response => {
-        const { data, message: selfMessage } = response.data;
-        var results = data.recordsets[0];
-        var number = data.recordsets[1][0].count
+        var results = response.data.results;
         results = results.map((item, index) => {
             return {
                 key: item.new_id,
@@ -21,19 +19,19 @@ function getByPage(pageSize, startPage, condition, callback) {
                 ...item
             }
         });
-        if (callback)
+
         callback({
-            PaginationTotal: parseInt(number)  || 0,
+            PaginationTotal: parseInt(response.data.allCount) || 0,
             dataSource: results,
-            allCount: number,
-            pagi_total: number,
+            allCount: response.data.allCount,
+            pagi_total: response.data.allCount,
             spinning: false
         })
-        if (selfMessage === 'succeeded') {
+        if (response.data.message === 'succeeded') {
             message.success('员工年假标准维护-加载成功')
         }
         else {
-            message.error(selfMessage)
+            message.error(response.data.message)
         }
     }).catch(err => {
         callback({
