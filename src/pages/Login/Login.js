@@ -11,9 +11,9 @@ import { withRouter } from 'umi'
 
 import styles from './Login.css'
 
-@connect(
-    state => ({ rules: state.vrules })
-)
+// @connect(
+//     state => ({ rules: state.vrules })
+// )
 class Login1 extends React.Component {
     constructor(props) {
         super(props)
@@ -115,6 +115,10 @@ class Login1 extends React.Component {
     }
 }
 
+const LoginX = connect(({vrules})=>({
+    rules: vrules
+}))(Login1)
+
 
 function hasAliveCookie(username) {
     username = 'kevinjang'
@@ -140,4 +144,4 @@ function dealCookie(username) {
     }))
 }
 
-export default withRouter(({history})=>(<Login1 history={history} />))
+export default withRouter(({history})=>(<LoginX history={history} />))
