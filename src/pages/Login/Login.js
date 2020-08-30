@@ -5,7 +5,9 @@ const { Tab, UserName, Password, Submit, Mobile, Captcha } = Login
 import { validateUserInfo } from '../../utils/request'
 import { connect } from 'dva'
 import { Alert } from 'antd'
-import router from 'umi/router'
+// import router from 'umi/router'
+
+import { withRouter } from 'umi'
 
 import styles from './Login.css'
 
@@ -22,6 +24,10 @@ class Login1 extends React.Component {
             msgType: '',
             activeTab: 'tab1'
         }
+        this.history = props.history;
+    }
+    componentDidMount(){
+
     }
     onLoginSubmit = (err, values) => {
         const info = { ...values, tabType: this.state.activeTab }
@@ -33,20 +39,22 @@ class Login1 extends React.Component {
                 msgType: data.code
             })
 
-            if(!hasAliveCookie()){
+            if (!hasAliveCookie()) {
                 // 如果没有
                 dealCookie();
             }
 
-            console.log('onLoginSubmit-router', router)
-            router.push('/mainframe');
+            // console.log('onLoginSubmit-router', router)
+            // router.push('/mainframe');
+            this.history.push('/mainframe');
         }).catch(err => {
 
-            if(!hasAliveCookie()){
+            if (!hasAliveCookie()) {
                 // 如果没有
                 dealCookie();
             }
-            router.push('/mainframe');
+            // router.push('/mainframe');
+            this.history.push('/mainframe');
         });
     }
 
@@ -95,7 +103,7 @@ class Login1 extends React.Component {
                     <Submit>登录</Submit>
                 </Login>
             </div>
-            
+
             {
                 this.state.msg ? <Alert
                     message={this.state.msg}
@@ -108,12 +116,12 @@ class Login1 extends React.Component {
 }
 
 
-function hasAliveCookie(username){
-    username= 'kevinjang'
-    if(!localStorage.getItem(username)) return false;
-    else{
+function hasAliveCookie(username) {
+    username = 'kevinjang'
+    if (!localStorage.getItem(username)) return false;
+    else {
         const cookie = JSON.parse(localStorage.getItem(username));
-        if(parseInt(cookie.expires)> Date.now()){
+        if (parseInt(cookie.expires) > Date.now()) {
             return false;;
         }
 
@@ -121,8 +129,8 @@ function hasAliveCookie(username){
     }
 }
 
-function dealCookie(username){
-    username= 'kevinjang'
+function dealCookie(username) {
+    username = 'kevinjang'
     const maxAge = 604800000;
     const expires = Date.now() + maxAge;
     localStorage.setItem(username, JSON.stringify({
@@ -132,4 +140,4 @@ function dealCookie(username){
     }))
 }
 
-export default Login1
+export default withRouter(({history})=>(<Login1 history={history} />))

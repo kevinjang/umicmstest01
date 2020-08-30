@@ -11,14 +11,15 @@ const NoticeIcon = (props) => {
     const getNoticeListBox = () => {
         const panes = [];
         React.Children.forEach(children, child => {
+            const {title} = child.props
             panes.push(
-                <TabPane>
-                    <NoticeList />
+                <TabPane tab={title}>
+                    <NoticeList title={title} />
                 </TabPane>
             )
         })
         return (
-            <Spin>
+            <Spin spinning={false}>
                 <Tabs>
                     {panes}
                 </Tabs>

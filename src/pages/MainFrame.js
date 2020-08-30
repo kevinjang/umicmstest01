@@ -145,7 +145,9 @@ class KLayout extends React.Component {
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
                                     {/* <Notification></Notification> */}
-                                    <GlobalHeaderDropdown />
+                                    <div style={{ float: 'left', marginTop: '-10px' }}>
+                                        <GlobalHeaderDropdown />
+                                    </div>
                                     <UserInfo className={styles.bannerHeaderUserInfo}></UserInfo>
                                 </div>
                             </Header>
@@ -193,7 +195,7 @@ class KLayout extends React.Component {
                                         })}
                                     </Breadcrumb>
                                     <Scrollbars>
-                                        <Content className={styles.content} style={{minHeight: 'calc(100vh - 153px)'}}>
+                                        <Content className={styles.content} style={{ minHeight: 'calc(100vh - 153px)' }}>
                                             {/**Content的style必须这么写，不然就会被css的优先级干掉，无法正常显示高度 */}
                                             <LoadableComponent />
                                         </Content>
