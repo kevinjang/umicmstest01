@@ -20,7 +20,11 @@ import Loadable from 'react-loadable';
 
 import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
 
+import {CopyrightCircleOutlined} from '@ant-design/icons'
+import moment from 'moment'
 // const UserContextMock = UserContext
+
+import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 
 @connect(
     state => ({
@@ -121,11 +125,6 @@ class KLayout extends React.Component {
 
     render() {
         document.title = 'KSNL';
-        // const linkss = [
-        //     { text: 'KSNL',level: 0 },
-        //     { text: 'HaHa', level: 1 },
-        //     { text: 'MainFrame', level: 2 }
-        // ]
         const LoadableComponent = Loadable({
             loader: () => import(`${this.state.pathname}`),
             loading: () => <div>{'loading'}</div>
@@ -139,7 +138,7 @@ class KLayout extends React.Component {
                 size="large" >
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
-                        <Layout>
+                        <Layout style={{height: '100vh'}}>
                             <Header className={styles.bannerHeader}>
                                 <Icon type="chrome" theme="filled" />
                                 <span>导航</span>
@@ -153,41 +152,13 @@ class KLayout extends React.Component {
                             </Header>
 
                             <Layout className={styles.sidebarLayout}>
-                                <Sider
-                                    width={200}
+                                <SidebarMenu width={200}
                                     className={styles.siderbar}
                                     theme={this.state.theme}
-                                    collapsible>
-                                    <Scrollbars>
-                                        <BrowserRouter>
-                                            <Menu
-                                                theme={this.state.theme}
-                                                defaultSelectedKeys={this.state.selectedKeys}
-                                                defaultOpenKeys={['sub1']}
-                                                mode='inline'
-                                                inlineCollapsed={this.state.collapsed}
-                                            >
-                                                {/* {console.log('this.props.menus:', this.props.menus)} */}
-                                                {this.props.menus.map(item => {
-                                                    if (item.children)
-                                                        return <SubMenu key={item.id} title={<span><Icon type={item.icon} /><span>{item.title}</span></span>}>
-                                                            {item.children.map(cItem => {
-                                                                return <Item key={cItem.id + '_' + cItem.nodeInfo}>
-                                                                    <Icon type={cItem.icon}></Icon>
-                                                                    <span><Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} onClick={() => this.menuItemClick(cItem)}> {cItem.title}</Link></span>
-                                                                </Item>
-                                                            })}
-                                                        </SubMenu>
-                                                    else
-                                                        return <Item key={item.id}>
-                                                            <Icon type={item.icon}></Icon>
-                                                            <span><Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} onClick={() => this.menuItemClick(cItem)}> {cItem.title}</Link></span>
-                                                        </Item>
-                                                })}
-                                            </Menu>
-                                        </BrowserRouter>
-                                    </Scrollbars>
-                                </Sider>
+                                    collapsible
+                                    menus={this.props.menus}
+                                    menuMode={'inline'}
+                                    menuCollapsed={this.state.collapsed} />
                                 <Layout className={styles.contentLayout}>
                                     <Breadcrumb style={{ paddingLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
                                         {this.state.linkArrForBreadCrumb.map((item) => {
@@ -201,7 +172,7 @@ class KLayout extends React.Component {
                                         </Content>
                                     </Scrollbars>
                                     <Footer className={styles.footer}>
-                                        <Icon type="copyright">  </Icon>KSNL
+                                        <CopyrightCircleOutlined />KSNL {moment().year()}
                                 </Footer>
                                 </Layout>
                             </Layout>
