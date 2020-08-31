@@ -6,12 +6,12 @@ import { Scrollbars } from 'react-custom-scrollbars'
 
 import { Link } from 'umi'
 
-const SidebarMenus = (props) => {
-    const { menus, theme, menuMode, menuCollapsed } = props;
+const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) => {
+    // const { menus, theme, menuMode, menuCollapsed } = props;
     return (
-        <Sider {...props}>
+        <Sider collapsed={menuCollapsed} {...restProps}>
             <Scrollbars>
-                <Menu theme={theme} mode={menuMode} inlineCollapsed={menuCollapsed}>
+                <Menu theme={theme} mode={menuMode}>
                     {menus.map((item, index) => {
                         if (item.children) {
                             return (<SubMenu
@@ -35,8 +35,9 @@ const SidebarMenus = (props) => {
                                                             description: 'test'
                                                         })}
                                                     >
-                                                        {cItem.title}    
-                                                    </Link></span>
+                                                        {cItem.title}
+                                                    </Link>
+                                                </span>
                                             </MenuItem>
                                         )
                                     })
@@ -47,7 +48,7 @@ const SidebarMenus = (props) => {
                             return <MenuItem key={item.id}>
                                 <Icon type={item.icon}></Icon>
                                 <span>
-                                    <Link style={{color:'white'}} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath} 
+                                    <Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
                                         onClick={() => notification.info({
                                             message: 'test',
                                             description: 'test'

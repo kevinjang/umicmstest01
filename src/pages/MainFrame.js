@@ -1,14 +1,14 @@
 import React from 'react'
-import { Layout, Menu, Icon, Spin, Breadcrumb } from 'antd'
+import { Layout, Icon, Spin, Breadcrumb } from 'antd'
 import { connect } from 'dva';
-import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
+import { BrowserRouter, Switch } from 'react-router-dom'
 import { asyncComponent } from '../utils/asyncComponent'
 import styles from './MainFrame.css'
 
 import UserInfo from './user/userInfo'
 
-const { Header, Footer, Sider, Content } = Layout
-const { Item, SubMenu } = Menu
+const { Header, Footer, Content } = Layout
+// const { Item, SubMenu } = Menu
 
 import Notification from './Notification/Notification'
 
@@ -16,15 +16,22 @@ import { UserContext, GetData, MyUserData } from './UserContextMock';
 
 import { Scrollbars } from 'react-custom-scrollbars'
 
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
 
 import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
 
-import {CopyrightCircleOutlined} from '@ant-design/icons'
+import { CopyrightCircleOutlined } from '@ant-design/icons'
 import moment from 'moment'
 // const UserContextMock = UserContext
 
 import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
+
+import { Route, Link, useRouteMatch, Router } from 'umi'
+
+import withBreadcrumbs from 'react-router-breadcrumbs-hoc'
+import { find, flatMapDeep } from 'lodash'
+
+import { createBrowserHistory } from 'history'
 
 @connect(
     state => ({
@@ -35,6 +42,7 @@ import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 class KLayout extends React.Component {
     constructor(props) {
         super(props)
+        // this.breadcrumbs = props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'chrome' }];
         this.state = {
             collapsed: false,
             selectedKeys: ['1'],
@@ -43,66 +51,13 @@ class KLayout extends React.Component {
             textAlign: 'center',
             paddingTop: '25%',
             pathname: './Index',
-            linkArrForBreadCrumb: [{ title: 'KSNL', level: 0, icon: 'chrome' }]
-        }
-    }
-
-    getTrace = (item) => {
-        // console.log('getTrace item:', item)
-        let parentItem = null;
-        let { linkArrForBreadCrumb } = this.state;
-        // console.log('getTrace linkArrForBreadCrumb:', linkArrForBreadCrumb)
-        const menus = this.props.menus;
-        let dealed = false;
-        for (let i = 0; i < menus.length; i++) {
-            parentItem = menus[i];
-
-            // console.log('getTrace parentItem:', parentItem);
-
-            if (parentItem.children) {
-                for (let j = 0; j < parentItem.children.length; j++) {
-                    if (parentItem.children[j].id === item.id) {
-                        let secondLink = {
-                            title: parentItem.title,
-                            level: 1,
-                            icon: parentItem.icon
-                        };
-
-                        // console.log('parentItem.children[j].id:', parentItem.children[j]);
-                        // console.log('linkArrForBreadCrumb.slice(0):', linkArrForBreadCrumb.slice(0));
-
-                        linkArrForBreadCrumb = linkArrForBreadCrumb.slice(0, 1);
-                        linkArrForBreadCrumb.push(secondLink);
-
-                        let thirdLink = {
-                            title: item.title,
-                            level: 2,
-                            icon: item.icon
-                        }
-
-                        linkArrForBreadCrumb.push(thirdLink);
-
-                        dealed = true;
-
-                        this.setState({
-                            linkArrForBreadCrumb
-                        });
-
-                        break;
-                    }
-                }
-            }
-
-            if (dealed) {
-                break;
-            }
+            breadcrumbs: props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'chrome' }]
+            // linkArrForBreadCrumb: [{ title: 'KSNL', level: 0, icon: 'chrome' }]
         }
     }
 
     menuItemClick = (item) => {
         const pathname = item.nodeInfo;
-
-        this.getTrace(item);
 
         this.setState({
             pathname
@@ -123,12 +78,40 @@ class KLayout extends React.Component {
         })
     }
 
+    componentDidMount(){
+        this.setState({
+            breadcrumbs: this.props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'chrome' }]
+        })
+    }
+
+    getBreadcrumbs = (item) => {
+        let path = item.match.path;
+        if (path === '/') {
+            return <Breadcrumb.Item>
+                <Icon type='chrome' />KSNL
+            </Breadcrumb.Item>
+        }
+
+        if (path === '/mainframe') {
+            return <Breadcrumb.Item>
+                <Icon type="mail" />主页
+            </Breadcrumb.Item>
+        }
+
+        const matchArr = path.split('/');
+        const lastMatch = matchArr[matchArr.length - 1];
+
+        const itemY = find(flatMapDeep(this.props.menus, 'children'), (xItem) => {
+            return xItem.urlPath === lastMatch;
+        })
+
+        return <Breadcrumb.Item>
+            <Icon type={itemY.icon} />{itemY.title}
+        </Breadcrumb.Item>
+    }
+
     render() {
         document.title = 'KSNL';
-        const LoadableComponent = Loadable({
-            loader: () => import(`${this.state.pathname}`),
-            loading: () => <div>{'loading'}</div>
-        })
 
         return <div style={{
             width: '100%', height: 'calc(100vh - 0px)'
@@ -138,12 +121,11 @@ class KLayout extends React.Component {
                 size="large" >
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
-                        <Layout style={{height: '100vh'}}>
+                        <Layout style={{ height: '100vh' }}>
                             <Header className={styles.bannerHeader}>
                                 <Icon type="chrome" theme="filled" />
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
-                                    {/* <Notification></Notification> */}
                                     <div style={{ float: 'left', marginTop: '-10px' }}>
                                         <GlobalHeaderDropdown />
                                     </div>
@@ -160,20 +142,21 @@ class KLayout extends React.Component {
                                     menuMode={'inline'}
                                     menuCollapsed={this.state.collapsed} />
                                 <Layout className={styles.contentLayout}>
-                                    <Breadcrumb style={{ paddingLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
-                                        {this.state.linkArrForBreadCrumb.map((item) => {
-                                            return <Breadcrumb.Item>{<Icon type={item.icon} />} {item.title}</Breadcrumb.Item>
-                                        })}
+                                    <Breadcrumb separator={"/"} style={{ paddingLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
+                                        {
+                                            this.state.breadcrumbs.map(item => {
+                                                return this.getBreadcrumbs(item);
+                                            })
+                                        }
                                     </Breadcrumb>
                                     <Scrollbars>
                                         <Content className={styles.content} style={{ minHeight: 'calc(100vh - 153px)' }}>
-                                            {/**Content的style必须这么写，不然就会被css的优先级干掉，无法正常显示高度 */}
-                                            <LoadableComponent />
+                                            {this.props.children}
                                         </Content>
                                     </Scrollbars>
                                     <Footer className={styles.footer}>
                                         <CopyrightCircleOutlined />KSNL {moment().year()}
-                                </Footer>
+                                    </Footer>
                                 </Layout>
                             </Layout>
                         </Layout>
@@ -183,4 +166,4 @@ class KLayout extends React.Component {
         </div>
     }
 }
-export default KLayout
+export default withBreadcrumbs()(KLayout);

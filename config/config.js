@@ -10,14 +10,26 @@ export default {
         {
             path: '/', component: '../layout',
             routes: [
-                { path: '/', component: './Login/Login' },
+                { path: '/login', component: './Login/Login' },
                 {
-                    path: '/mainframe', 
-                    component: './MainFrame'
-                },
-                {
-                    path: '/treetest',
-                    component: './treetest/treetest'
+                    path: '/', component: './MainFrame',
+                    routes: [
+                        {
+                            path: '/dashboard', component: './dashboard/dashboard'
+                        },
+                        {
+                            path: '/treetest', component: './treetest/treetest'
+                        },
+                        {
+                            path: '/aladin', component: './treetest/aladin'
+                        },
+                        {
+                            path: '/formtest', component: './treetest/FormTest'
+                        },
+                        {
+                            path: '/LeaveAuthorization', component: './BPM_RM/LeaveAuthorization'
+                        },
+                    ]
                 },
                 { component: './404' }
             ]

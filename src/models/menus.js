@@ -14,12 +14,14 @@ export default {
                     title: "Table数据展示",
                     icon: "pie-chart",
                     urlPath: "dashboard",
+                    path: '',
                     nodeInfo: "./dashboard/dashboard"
                 }, {
                     id: "5",
                     level: 2,
                     title: "Option 5",
                     icon: "pie-chart",
+                    path: 'treetest',
                     urlPath: "treetest",
                     nodeInfo: "./treetest/treetest"
                 }
@@ -37,6 +39,7 @@ export default {
                     title: "弹窗编辑示例",
                     icon: "weibo-square",
                     urlPath: "aladin",
+                    path: 'aladin',
                     nodeInfo: "./treetest/Aladin"
                 }, {
                     id: "7",
