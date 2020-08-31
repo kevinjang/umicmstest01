@@ -135,6 +135,7 @@ class KLayout extends React.Component {
                             </Header>
 
                             <Layout style={{ maxHeight: 'calc(100vh - 64px)' }}>
+                                {/*20200831 对Sider进行了code split，拆分出src/components/SidebarMenus/SidebarMenu.jsx*/}
                                 <Sider
                                     width={200}
                                     style={{ minHeight: '91.5vh', color: 'white', paddingTop: 16 }}
