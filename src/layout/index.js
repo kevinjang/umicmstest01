@@ -6,7 +6,7 @@ class Index extends React.Component {
         super(props)
     }
     render() {
-        return <div id="MainFrame" className={styles.header}>
+        return <div id="MainFrame" className={ window.location.pathname === '/'?styles.header:null}>
             {this.props.children}
 
             <div style={{ display: (function(){ return window.location.pathname === '/'? "block" : "none"; })() }}>

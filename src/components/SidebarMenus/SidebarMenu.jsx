@@ -23,6 +23,7 @@ const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) =
                                     item.children.map(cItem => {
                                         return (
                                             <MenuItem
+                                                
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
                                                 <Icon type={cItem.icon}></Icon>
                                                 <span>
