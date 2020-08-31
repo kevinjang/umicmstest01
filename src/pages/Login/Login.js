@@ -1,19 +1,13 @@
 import React from 'react'
 import { Login } from 'ant-design-pro'
-// import
+
 const { Tab, UserName, Password, Submit, Mobile, Captcha } = Login
 import { validateUserInfo } from '../../utils/request'
-import { connect } from 'dva'
+import { connect, withRouter } from 'umi'
 import { Alert } from 'antd'
-// import router from 'umi/router'
-
-import { withRouter } from 'umi'
-
 import styles from './Login.css'
+// import validatorRules from '../../models/validatorRules'
 
-// @connect(
-//     state => ({ rules: state.vrules })
-// )
 class Login1 extends React.Component {
     constructor(props) {
         super(props)
@@ -25,6 +19,7 @@ class Login1 extends React.Component {
             activeTab: 'tab1'
         }
         this.history = props.history;
+        // console.log(props);
     }
     componentDidMount(){
 
@@ -59,7 +54,7 @@ class Login1 extends React.Component {
     }
 
     onTabChange = (currentTab) => {
-        console.log(currentTab)
+        // console.log(currentTab)
         this.setState({
             activeTab: currentTab
         })
@@ -69,8 +64,10 @@ class Login1 extends React.Component {
         // console.log('get Captcha')
     }
 
+
+
     render() {
-        // console.log(window.location)
+        // console.log(this.props.rules)
         return <div style={{
             paddingTop: '25vh',
             marginLeft: '37.5vw',
@@ -93,13 +90,7 @@ class Login1 extends React.Component {
                         ></UserName>
                         <Password name="pw" placeholder="请输入密码" rules={this.props.rules[0].pwRules}></Password>
                     </Tab>
-                    <Tab key="tab2" tab="手机验证码登录">
-                        <Mobile name="mobile" placeholder="请输入手机号" rules={this.props.rules[0].mobileRules}></Mobile>
-                        <Captcha name="captcha" placeholder="验证码" buttontext='获取验证码'
-                            onGetCaptcha={() => this.getCaptcha()}>
-                            {/* <buttonText></buttonText>     */}
-                        </Captcha>
-                    </Tab>
+                    
                     <Submit>登录</Submit>
                 </Login>
             </div>
@@ -115,9 +106,12 @@ class Login1 extends React.Component {
     }
 }
 
-const LoginX = connect(({vrules})=>({
-    rules: vrules
-}))(Login1)
+const LoginX = connect(({vrules})=>{
+    // console.log('vrules:', vrules)
+    return {
+        rules: vrules
+    }
+})(Login1)
 
 
 function hasAliveCookie(username) {
