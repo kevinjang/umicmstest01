@@ -1,4 +1,4 @@
-export default {
+const VRulesModel = {
     namespace: "vrules",
     state: [
         {
@@ -41,3 +41,5 @@ export default {
         }
     ]
 }
+
+export default VRulesModel;
