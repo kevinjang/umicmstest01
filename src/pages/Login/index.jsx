@@ -6,7 +6,7 @@ import LoginContext from './components/LoginContext'
 const { TabPane } = Tabs
 const TabChildren = []
 
-
+TabChildren.push(<UserName key="userName" name="userName" placeholder="用户名" />)
 
 
 const Login1 = (props) => {
@@ -23,10 +23,10 @@ const Login1 = (props) => {
         }}>
             <Form form={props.form}>
                 <Tabs>
-                    <LoginContext.Consumer tab="密码登陆">
+                    <LoginContext.Consumer key="密码登陆" tab="密码登陆">
                         {value => (<TabPane tab="密码登陆"  //tabUtil={value.tabUtil}
                         >
-                            <UserName name="userName" placeholder="用户名" />
+                            {TabChildren}
                         </TabPane>)}
                     </LoginContext.Consumer>
                 </Tabs>
