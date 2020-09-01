@@ -1,37 +1,25 @@
-import { Login, } from 'ant-design-pro'
+// import { Login } from 'ant-design-pro'
 import { Tabs, Form } from 'antd'
-const { Tab, UserName } = Login
+// const { UserName } = Login
 
-import LoginContext from './components/LoginContext'
+// import LoginContext from './components/LoginContext'
 const { TabPane } = Tabs
-const TabChildren = []
 
-TabChildren.push(<UserName key="userName" name="userName" placeholder="用户名" />)
+// import LoginTab from './components/LoginTab'
+// const TabChildren = []
 
+// TabChildren.push(<UserName key="userName" name="userName" placeholder="用户名" />)
+
+// import LoginForm from './components'
+
+// const {Tab} = LoginForm
 
 const Login1 = (props) => {
+
     return (
-        <LoginContext.Provider value={{
-            tabUtil: {
-                addTab: (id) => {
+        <Form>
 
-                },
-                removeTab: (id) => {
-
-                }
-            }
-        }}>
-            <Form form={props.form}>
-                <Tabs>
-                    <LoginContext.Consumer key="密码登陆" tab="密码登陆">
-                        {value => (<TabPane tab="密码登陆"  //tabUtil={value.tabUtil}
-                        >
-                            {TabChildren}
-                        </TabPane>)}
-                    </LoginContext.Consumer>
-                </Tabs>
-            </Form>
-        </LoginContext.Provider>
+        </Form>
     )
 }
 
