@@ -6,10 +6,12 @@ const { TabPane } = Tabs
 const LoginTab = props => {
     console.log('logintab props:', props)
     return (
-        <TabPane>
+        <TabPane {...props}>
             {props.children}
         </TabPane>
     )
 }
+
+LoginTab.typeName = "LoginTab";
 
 export default LoginTab;
