@@ -56,11 +56,11 @@ const KsnlLayout = (props) => {
             </Breadcrumb.Item>
         }
 
-        const matchArr = path.split('/');
-        const lastMatch = matchArr[matchArr.length - 1];
+        // const matchArr = path.split('/');
+        // const lastMatch = matchArr[matchArr.length - 1];
 
         const itemY = find(flatMapDeep(menus, 'children'), (xItem) => {
-            return xItem.urlPath === lastMatch;
+            return xItem.urlPath === path;
         })
 
         return <Breadcrumb.Item>

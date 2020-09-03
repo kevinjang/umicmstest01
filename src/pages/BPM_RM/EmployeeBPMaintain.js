@@ -1,5 +1,3 @@
-
-// import styles from './EmployeeBPMaintain.css';
 import React from 'react'
 import {
   Spin, Row, Col, Layout, Table, Form, Button, Input,
@@ -282,9 +280,11 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   getQueryConditions = () => {
-    const { getFieldValue } = this.props.form;
-    var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');
-    var ebm_filter_text = getFieldValue('ebm_filter_text');
+    console.log('this.props.form:', this.props.form);
+    const { fields } = this.props.form;
+    console.log(`fields['ebm_filter_combo']:`, fields['ebm_filter_combo'])
+    var ebm_filterKeyWord = fields['ebm_filter_combo'].value;
+    var ebm_filter_text = fields['ebm_filter_text'].value;
     const condition = ebm_filterKeyWord === 'none' ? null : {
       name: ebm_filterKeyWord,
       value: ebm_filter_text
@@ -321,14 +321,11 @@ class EmployeeBPMaintain extends React.Component {
       return `共计${this.state.allCount}条数据`
     }
 
-    const { getFieldDecorator } = this.form;
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onTableRowSelectedChange
     }
-
-    console.log('pagination-size:', this.pagination.pageSize)
 
     return <Spin spinning={this.state.spinning}>
       <div>
@@ -354,7 +351,9 @@ class EmployeeBPMaintain extends React.Component {
             }]
           }></SearchSquare>
         <Layout style={{ width: '100%' }}>
-          <Form>
+          <Form onFieldsChange={(changedFields, allFields)=>{
+            
+          }}>
             <Form.Item>
               <Table
                 columns={this.columns}
@@ -413,20 +412,20 @@ class EmployeeBPMaintain extends React.Component {
   }
 }
 
-const EmployeeBPMaintainForm = Form.create({ name: 'employee_bp_maintain' })(EmployeeBPMaintain);
+// const EmployeeBPMaintainForm = Form.create({ name: 'employee_bp_maintain' })(EmployeeBPMaintain);
 
-class EmployeeBPMaintainFormComp extends React.Component {
-  constructor(props) {
-    super(props);
+// class EmployeeBPMaintainFormComp extends React.Component {
+//   constructor(props) {
+//     super(props);
 
-    console.log('EmployeeBPMaintainFormComp-props:', props);
-  }
+//     // console.log('EmployeeBPMaintainFormComp-props:', props);
+//   }
 
-  render() {
-    return (
-      <EmployeeBPMaintainForm {...this.props}></EmployeeBPMaintainForm>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <EmployeeBPMaintainForm {...this.props}></EmployeeBPMaintainForm>
+//     );
+//   }
+// }
 
-export default EmployeeBPMaintainFormComp
+export default EmployeeBPMaintain

@@ -1,7 +1,7 @@
 import axios from 'axios'
 const qs = require('qs')
-// const baseUrl = 'http://localhost:3000'
-const baseUrl = 'http://localhost/TMPCC';
+const baseUrl = 'http://localhost:3000'
+// const baseUrl = 'http://localhost/TMPCC';
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;

@@ -13,7 +13,7 @@ export default {
                     level: 2,
                     title: "Table数据展示",
                     icon: "pie-chart",
-                    urlPath: "dashboard",
+                    urlPath: "/mainframe/dashboard",
                     path: '',
                     nodeInfo: "./dashboard/dashboard"
                 }, {
@@ -21,7 +21,7 @@ export default {
                     level: 2,
                     title: "Option 5",
                     icon: "pie-chart",
-                    path: 'treetest',
+                    path: '/mainframe/treetest',
                     urlPath: "treetest",
                     nodeInfo: "./treetest/treetest"
                 }
@@ -70,7 +70,7 @@ export default {
                     level: 2,
                     title: "员工BP号维护",
                     icon: "windows",
-                    urlPath: "EmployeeBPMaintain",
+                    urlPath: "/mainframe/EmployeeBPMaintain",
                     nodeInfo: "./BPM_RM/EmployeeBPMaintain"
                 },
                 {

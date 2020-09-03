@@ -3,11 +3,15 @@ const { Sider } = Layout;
 const MenuItem = Menu.Item;
 const { SubMenu } = Menu;
 import { Scrollbars } from 'react-custom-scrollbars'
-
+import { useState } from 'react'
 import { Link } from 'umi'
 
 const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) => {
     // const { menus, theme, menuMode, menuCollapsed } = props;
+    const [activeSubMenu, setActiveSubMenu] = useState()
+    // const currentPath = location.pathname;
+    // console.log('currentPath:', currentPath.split('/'));
+    // const subMenuItem = 
     return (
         <Sider collapsed={menuCollapsed} {...restProps}>
             <Scrollbars>
@@ -23,7 +27,6 @@ const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) =
                                     item.children.map(cItem => {
                                         return (
                                             <MenuItem
-                                                
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
                                                 <Icon type={cItem.icon}></Icon>
                                                 <span>

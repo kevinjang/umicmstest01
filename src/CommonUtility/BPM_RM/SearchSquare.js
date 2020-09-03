@@ -9,9 +9,10 @@ export default function (props) {
 
     // }
 
-    const { getFieldDecorator } = props.form;
+    // const { getFieldDecorator } = props.form;
 
     // const {FormItems} = props.items;
+    
     return (
         <div>
             <Header style={{
@@ -23,10 +24,15 @@ export default function (props) {
                 <Form>
                     {props.items ?
                         props.items.map((item) => {
-                            return <Form.Item style={{ float: 'right', marginBottom: '0px' }}>
-                                {
+                            console.log('item.obj type:', typeof item.obj)
+                            
+                            const ObjCompo=item.obj;
+                            return <Form.Item style={{ float: 'right', marginBottom: '0px' }} name={item.name}>
+                                {/* {
                                     getFieldDecorator(item.name)(item.obj)
-                                }
+                                } */}
+                                {/* <ObjCompo /> */}
+                                {item.obj}
                             </Form.Item>
                         }) : null
                     }
