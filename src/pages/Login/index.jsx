@@ -6,14 +6,14 @@ import { UserOutlined, EyeInvisibleOutlined, LockOutlined } from '@ant-design/ic
 import styles from './index.less'
 const { Tab } = LoginForm
 
-import {withRouter} from 'umi'
+import { withRouter } from 'umi'
 
 const validateMessages = {
     required: '`${name}` is required!'
 }
 
 const Login1 = (props) => {
-    const {history} = props;
+    const { history } = props;
     console.log('history:', history)
     return (
         <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot"
@@ -35,18 +35,20 @@ const Login1 = (props) => {
                         required: true,
                         message: '请输入密码！'
                     }
-                ]}><Input.Password placeholder="密码" size="large" key="pwd" prefix={<LockOutlined type="required" />} /></Form.Item>
+                ]}>
+                    <Input.Password placeholder="密码" size="large" key="pwd" prefix={<LockOutlined type="required" />} />
+                </Form.Item>
                 <Form.Item>
-                    <Button 
-                        className={styles.submitBtn} 
-                        size="large" 
-                        key="submitbtn" 
-                        htmlType="submit" 
-                        type="primary" 
-                        onClick={()=>{
+                    <Button
+                        className={styles.submitBtn}
+                        size="large"
+                        key="submitbtn"
+                        htmlType="submit"
+                        type="primary"
+                        onClick={() => {
                             history.push('/mainframe')
                         }}
-                        onSubmit={()=>{
+                        onSubmit={() => {
                             history.push('/mainframe')
                         }}>登录</Button>
                 </Form.Item>
