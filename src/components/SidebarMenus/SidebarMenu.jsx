@@ -6,22 +6,27 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import { useState } from 'react'
 import { Link } from 'umi'
 
+import LoadOnDemand from '@/components/DynamicComponent/LoadOnDemand'
+
 const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) => {
     // const { menus, theme, menuMode, menuCollapsed } = props;
     const [activeSubMenu, setActiveSubMenu] = useState()
     // const currentPath = location.pathname;
     // console.log('currentPath:', currentPath.split('/'));
     // const subMenuItem = 
+    console.log('LoadOnDemand:', LoadOnDemand)
+
     return (
         <Sider collapsed={menuCollapsed} {...restProps}>
             <Scrollbars>
                 <Menu theme={theme} mode={menuMode}>
                     {menus.map((item, index) => {
+                        // const Icon = await LoadOnDemand.loader(item.icon)
                         if (item.children) {
                             return (<SubMenu
                                 key={item.id}
                                 title={
-                                    <span><Icon type={item.icon} /><span>{item.title}</span></span>
+                                    <span><Icon /><span>{item.title}</span></span>
                                 }>
                                 {
                                     item.children.map(cItem => {
