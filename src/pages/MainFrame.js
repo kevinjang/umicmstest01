@@ -32,7 +32,10 @@ import { Route, Link, useRouteMatch, Router } from 'umi'
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc'
 import { find, flatMapDeep } from 'lodash'
 
+import KBreadcrumbs from '@/components/Breadcrumbs/'
+
 const KsnlLayout = (props) => {
+    console.log('props.breadcrumbs:', props.breadcrumbs);
     const [collapsed, setCollapsed] = useState(false);
     const theme = 'dark';//,  = 'center', paddingTop='25%';
     const [spinning, setSpinning] = useState(false);
@@ -55,9 +58,6 @@ const KsnlLayout = (props) => {
                 <Icon type="mail" />主页
             </Breadcrumb.Item>
         }
-
-        // const matchArr = path.split('/');
-        // const lastMatch = matchArr[matchArr.length - 1];
 
         const itemY = find(flatMapDeep(menus, 'children'), (xItem) => {
             return xItem.urlPath === path;
@@ -103,13 +103,14 @@ const KsnlLayout = (props) => {
                                 menuMode={'inline'}
                                 menuCollapsed={collapsed} />
                             <Layout className={styles.contentLayout}>
-                                <Breadcrumb separator={"/"} style={{ padding: '10px' }}>
+                                {/* <Breadcrumb separator={"/"} style={{ padding: '10px' }}>
                                     {
                                         breadcrumbs.map(item => {
                                             return getBreadcrumbs(item);
                                         })
                                     }
-                                </Breadcrumb>
+                                </Breadcrumb> */}
+                                <KBreadcrumbs />
                                 <Scrollbars>
                                     <Content className={styles.content} style={{ minHeight: 'calc(100vh - 153px)' }}>
                                         {children}
