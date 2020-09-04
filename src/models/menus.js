@@ -6,7 +6,7 @@ export default {
             id: "1",
             level: 1,
             title: "Option 1",
-            icon: "pie-chart",
+            icon: "PieChart",
             children: [
                 {
                     id: "4",
