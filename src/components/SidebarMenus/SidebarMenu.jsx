@@ -1,20 +1,26 @@
-import { Layout, Menu, Icon, notification } from 'antd'
+import { Layout, Menu, notification } from 'antd'
 const { Sider } = Layout;
 const MenuItem = Menu.Item;
 const { SubMenu } = Menu;
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useState } from 'react'
-import { Link } from 'umi'
+import { Link, connect } from 'umi'
+import * as Icon from '@ant-design/icons'
 
-import LoadOnDemand from '@/components/DynamicComponent/LoadOnDemand'
 
-const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) => {
+const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme, menuMode, menuCollapsed, ...restProps }) => {
     // const { menus, theme, menuMode, menuCollapsed } = props;
-    const [activeSubMenu, setActiveSubMenu] = useState()
+    const [activeSubMenuId, setActiveSubMenuId] = useState()
     // const currentPath = location.pathname;
     // console.log('currentPath:', currentPath.split('/'));
     // const subMenuItem = 
-    console.log('LoadOnDemand:', LoadOnDemand)
+    // console.log('IconX:', IconX)
+
+    const getActiveSubmenu = () => {
+        if (!activeSubMenu) {
+            //如果没有活跃的值，根据当前路径找到活跃的值，并更新再获取
+        }
+    }
 
     return (
         <Sider collapsed={menuCollapsed} {...restProps}>
@@ -26,14 +32,24 @@ const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) =
                             return (<SubMenu
                                 key={item.id}
                                 title={
-                                    <span><Icon /><span>{item.title}</span></span>
+                                    <span>{
+                                        React.createElement(Icon[`${item.icon}Outlined`], {})
+                                    }<span>{item.title}</span></span>
                                 }>
                                 {
                                     item.children.map(cItem => {
                                         return (
                                             <MenuItem
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
-                                                <Icon type={cItem.icon}></Icon>
+                                                {/* <Icon type={cItem.icon}></Icon> */}
+                                                {/* <IconX name={cItem.icon} /> */}
+                                                {
+                                                    React.createElement(
+                                                        Icon[`${cItem.icon}Outlined`], {
+
+                                                    }
+                                                    )
+                                                }
                                                 <span>
                                                     <Link
                                                         style={{ color: 'white' }}
@@ -55,7 +71,15 @@ const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) =
                         }
                         else
                             return <MenuItem key={item.id}>
-                                <Icon type={item.icon}></Icon>
+                                {/* <Icon type={item.icon}></Icon> */}
+                                {/* <IconX name={cItem.icon} /> */}
+                                {
+                                    React.createElement(
+                                        Icon[`${cItem.icon}Outlined`], {
+
+                                    }
+                                    )
+                                }
                                 <span>
                                     <Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
                                         onClick={() => notification.info({
@@ -71,4 +95,6 @@ const SidebarMenus = ({ menus, theme, menuMode, menuCollapsed, ...restProps }) =
     )
 }
 
-export default SidebarMenus;
+export default connect(({ menus }) => ({
+    menus: menus.menus
+}))(SidebarMenus);
