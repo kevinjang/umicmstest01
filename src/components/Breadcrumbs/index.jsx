@@ -1,11 +1,15 @@
 import { Breadcrumb } from 'antd'
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc'
 import { connect } from 'umi'
-import {ChromeOutlined, MailOutlined} from '@ant-design/icons'
+import { ChromeOutlined, MailOutlined } from '@ant-design/icons'
+import { find, flatMapDeep } from 'lodash'
+import IconX from '@/components/DynamicComponent/Icon'
+import * as Icon from '@ant-design/icons'
 
 const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
+    console.log('Icon:', Icon)
     return (
-        <Breadcrumb style={{padding: '10px'}}>
+        <Breadcrumb style={{ padding: '10px' }}>
             {breadcrumbs.map((breadcrumb, index) => {
                 let path = breadcrumb.match.path;
                 if (path === '/') {
@@ -29,7 +33,14 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
                 })
 
                 return <Breadcrumb.Item>
-                    <Icon type={itemY.icon} />{itemY.title}
+                    {
+                        React.createElement(
+                            Icon[`${itemY.icon}Outlined`],
+                            {
+                                size: 'small'
+                            }
+                        )
+                    }{itemY.title}
                 </Breadcrumb.Item>
             })}
         </Breadcrumb>
@@ -38,6 +49,6 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
 
 export default withBreadcrumbs()(
     connect(({ menus }) => ({
-        menus
+        menus: menus.menus
     }))(KsnlBreadCrumbs)
 );
