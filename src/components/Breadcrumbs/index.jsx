@@ -3,7 +3,7 @@ import withBreadcrumbs from 'react-router-breadcrumbs-hoc'
 import { connect } from 'umi'
 import { ChromeOutlined, MailOutlined } from '@ant-design/icons'
 import { find, flatMapDeep } from 'lodash'
-import IconX from '@/components/DynamicComponent/Icon'
+// import IconX from '@/components/DynamicComponent/Icon'
 import * as Icon from '@ant-design/icons'
 
 const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
