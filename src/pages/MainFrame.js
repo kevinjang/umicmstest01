@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Icon, Spin } from 'antd'
+import { Layout, Spin } from 'antd'
 import { connect } from 'umi'
 import styles from './MainFrame.css'
 import UserInfo from './user/userInfo'
@@ -7,7 +7,7 @@ const { Header, Footer, Content } = Layout
 import { UserContext, GetData, MyUserData } from './UserContextMock';
 import { Scrollbars } from 'react-custom-scrollbars'
 import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
-import { CopyrightCircleOutlined } from '@ant-design/icons'
+import { CopyrightCircleOutlined, ChromeFilled } from '@ant-design/icons'
 import moment from 'moment'
 import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 import KBreadcrumbs from '@/components/Breadcrumbs/'
@@ -46,7 +46,7 @@ class KLayout extends React.Component {
     componentDidMount() {
         console.log('menus:', this.props.menus)
         this.setState({
-            breadcrumbs: this.props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'chrome' }]
+            breadcrumbs: this.props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'Chrome' }]
         })
     }
 
@@ -63,7 +63,8 @@ class KLayout extends React.Component {
                     <UserContext.Provider value={MyUserData}>
                         <Layout style={{ height: '100vh' }}>
                             <Header className={styles.bannerHeader}>
-                                <Icon type="chrome" theme="filled" />
+                                {/* <Icon type="chrome" theme="filled" /> */}
+                                <ChromeFilled />
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
                                     <div style={{ float: 'left', marginTop: '-10px' }}>
