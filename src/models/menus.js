@@ -24,7 +24,7 @@ const MenusModel = {
                         icon: "PieChart",
                         // path: '/mainframe/treetest',
                         urlPath: "/mainframe/treetest",
-                        nodeInfo: "./treetest/treetest"
+                        nodeInfo: "./treetest/index"
                     }
                 ]
             },
