@@ -7,7 +7,7 @@ import { find, flatMapDeep } from 'lodash'
 import * as Icon from '@ant-design/icons'
 
 const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
-    console.log('Icon:', Icon)
+    // console.log('Icon:', Icon)
     return (
         <Breadcrumb style={{ padding: '10px' }} key={"bc_root"}>
             {breadcrumbs.map((breadcrumb, index) => {
