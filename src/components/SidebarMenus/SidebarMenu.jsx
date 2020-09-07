@@ -8,7 +8,9 @@ import { Link, connect } from 'umi'
 import * as Icon from '@ant-design/icons'
 
 
-const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme, menuMode, menuCollapsed, ...restProps }) => {
+const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
+     menuMode, menuCollapsed, collapsible,
+     className, ...restProps }) => {
     // const { menus, theme, menuMode, menuCollapsed } = props;
     const [activeSubMenuId, setActiveSubMenuId] = useState()
     // const currentPath = location.pathname;
@@ -23,7 +25,8 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme, menuMode,
     }
 
     return (
-        <Sider collapsed={menuCollapsed} {...restProps}>
+        <Sider collapsed={menuCollapsed} theme={theme} collapsible={collapsible} 
+            className={className}>
             <Scrollbars>
                 <Menu theme={theme} mode={menuMode}>
                     {menus.map((item, index) => {
