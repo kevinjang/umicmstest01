@@ -9,11 +9,11 @@ import * as Icon from '@ant-design/icons'
 const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
     console.log('Icon:', Icon)
     return (
-        <Breadcrumb style={{ padding: '10px' }}>
+        <Breadcrumb style={{ padding: '10px' }} key={"bc_root"}>
             {breadcrumbs.map((breadcrumb, index) => {
                 let path = breadcrumb.match.path;
                 if (path === '/') {
-                    return <Breadcrumb.Item>
+                    return <Breadcrumb.Item key="ksnl_root_bc">
                         {/* <Icon type='chrome' /> */}
                         <ChromeOutlined size="small" />
                         KSNL
@@ -21,7 +21,7 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
                 }
 
                 if (path === '/mainframe') {
-                    return <Breadcrumb.Item>
+                    return <Breadcrumb.Item key="mainframe_bc">
                         {/* <Icon type="mail" /> */}
                         <MailOutlined size="small" />
                         主页
@@ -32,12 +32,13 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
                     return xItem.urlPath === path;
                 })
 
-                return <Breadcrumb.Item>
+                return <Breadcrumb.Item key={itemY.id}>
                     {
                         React.createElement(
                             Icon[`${itemY.icon}Outlined`],
                             {
-                                size: 'small'
+                                size: 'small',
+                                key: itemY.id
                             }
                         )
                     }{itemY.title}
