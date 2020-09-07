@@ -13,7 +13,7 @@ const NoticeIcon = (props) => {
         React.Children.forEach(children, child => {
             const {title} = child.props
             panes.push(
-                <TabPane tab={title}>
+                <TabPane tab={title} key={title}>
                     <NoticeList title={title} />
                 </TabPane>
             )
