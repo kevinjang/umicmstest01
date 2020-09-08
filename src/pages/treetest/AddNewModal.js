@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { DownOutlined } from '@ant-design/icons'
 import {
     Form, Input, Row, Col, DatePicker, Menu, Dropdown,
     Button, Icon, InputNumber
@@ -28,7 +28,7 @@ const FormContent = ({ form, index, ...props }) => (
     </FormContext.Provider>
 );
 
-const FormContextY = Form.create({ name: 'anm' })(FormContent);
+// const FormContextY = Form.create({ name: 'anm' })(FormContent);
 
 
 let timeout = 200;
@@ -97,6 +97,8 @@ class AddNewModal extends React.Component {
                 ...item
             }
         });
+
+        this.formRef = React.createRef();
         this.state = {
             // visible: this.visible,
             record,
@@ -115,15 +117,16 @@ class AddNewModal extends React.Component {
     componentDidMount = (e) => {
         // console.log('did mount props',this.props);
         this.onControlChange();
+        _FORM = this.formRef.current
     }
 
     componentWillReceiveProps = (e) => {
         // console.log('will receive props - e - this.state',e, this.state);
-        const {record} = e;
+        const { record } = e;
         this.setState({
             record,
             taxCodes: this.TaxCodes
-        },()=>{
+        }, () => {
             this.onControlChange();
         })
     }
@@ -183,7 +186,8 @@ class AddNewModal extends React.Component {
         const { record, taxCodes } = this.state;
         const { columns, cabinTypeCodes } = this.props;
 
-        _FORM = form;
+        // _FORM = this.formRef.current;
+        console.log('_FORM:', _FORM)
         const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
                 {
@@ -214,40 +218,26 @@ class AddNewModal extends React.Component {
             <Row gutter={12}>
                 <Col span={4} >费用日期</Col>
                 <Col span={8} >
-                    <FormItem>
+                    <FormItem name={'ExpenseTime'} rules={[
                         {
-                            form.getFieldDecorator('ExpenseTime', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: ''
-                                    }
-                                ],
-                                initialValue: moment(record['ExpenseTime'], dateFormat)
-                            })(
-                                <DatePicker onChange={this.onDatePickerChange}>
-                                    {moment(record['ExpenseTime'], dateFormat)}
-                                </DatePicker>
-                            )
+                            required: true,
+                            message: ''
                         }
+                    ]} initialValue={moment(record['ExpenseTime'], dateFormat)}>
+                        <DatePicker onChange={this.onDatePickerChange}>
+                            {moment(record['ExpenseTime'], dateFormat)}
+                        </DatePicker>
                     </FormItem>
                 </Col>
                 <Col span={4} >费用发生地</Col>
                 <Col span={8} >
-                    <FormItem>
+                    <FormItem name="ExpenseAddress" rules={[
                         {
-                            form.getFieldDecorator('ExpenseAddress', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '费用发生地是必填项'
-                                    }
-                                ],
-                                initialValue: record['ExpenseAddress']
-                            })(
-                                <Input onChange={this.onExpenseAddressChange}></Input>
-                            )
+                            required: true,
+                            message: '费用发生地是必填项'
                         }
+                    ]} initialValue={record['ExpenseAddress']}>
+                        <Input onChange={this.onExpenseAddressChange}></Input>
                     </FormItem>
                 </Col>
             </Row>
@@ -258,201 +248,158 @@ class AddNewModal extends React.Component {
                         validateStatus={ctValidateData.validateStatus}
                         help={ctValidateData.message}>
 
-                        <Dropdown overlay={tcMenu} onChange={this.onCTChange}>
-                            <Button id='ctBtn'>
-                                {
-                                    cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
-                                }
+                        <Dropdown.Button overlay={tcMenu} onChange={this.onCTChange} icon={<DownOutlined />}>
+                            {/* <Button id='ctBtn'>
+                                
                                 <Icon type="down" />
-                            </Button>
-                        </Dropdown>
+                            </Button> */}
+                            {
+                                cabinTypeCodes.find(item1 => item1.key === record.CabinType).text
+                            }
+                        </Dropdown.Button>
                     </FormItem>
                 </Col>
                 <Col span={4}>税率</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseHotelTaxCode" rules={[
                         {
-                            form.getFieldDecorator('ExpenseHotelTaxCode', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '税率必选'
-                                    }
-                                ],
-                                initialValue: record['ExpenseHotelTaxCode']
-                            })(
-                                <Dropdown overlay={tcTaxCode} onChange={this.onTCChange}>
-                                    <Button id='tcBtn'>
-                                        {
-                                            taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode).text
-                                            // console.log('taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode)', taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode))
-                                        }
-                                        <Icon type='down'></Icon>
-                                    </Button>
-                                </Dropdown>
-                            )
+                            required: true,
+                            message: '税率必选'
                         }
+                    ]} initialValue={record['ExpenseHotelTaxCode']}>
+                        <Dropdown.Button overlay={tcTaxCode} onChange={this.onTCChange} icon={<DownOutlined />}>
+                            {/* <Button id='tcBtn'>
+                                
+                                <Icon type='down'></Icon>
+                            </Button> */}
+                            {
+                                taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode).text
+                                // console.log('taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode)', taxCodes.find(item1 => item1.key === record.ExpenseHotelTaxCode))
+                            }
+                        </Dropdown.Button>
                     </FormItem>
                 </Col>
             </Row>
             <Row gutter={12}>
                 <Col span={4}>航空/铁路</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseTraffic" rules={[
                         {
-                            form.getFieldDecorator('ExpenseTraffic', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '航空/铁路 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseTraffic']
-                            })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseTrafficChange}
-                                disabled={this.state.trafficControlDisabled}
-                                formatter={value => `￥ ${value}`}
-                            // value={record['ExpenseTraffic']}
-                            >
-                                {/* {record['ExpenseTraffic']} */}
-                            </InputNumber>)
+                            required: true,
+                            message: '航空/铁路 必填！'
                         }
+                    ]} initialValue={record['ExpenseTraffic']}>
+                        <InputNumber step='1' min={0}
+                            onChange={this.onExpenseTrafficChange}
+                            disabled={this.state.trafficControlDisabled}
+                            formatter={value => `￥ ${value}`}
+                        // value={record['ExpenseTraffic']}
+                        >
+                            {/* {record['ExpenseTraffic']} */}
+                        </InputNumber>
                     </FormItem>
                 </Col>
                 <Col span={4}>公路/水路</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseBoat" rules={[
                         {
-                            form.getFieldDecorator('ExpenseBoat', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '公路/水路 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseBoat']
-                            })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseBoatChange}
-                                disabled={this.state.boatControlDisabled}
-                                formatter={value => `￥ ${value}`}
-                            >
-                                {record['ExpenseBoat']}
-                            </InputNumber>)
-                        }</FormItem>
+                            required: true,
+                            message: '公路/水路 必填！'
+                        }
+                    ]} initialValue={record['ExpenseBoat']} >
+                        <InputNumber step='1' min={0}
+                            onChange={this.onExpenseBoatChange}
+                            disabled={this.state.boatControlDisabled}
+                            formatter={value => `￥ ${value}`}
+                        >
+                            {record['ExpenseBoat']}
+                        </InputNumber>
+                    </FormItem>
                 </Col>
             </Row>
             <Row gutter={12}>
                 <Col span={4}>出租车/网约车/市内公交</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseBaggage" rules={[
                         {
-                            form.getFieldDecorator('ExpenseBaggage', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '出租车/网约车/市内公交 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseBaggage']
-                            })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseBaggageChange}
-                                disabled={this.state.baggageControlDisabled}
-                                formatter={value => `￥ ${value}`}>
-                                {record['ExpenseBaggage']}
-                            </InputNumber>)
-                        }</FormItem>
+                            required: true,
+                            message: '出租车/网约车/市内公交 必填！'
+                        }
+                    ]} initialValue={record['ExpenseBaggage']}>
+                        <InputNumber step='1' min={0}
+                            onChange={this.onExpenseBaggageChange}
+                            disabled={this.state.baggageControlDisabled}
+                            formatter={value => `￥ ${value}`}>
+                            {record['ExpenseBaggage']}
+                        </InputNumber>
+                    </FormItem>
                 </Col>
                 <Col span={4}>住宿</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseHotel" rules={[
                         {
-                            form.getFieldDecorator('ExpenseHotel', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '住宿 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseHotel']
-                            })(<InputNumber step='1' min={0}
-                                onChange={this.onExpenseHotelChange}
-                                disabled={this.state.hotelControlDisabled}
-                                formatter={value => `￥ ${value}`}>
-                                {record['ExpenseHotel']}
-                            </InputNumber>)
+                            required: true,
+                            message: '住宿 必填！'
                         }
+                    ]} initialValue={record['ExpenseHotel']}>
+                        <InputNumber step='1' min={0}
+                            onChange={this.onExpenseHotelChange}
+                            disabled={this.state.hotelControlDisabled}
+                            formatter={value => `￥ ${value}`}>
+                            {record['ExpenseHotel']}
+                        </InputNumber>
                     </FormItem>
                 </Col>
             </Row>
             <Row gutter={12}>
                 <Col span={4}>餐费</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseMeal" rules={[
                         {
-                            form.getFieldDecorator('ExpenseMeal', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '餐费 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseMeal']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseMealChange}
-                                formatter={value => `￥ ${value}`}>
-                                {record['ExpenseMeal']}
-                            </InputNumber>)
+                            required: true,
+                            message: '餐费 必填！'
                         }
+                    ]} initialValue={record['ExpenseMeal']}>
+                        <InputNumber step='1' min={0} onChange={this.onExpenseMealChange}
+                            formatter={value => `￥ ${value}`}>
+                            {record['ExpenseMeal']}
+                        </InputNumber>
                     </FormItem>
                 </Col>
                 <Col span={4}>其他</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name="ExpenseOther" rules={[
                         {
-                            form.getFieldDecorator('ExpenseOther', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '其他 必填！'
-                                    }
-                                ],
-                                initialValue: record['ExpenseOther']
-                            })(<InputNumber step='1' min={0} onChange={this.onExpenseOtherChange}
-                                formatter={value => `￥ ${value}`}>
-                                {record['ExpenseOther']}
-                            </InputNumber>)
+                            required: true,
+                            message: '其他 必填！'
                         }
+                    ]} initialValue={record['ExpenseOther']}>
+                        <InputNumber step='1' min={0} onChange={this.onExpenseOtherChange}
+                            formatter={value => `￥ ${value}`}>
+                            {record['ExpenseOther']}
+                        </InputNumber>
                     </FormItem>
                 </Col>
             </Row>
             <Row gutter={12}>
                 <Col span={4}>费用合计</Col>
                 <Col span={8}>
-                    <FormItem>
-                        {
-                            form.getFieldDecorator('ExpenseSum', {
-                                initialValue: record['ExpenseSum']
-                            })(<InputNumber contentEditable={false} disabled={true} formatter={value => `￥ ${value}`}>
-                            </InputNumber>)
-                        }
+                    <FormItem name={"ExpenseSum"} initialValue={record['ExpenseSum']}>
+                        <InputNumber contentEditable={false} disabled={true} formatter={value => `￥ ${value}`}>
+                        </InputNumber>
                     </FormItem>
                 </Col>
                 <Col span={4}>电子发票号</Col>
                 <Col span={8}>
-                    <FormItem>
+                    <FormItem name={"InvoiceNo"} rules={[
                         {
-                            form.getFieldDecorator('InvoiceNo', {
-                                rules: [
-                                    {
-                                        max: 10,
-                                        message: '电子发票号限定最长10位'
-                                    }
-                                ],
-                                initialValue: record['InvoiceNo']
-                            })(
-                                <Input onChange={this.onInvoiceNoChange} >
-                                </Input>
-                            )
+                            max: 10,
+                            message: '电子发票号限定最长10位'
                         }
+                    ]} initialValue={record['InvoiceNo']}>
+
+                        <Input onChange={this.onInvoiceNoChange} >
+                        </Input>
                     </FormItem>
                 </Col>
             </Row>
@@ -460,7 +407,7 @@ class AddNewModal extends React.Component {
     }
 
     onDatePickerChange = (e) => {
-        console.log('onDatePickerChange - e', e)
+        // console.log('onDatePickerChange - e', e)
         const { record } = this.state;
         record['ExpenseTime'] = e;
 
@@ -856,11 +803,9 @@ class AddNewModal extends React.Component {
 
     render() {
         return <div>
-            <FormContextY>
-                <FormContext.Consumer>
-                    {this.renderContent}
-                </FormContext.Consumer>
-            </FormContextY>
+            <Form ref={this.formRef}>
+                {this.renderContent}
+            </Form>
         </div>
     }
 }
