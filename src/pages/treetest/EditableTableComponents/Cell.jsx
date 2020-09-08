@@ -6,13 +6,12 @@ import EditableContext from './TreeTestContext'
 import { indexOf, find } from 'lodash'
 
 const dateFormat = 'YYYY/MM/DD';
-const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, index, handleSave, children, ...restProps }) => {
+const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, index, handleSave, children, dispatch, ...restProps }) => {
     const [editing, setEditing] = useState(false)
+    var input = null;
     const numberControls = ['ExpenseTraffic', 'ExpenseBoat', 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther', 'ExpenseSum', 'Remark2']
     const ctMenu = (<Menu onClick={(e, v) => {
-        // const { record } = props;
         record.CabinType = e.key
-        // const { handleSave } = props;
         toggleEdit();
         handleSave(record)
     }}>{cabinTypeCodes.map((item, index) => {
@@ -20,13 +19,9 @@ const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, in
         </Menu.Item>
     })}
     </Menu>)
-    // const [form, setForm] = useState()
     var form = null;
     const tcMenu = (<Menu onClick={(e, v) => {
-        // const { record } = props;
         record.ExpenseHotelTaxCode = e.key
-
-        // const { handleSave } = props;
         toggleEdit();
         handleSave(record)
     }}>{taxCodes.map((item, index) => {
@@ -34,49 +29,38 @@ const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, in
         </Menu.Item>
     })}</Menu>);
 
-
-    // const drpControls = [{
-    //     name: 'CabinType',
-    //     component: ctMenu
-    // }, {
-    //     name: 'ExpenseHotelTaxCode',
-    //     component: tcMenu
-    // }];
     const drpControls = ['CabinType', 'ExpenseHotelTaxCode',]
 
     const toggleEdit = () => {
-        // const editing = !state.editing;
-        // setState({
-        //     editing,
-        // }, () => {
-        //     if (editing) {
-        //         if (input)
-        //             input.focus()
-        //     }
-        // })
-        setEditing(!editing)
+        
+        setEditing(editing => {
+            if (!editing) {
+                if (input)
+                    input.focus()
+            }
+
+            return !editing;
+        })
     }
 
     const save = (e) => {
-        // const { record, handleSave } = props;
-        console.log('save form:', form)
+        // console.log('save form:', form)
         form.validateFields().then(values => {
             toggleEdit();
             handleSave({ ...record, ...values });
         }).catch(error => {
-            if (error && error[e.currentTarget.id]) {
+            if (error && error.errorFields.length > 0) {
                 return;
             }
         })
     }
 
-    const setControl = (dataIndex, that) => {
+    const setControl = (dataIndex) => {
         if (drpControls.findIndex(item => item === dataIndex) > -1) {
-            // const { record, index } = props;
             return <Dropdown overlay={(dataIndex === 'CabinType') ? ctMenu : tcMenu} trigger={['click']}>
                 {(dataIndex === 'CabinType') ?
-                    <div className={"editable-cell-value-wrap"}>
-                        {cabinTypeCodes.find(p => p.key === record.CabinType).text} 
+                    <div >
+                        {cabinTypeCodes.find(p => p.key === record.CabinType).text}
                         <DownOutlined />
                     </div> :
                     <div id={"record_drpTaxCodeBtn_" + index} >
@@ -88,7 +72,7 @@ const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, in
                 }
             </Dropdown>
         } else if (numberControls.findIndex(item => item === dataIndex) > -1) {
-            return <InputNumber autoFocus={true} onBlur={save} >
+            return <InputNumber ref={node=>(input = node)} autoFocus={true} onBlur={save} >
             </InputNumber>
         } else if (dataIndex === 'ExpenseTime') {
             let currDate = new Date();
@@ -98,20 +82,14 @@ const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, in
             </DatePicker>
         } else {
             return <Input
-                // ref={node => (input = node)}
+                ref={node => (input = node)}
                 onPressEnter={save}
                 onBlur={save} />
         }
     }
 
-
     const renderCell = formx => {
         form = formx;
-        // setForm(form)
-        // const { children, dataIndex, record, title } = props;
-        // const { editing } = state;
-        // console.log(`drpControls.indexOf(${dataIndex}):`, drpControls.indexOf(dataIndex))
-        // const compo = find(drpControls, control => control.name === dataIndex);
         return editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex} rules={[
                 {
@@ -122,7 +100,7 @@ const Cell = ({ cabinTypeCodes, taxCodes, editable, dataIndex, title, record, in
                 {setControl(dataIndex)}
             </Form.Item>
         ) :
-            (<div className='editable-cell-value-wrap' style={{ paddingRight: 24 }} onClick={toggleEdit}>
+            (<div className='editable-cell-value-wrap' onMouseDown={toggleEdit}>
                 {children}
             </div>);
     }
