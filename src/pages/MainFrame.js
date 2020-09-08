@@ -27,7 +27,7 @@ class KLayout extends React.Component {
     }
 
     componentWillMount() {
-        if(window.location.pathname === '/'){
+        if (window.location.pathname === '/') {
             history.go('/login')
         }
         this.setState({
@@ -44,7 +44,6 @@ class KLayout extends React.Component {
     }
 
     componentDidMount() {
-        console.log('menus:', this.props.menus)
         this.setState({
             breadcrumbs: this.props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'Chrome' }]
         })
@@ -62,8 +61,7 @@ class KLayout extends React.Component {
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
                         <Layout style={{ height: '100vh' }}>
-                            <Header className={styles.bannerHeader}>
-                                {/* <Icon type="chrome" theme="filled" /> */}
+                            <Header  style={{ color: 'white' }} className={styles.bannerHeader}>
                                 <ChromeFilled />
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
