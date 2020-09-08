@@ -46,6 +46,7 @@ const Login1 = (props) => {
                         htmlType="submit"
                         type="primary"
                         onClick={() => {
+                            history.push('/mainframe')
                             const promiseRet = checkBackEndRunning();
                             console.log('process:', process)
                             promiseRet.then(data => {

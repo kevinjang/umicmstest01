@@ -3,125 +3,31 @@ import { Table, Popconfirm, message, Modal, Button, Icon } from 'antd';
 import AddNewModal from './AddNewModal'
 import moment from 'moment'
 import { connect } from 'umi'
+import { updateWith, update } from 'lodash'
 
 const dateFormat = 'YYYY/MM/DD';
 
 import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
+import { find } from 'lodash';
 
 class Aladin extends React.Component {
     constructor(props) {
         super(props);
 
 
-        this.CabinTypeCodes = [
-            {
-                key: '0',
-                text: '--请选择--'
-            },
-            {
-                key: '1',
-                text: '无'
-            },
-            {
-                key: '2',
-                text: '火车，软卧'
-            },
-            {
-                key: '3',
-                text: '火车，硬卧'
-            },
-            {
-                key: '4',
-                text: '火车，硬座'
-            },
-            {
-                key: '5',
-                text: '火车，二等座'
-            },
-            {
-                key: '6',
-                text: '火车，一等座'
-            },
-            {
-                key: '7',
-                text: '火车，商务座'
-            },
-            {
-                key: '8',
-                text: '轮船，二等座'
-            },
-            {
-                key: '9',
-                text: '轮船，一等座'
-            },
-            {
-                key: '10',
-                text: '飞机，经济舱'
-            },
-            {
-                key: '11',
-                text: '飞机，商务舱'
-            },
-            {
-                key: '12',
-                text: '飞机，公务舱'
-            },
-            {
-                key: '13',
-                text: '飞机，头等舱'
-            }
-        ]
+        this.CabinTypeCodes = props.cabinTypeCodes
 
-        this.TaxCodes = [
-            {
-                key: '_',
-                text: '--请选择--'
-            }, {
-                key: 'J0',
-                text: '0%应交税费-进项税'
-            }, {
-                key: 'JC',
-                text: '1.5%应交税费-进项税'
-            }, {
-                key: 'J6',
-                text: '3%应交税费-进项税'
-            }, {
-                key: 'J8',
-                text: '4%应交税费-进项税'
-            }, {
-                key: 'J7',
-                text: '5%应交税费-进项税'
-            }, {
-                key: 'J5',
-                text: '6%应交税费-进项税'
-            }, {
-                key: 'J9',
-                text: '7%应交税费-进项税'
-            }, {
-                key: 'JK',
-                text: '9%应交税费-进项税'
-            }, {
-                key: 'JG',
-                text: '10%应交税费-进项税'
-            }, {
-                key: 'J4',
-                text: '11%应交税费-进项税'
-            }, {
-                key: 'J2',
-                text: '13%应交税费-进项税'
-            }, {
-                key: 'JF',
-                text: '16%应交税费-进项税'
-            }, {
-                key: 'JJ',
-                text: '19%应交税费-进项税'
-            }];
+        this.TaxCodes = props.taxCodes
 
         this.numberControls = ['ExpenseTraffic', 'ExpenseBoat'
             , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
 
         this.drpControls = ['ExpenseHotelTaxCode', 'CabinType']
 
+        this.allUpdateColumns = ['ExpenseTraffic', 'ExpenseBoat'
+            , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther', 'ExpenseHotelTaxCode', 'CabinType', 'ExpenseTime', 'ExpenseAddress', 'ExpenseSum']
+
+        this.originalRecord = null;
 
         this.columns = [
             {
@@ -318,6 +224,7 @@ class Aladin extends React.Component {
             form: null,
             modalButtonClicked: ''
         }
+        this.originalDataSource = [...this.state.dataSource]
     }
 
     getNumberForInput(value) {
@@ -325,6 +232,7 @@ class Aladin extends React.Component {
     }
 
     EditClick = (record) => {
+        this.originalRecord = { ...record }
         let index = this.state.dataSource.findIndex(item => item.key === record.key);
         this.setState({
             editingRecord: record,
@@ -338,7 +246,7 @@ class Aladin extends React.Component {
     }
 
     modalOkClick = () => {
-        //想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
+        // 想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
         this.modalClose();
 
         this.updateDataSource();
@@ -358,6 +266,8 @@ class Aladin extends React.Component {
             dataSource[index] = item;
         }
 
+        this.originalDataSource = dataSource;
+
         this.setState({
             dataSource,
             modalButtonClicked: 'ok'
@@ -366,10 +276,41 @@ class Aladin extends React.Component {
 
     modalCancelClick = () => {
         this.modalClose();
-        this.setState({
-            // dataSource,
-            modalButtonClicked: 'cancel'
-        })
+
+        // if (this.originalRecord) {
+        //     const data = [...this.state.dataSource];
+        //     var item = find(data, item => item.id === this.originalRecord.id);
+        //     // updateWith()
+        //     if (item) {
+        //         // updateWith(item, this.allUpdateColumns, (nsValue, key,nsObject)=>{
+        //         //     return this.originalRecord[key]
+        //         // })
+        //         item = this.originalRecord;
+
+
+        //         this.setState({
+        //             dataSource: data,
+        //             modalButtonClicked: 'cancel'
+        //         })
+        //     }
+        //     else {
+        //         this.setState({
+        //             // dataSource: [...this.state.dataSource, this.originalRecord],
+        //             modalButtonClicked: 'cancel'
+        //         })
+        //     }
+        // }
+        if (this.originalDataSource) {
+            this.setState({
+                dataSource: this.originalDataSource,
+                modalButtonClicked: 'cancel'
+            })
+        } else {
+            this.setState({
+                // dataSource: [...this.state.dataSource, this.originalRecord],
+                modalButtonClicked: 'cancel'
+            })
+        }
     }
 
     modalClose = () => {
@@ -494,6 +435,7 @@ class Aladin extends React.Component {
                         return {
                             onDoubleClick: event => {
                                 let index = this.state.dataSource.findIndex(item => item.key === record.key);
+                                this.originalRecord = { ...record }
                                 this.setState({
                                     editingRecord: record,
                                     editingRecordIndex: index,

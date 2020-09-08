@@ -1,5 +1,5 @@
 import React from 'react'
-import { DownOutlined } from '@ant-design/icons'
+import { DownOutlined, DollarOutlined } from '@ant-design/icons'
 import {
     Form, Input, Row, Col, DatePicker, Menu, Dropdown,
     Button, Icon, InputNumber
@@ -22,11 +22,11 @@ const _ZERO = 0;
 
 let _FORM;
 
-const FormContent = ({ form, index, ...props }) => (
-    <FormContext.Provider value={form}>
-        <div {...props}></div>
-    </FormContext.Provider>
-);
+// const FormContent = ({ form, index, ...props }) => (
+//     <FormContext.Provider value={form}>
+//         <div {...props}></div>
+//     </FormContext.Provider>
+// );
 
 // const FormContextY = Form.create({ name: 'anm' })(FormContent);
 
@@ -90,6 +90,7 @@ class AddNewModal extends React.Component {
             message: '',
             value: ''
         }
+        this.oldRecord = record
         // this.visible = visible;
 
         let newTaxCodes = this.TaxCodes.map(item => {
@@ -110,7 +111,8 @@ class AddNewModal extends React.Component {
             trafficControlDisabled: false,
             boatControlDisabled: false,
             baggageControlDisabled: false,
-            hotelControlDisabled: false
+            hotelControlDisabled: false,
+            expenseSum: record["ExpenseSum"]
         }
     }
 
@@ -134,8 +136,6 @@ class AddNewModal extends React.Component {
     componentDidUpdate = (e) => {
         // console.log('did update this.state.record', this.state.record)
     }
-
-    // componentdi
 
     componentWillUnmount = () => {
         // console.log('AddNewModal will unmount now!')
@@ -183,11 +183,9 @@ class AddNewModal extends React.Component {
     }
 
     renderContent = (form) => {
-        const { record, taxCodes } = this.state;
+        const { record, taxCodes, expenseSum } = this.state;
         const { columns, cabinTypeCodes } = this.props;
 
-        // _FORM = this.formRef.current;
-        console.log('_FORM:', _FORM)
         const tcMenu = (
             <Menu onClick={this.cabinTypeClicked}>
                 {
@@ -384,8 +382,9 @@ class AddNewModal extends React.Component {
             <Row gutter={12}>
                 <Col span={4}>费用合计</Col>
                 <Col span={8}>
-                    <FormItem name={"ExpenseSum"} initialValue={record['ExpenseSum']}>
-                        <InputNumber contentEditable={false} disabled={true} formatter={value => `￥ ${value}`}>
+                    <FormItem name={"ExpenseSum"} initialValue={expenseSum} >
+                        <InputNumber min={0} readOnly={true} formatter={value=>`￥ ${value}`}>
+                            {expenseSum}
                         </InputNumber>
                     </FormItem>
                 </Col>
@@ -472,8 +471,10 @@ class AddNewModal extends React.Component {
             record['ExpenseSum'] = sum;
 
             this.setState({
-                record: record
+                record: record,
+                expenseSum: sum
             }, () => {
+                console.log('expenseSum:', this.state.expenseSum)
                 this.onControlChange();
             });
 
@@ -690,7 +691,7 @@ class AddNewModal extends React.Component {
                     record.ExpenseBaggage +
                     record.ExpenseHotel);
 
-                record.ExpenseBoat = _ZERO.toString();
+                record.ExpenseBoat = _ZERO;//.toString();
                 record['ExpenseBaggage'] = _ZERO;
                 record['ExpenseHotel'] = _ZERO;
                 this.setState({
@@ -705,7 +706,8 @@ class AddNewModal extends React.Component {
                     _FORM.setFieldsValue({
                         ExpenseBoat: _ZERO,
                         ExpenseBaggage: _ZERO,
-                        ExpenseHotel: _ZERO
+                        ExpenseHotel: _ZERO,
+                        ExpenseSum: record["ExpenseSum"]
                     });
 
 
