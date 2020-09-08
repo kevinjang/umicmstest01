@@ -39,7 +39,7 @@ const MenusModel = {
                         level: 2,
                         title: "弹窗编辑示例",
                         icon: "Weibo",
-                        urlPath: "aladin",
+                        urlPath: "/mainframe/aladin",
                         path: 'aladin',
                         nodeInfo: "./treetest/Aladin"
                     }, {
@@ -168,7 +168,7 @@ const MenusModel = {
                         level: 2,
                         title: "Spin测试",
                         icon: "Windows",
-                        urlPath: "spnningTest",
+                        urlPath: "/mainframe/spnningTest",
                         nodeInfo: "./compoTests/spnningTest"
                     },
                     {
