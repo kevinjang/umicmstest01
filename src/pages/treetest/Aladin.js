@@ -2,6 +2,7 @@ import React from 'react'
 import { Table, Popconfirm, message, Modal, Button, Icon } from 'antd';
 import AddNewModal from './AddNewModal'
 import moment from 'moment'
+import { connect } from 'umi'
 
 const dateFormat = 'YYYY/MM/DD';
 
@@ -536,4 +537,7 @@ class Aladin extends React.Component {
     }
 }
 
-export default Aladin
+export default connect(({ cabinTypeCodes, taxCodes }) => ({
+    cabinTypeCodes: cabinTypeCodes.values
+    , taxCodes: taxCodes.values
+}))(Aladin)
