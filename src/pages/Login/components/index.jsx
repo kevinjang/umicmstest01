@@ -10,7 +10,7 @@ const Login = props => {
         // const props = child.props;
         if (child.type.typeName === 'LoginTab') {
             console.log('child:', child)
-            TabChildren.push(<TabPane {...child.props}>{child.props.children}</TabPane>)
+            TabChildren.push(<TabPane key={"tp_m"} {...child.props}>{child.props.children}</TabPane>)
         }
     })
     return (
