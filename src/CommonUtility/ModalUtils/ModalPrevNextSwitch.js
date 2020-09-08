@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Modal, message, Button, Icon } from 'antd'
 
+import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons'
+
 class ModalWithPrevNext extends React.Component {
     constructor(props) {
         super(props);
@@ -75,7 +77,7 @@ class ModalWithPrevNext extends React.Component {
 
     render() {
         // console.log('this.props.record:', this.props.record)
-        return (<Modal {...this.props}>
+        return (<Modal {...this.props} okText="确定" cancelText="取消">
             <div style={{ display: 'flex' }}>
                 <div style={{
                     width: '50px', height: '370px',
@@ -84,7 +86,8 @@ class ModalWithPrevNext extends React.Component {
                 }}>
                     {this.props.record && this.props.record.key !== this.state.dataSource.length ?
                         <Button type='link' onClick={this.previousRecord}>
-                            <Icon type='double-left' />
+                            {/* <Icon type='double-left' /> */}
+                            <DoubleLeftOutlined />
                         </Button>
                         : null}
                 </div>
@@ -96,7 +99,8 @@ class ModalWithPrevNext extends React.Component {
                 }}>
                     {this.props.record && this.props.record.key !== this.state.dataSource.length ?
                         <Button type='link' onClick={this.nextRecord}>
-                            <Icon type='double-right' />
+                            {/* <Icon type='double-right' /> */}
+                            <DoubleRightOutlined />
                         </Button>
                         : null}
                 </div>
