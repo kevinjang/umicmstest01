@@ -39,12 +39,13 @@ export default {
             path: '/', component: '@/pages/Login'
         },
         {
-            path:'/mainframe', component:'@/pages/MainFrame',
-            routes:[
-                {path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard'},
-                {path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain'},
-                {path: '/mainframe/treetest', component: '@/pages/treetest/index'},
-                // {path: '/mainframe/aladin', component: '@/pages/treetest/Aladin'}
+            path: '/mainframe', component: '@/pages/MainFrame',
+            routes: [
+                { path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard' },
+                { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain' },
+                { path: '/mainframe/treetest', component: '@/pages/treetest/index' },
+                { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
+                { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' }
 
             ]
         }
