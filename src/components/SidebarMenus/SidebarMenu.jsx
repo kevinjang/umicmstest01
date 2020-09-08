@@ -58,10 +58,10 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                                         style={{ color: 'white' }}
                                                         to={cItem.urlPath}
                                                         key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
-                                                        onClick={() => notification.info({
-                                                            message: 'test',
-                                                            description: 'test'
-                                                        })}
+                                                        // onClick={() => notification.info({
+                                                        //     message: 'test',
+                                                        //     description: 'test'
+                                                        // })}
                                                     >
                                                         {cItem.title}
                                                     </Link>
