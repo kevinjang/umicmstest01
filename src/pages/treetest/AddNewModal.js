@@ -474,7 +474,7 @@ class AddNewModal extends React.Component {
                 record: record,
                 expenseSum: sum
             }, () => {
-                console.log('expenseSum:', this.state.expenseSum)
+                // console.log('expenseSum:', this.state.expenseSum)
                 this.onControlChange();
             });
 

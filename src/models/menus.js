@@ -20,11 +20,11 @@ const MenusModel = {
                     }, {
                         id: "5",
                         level: 2,
-                        title: "Option 5",
+                        title: "EditInModal",
                         icon: "PieChart",
                         // path: '/mainframe/treetest',
-                        urlPath: "/mainframe/treetest",
-                        nodeInfo: "./treetest/index"
+                        urlPath: "/mainframe/newaladin",
+                        nodeInfo: "./EditInModal/index"
                     }
                 ]
             },

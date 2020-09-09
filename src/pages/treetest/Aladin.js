@@ -182,41 +182,40 @@ class Aladin extends React.Component {
             }
         ]
 
+        this.originalDataSource = [{
+            key: '0',
+            RowNum: '1',
+            ExpenseTime: moment(new Date(), dateFormat),
+            ExpenseAddress: '北京',
+            CabinType: '2',
+            ExpenseTraffic: 123,
+            ExpenseBoat: 0,
+            ExpenseBaggage: 0,
+            ExpenseHotel: 0,
+            ExpenseHotelTaxCode: '_',
+            ExpenseMeal: 0,
+            ExpenseOther: 0,
+            ExpenseSum: 123,
+            InvoiceNo: '123123123'
+        },
+        {
+            key: '1',
+            RowNum: '2',
+            ExpenseTime: moment(new Date(), dateFormat),
+            ExpenseAddress: '上海',
+            CabinType: '0',
+            ExpenseTraffic: 0,
+            ExpenseBoat: 0,
+            ExpenseBaggage: 0,
+            ExpenseHotel: 0,
+            ExpenseHotelTaxCode: '_',
+            ExpenseMeal: 0,
+            ExpenseOther: 0,
+            ExpenseSum: 0,
+            InvoiceNo: ''
+        }]
         this.state = {
-            dataSource: [
-                {
-                    key: '0',
-                    RowNum: '1',
-                    ExpenseTime: moment(new Date(), dateFormat),
-                    ExpenseAddress: '北京',
-                    CabinType: '2',
-                    ExpenseTraffic: 123,
-                    ExpenseBoat: 0,
-                    ExpenseBaggage: 0,
-                    ExpenseHotel: 0,
-                    ExpenseHotelTaxCode: '_',
-                    ExpenseMeal: 0,
-                    ExpenseOther: 0,
-                    ExpenseSum: 123,
-                    InvoiceNo: '123123123'
-                },
-                {
-                    key: '1',
-                    RowNum: '2',
-                    ExpenseTime: moment(new Date(), dateFormat),
-                    ExpenseAddress: '上海',
-                    CabinType: '0',
-                    ExpenseTraffic: 0,
-                    ExpenseBoat: 0,
-                    ExpenseBaggage: 0,
-                    ExpenseHotel: 0,
-                    ExpenseHotelTaxCode: '_',
-                    ExpenseMeal: 0,
-                    ExpenseOther: 0,
-                    ExpenseSum: 0,
-                    InvoiceNo: ''
-                }
-            ],
+            dataSource: [...this.originalDataSource],
             editingRecord: null,
             editingRecordIndex: 0,
             modalOpen: false,
@@ -224,7 +223,6 @@ class Aladin extends React.Component {
             form: null,
             modalButtonClicked: ''
         }
-        this.originalDataSource = [...this.state.dataSource]
     }
 
     getNumberForInput(value) {
@@ -253,7 +251,7 @@ class Aladin extends React.Component {
     }
 
     updateDataSource = () => {
-
+        // 点击ok时才会调用的方法，用于更新数据源
         let { dataSource, editingRecord } = this.state;
 
         let item = dataSource.find(item1 => item1.key === editingRecord.key);
@@ -416,14 +414,8 @@ class Aladin extends React.Component {
     }
 
     render() {
-        // const { editingRecord, editingRecordIndex } = this.state;
-
         const modalStyle = {
-            // content: {
-
-            // }
             height: '400px',
-            // paddingTop: '10px',
             width: '100%'
         }
         return <div>
