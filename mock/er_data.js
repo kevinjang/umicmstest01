@@ -1,6 +1,9 @@
+import moment from 'moment'
+const dateFormat = 'YYYY/MM/DD';
+
 export default {
-    'GET /api/erdata': () => {
-        return [{
+    'GET /api/erdata': (req, res) => {
+        res.json([{
             key: '0',
             RowNum: '1',
             ExpenseTime: moment(new Date(), dateFormat),
@@ -31,6 +34,6 @@ export default {
             ExpenseOther: 0,
             ExpenseSum: 0,
             InvoiceNo: ''
-        }]
+        }])
     }
 }
