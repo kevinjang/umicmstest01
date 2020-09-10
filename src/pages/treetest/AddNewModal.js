@@ -505,6 +505,7 @@ class AddNewModal extends React.Component {
     }
 
     onControlChange = () => {
+        console.log('form:', _FORM)
         // 税改联动逻辑
         const { record } = this.state;
         // = 0 ，全部禁用并清零
@@ -528,7 +529,8 @@ class AddNewModal extends React.Component {
                     ExpenseTraffic: _ZERO,
                     ExpenseBoat: _ZERO,
                     ExpenseBaggage: _ZERO,
-                    ExpenseHotel: _ZERO
+                    ExpenseHotel: _ZERO,
+                    ExpenseSum: record.ExpenseSum
                 });
 
                 // 全部重置后，税率全部加载
@@ -543,7 +545,8 @@ class AddNewModal extends React.Component {
             // const {form} = this.props;
             record.ExpenseTraffic = 0;
             _FORM.setFieldsValue({
-                ExpenseTraffic: _ZERO
+                ExpenseTraffic: _ZERO,
+                ExpenseSum: record.ExpenseSum
             })
             if (parseFloat(record['ExpenseBoat']) !== 0) {
                 // 如果有值且不为零，其他两项禁用并清零
@@ -561,7 +564,8 @@ class AddNewModal extends React.Component {
                     _FORM.setFieldsValue({
                         // ExpenseTraffic: 0,
                         ExpenseBaggage: _ZERO,
-                        ExpenseHotel: _ZERO
+                        ExpenseHotel: _ZERO,
+                        ExpenseSum: record.ExpenseSum
                     });
 
                     // 只要3%的行
@@ -604,7 +608,8 @@ class AddNewModal extends React.Component {
                     _FORM.setFieldsValue({
                         // ExpenseTraffic: 0,
                         ExpenseBoat: _ZERO,
-                        ExpenseHotel: _ZERO
+                        ExpenseHotel: _ZERO,
+                        ExpenseSum: record.ExpenseSum
                     });
                     // 出租车 税率需要0、3、6、9的
                     const neededTCs = ['J0', 'J6', 'J5', 'JK'];
@@ -646,7 +651,8 @@ class AddNewModal extends React.Component {
                     _FORM.setFieldsValue({
                         // ExpenseTraffic: 0,
                         ExpenseBaggage: _ZERO,
-                        ExpenseBoat: _ZERO
+                        ExpenseBoat: _ZERO,
+                        ExpenseSum: record.ExpenseSum
                     })
 
                     // 住宿 0、3、6
@@ -754,7 +760,8 @@ class AddNewModal extends React.Component {
                     _FORM.setFieldsValue({
                         ExpenseTraffic: _ZERO,
                         ExpenseBaggage: _ZERO,
-                        ExpenseHotel: _ZERO
+                        ExpenseHotel: _ZERO,
+                        ExpenseSum: record.ExpenseSum
                     });
                     // 只要3%的行
                     let newTaxCodes = [];

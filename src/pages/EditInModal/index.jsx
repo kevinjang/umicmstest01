@@ -3,17 +3,69 @@ import { Table, Button, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
 import { getNumberForInput } from '../../utils/utils'
 import moment from 'moment'
+import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
+import AddNewModal from '../treetest/AddNewModal'
+
 var first = true
+const dateFormat = 'YYYY/MM/DD';
 const Aladin = (props) => {
     var originalRecord = null;
+    var originalDataSource  = null;
     const [editingRecord, setEditingRecord] = useState();
     const [editingRecordIndex, setEditingRecordIndex] = useState(0);
     const [modalOpen, setModalOpen] = useState(false)
-    const [modalTitle, setModalTitle] = useState("添加新项目")
+    const [modalTitle, setModalTitle] = useState("添加新项目");
+    const [modalButtonClicked, setModalButtonClicked] = useState("")
+
+
     const { cabinTypeCodes, taxCodes } = props;
     const numberControls = ['ExpenseTraffic', 'ExpenseBoat'
         , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
     const drpControls = ['ExpenseHotelTaxCode', 'CabinType']
+
+    const handleDelete = (index) => {
+        let currentItem = dataSource[index];
+
+
+        index = parseInt(index);
+
+        if (index !== dataSource.length - 1) {
+
+            // 不是最后一行，将其之后的行的RowNum刷新
+            for (let ind = index; ind < dataSource.length - 1; ind++) {
+                let item = dataSource[ind + 1];
+                item.RowNum = index + 1;
+                dataSource[ind] = item; //dataSource[ind+1];
+            }
+        }
+        //  如果是最后一行，不需要刷新其他行RowNum
+        // 删除最后一行即可
+        dataSource.length -= 1;
+    }
+
+    const handleAdd = () => {
+        const count = dataSource.length;
+        const newData = {
+            key: count,
+            RowNum: count + 1,
+            ExpenseTime: moment(new Date(), dateFormat),
+            ExpenseAddress: '',
+            CabinType: '0',
+            ExpenseTraffic: 0,
+            ExpenseBoat: 0,
+            ExpenseBaggage: 0,
+            ExpenseHotel: 0,
+            ExpenseHotelTaxCode: '_',
+            ExpenseMeal: 0,
+            ExpenseOther: 0,
+            ExpenseSum: 0,
+            InvoiceNo: ''
+        };
+        
+        setModalOpen(true)
+        setEditingRecordIndex(count);
+        setEditingRecord(newData);
+    }
 
     const EditClick = (record) => {
         originalRecord = { ...record }
@@ -23,6 +75,55 @@ const Aladin = (props) => {
         setModalOpen(true);
         setModalTitle("编辑项目")
     }
+
+    const updateRecord = (record, index) => {
+        setEditingRecord(record);
+        setEditingRecordIndex(index)
+    }
+    const modalClose = () => {
+        setModalOpen(false)
+    }
+
+    const modalOkClick = () => {
+        // 想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
+        modalClose();
+
+        updateDataSource();
+    }
+
+    const modalCancelClick = () => {
+        modalClose();
+
+        if (originalDataSource) {
+            // setState({
+            //     dataSource: this.originalDataSource,
+            //     modalButtonClicked: 'cancel'
+            // })
+            setModalButtonClicked('cancel')
+        } else {
+            setModalButtonClicked('cancel')
+        }
+    }
+
+    const updateDataSource = () => {
+        // 点击ok时才会调用的方法，用于更新数据源
+        // let { dataSource, editingRecord } = this.state;
+
+        let item = dataSource.find(item1 => item1.key === editingRecord.key);
+        if (!item) {
+            // item = editingRecord;
+            dataSource[dataSource.length] = editingRecord;
+        } else {
+            let index = dataSource.findIndex(item1 => item1.key === editingRecord.key)
+            item = { ...editingRecord }
+            dataSource[index] = item;
+        }
+
+        originalDataSource = dataSource;
+
+        setModalButtonClicked('ok')
+    }
+
 
     const columns = [
         {
@@ -164,21 +265,23 @@ const Aladin = (props) => {
                     (
                         <div>
                             <Popconfirm title='确定删除吗?'
-                                onConfirm={() => this.handleDelete(record.key)}>
+                                onConfirm={() => handleDelete(record.key)}>
                                 <a href='/#'>删除</a>
                                 {/* <Button>删除</Button> */}
                             </Popconfirm>
                             |
                             <a href='javascript:;' onClick={() => EditClick(record)}>编辑</a>
-                            {/* <Button onClick={() => this.EditClick(record)} type='primary'>编辑</Button> */}
                         </div>
                     ) : null
 
         }
     ];
 
+    const modalStyle = {
+        height: '400px',
+        width: '100%'
+    }
 
-    // const [dataSource, setDataSource] = useState(props.er_data);
     var dataSource = props.er_data;
 
     useEffect(() => {
@@ -194,16 +297,34 @@ const Aladin = (props) => {
         }
 
     })
-
-    // useEffect(() => {
-    //     const { er_data } = props
-    //     console.log(er_data)
-    // })
     return (
         <div>
             {console.log(props.er_data)}
             <Table columns={columns} dataSource={dataSource}></Table>
-            <Button type="primary" >添加新项目</Button>
+            <Button type="primary" onClick={()=>handleAdd()} >添加新项目</Button>
+            <ModalWithPrevNext visible={modalOpen}
+                title={modalTitle}
+                onOk={modalOkClick}
+                onCancel={modalCancelClick}
+                destroyOnClose={true}
+                maskClosable={false}
+                // style={{ width: '1000px' }}
+                width='700px'
+                bodyStyle={modalStyle}
+                forceRender={true}
+                updateRecord={updateRecord}
+                record={editingRecord}
+                currentIndex={editingRecordIndex}
+                dataSource={dataSource}
+
+                buttonClicked={modalButtonClicked}>
+                <AddNewModal
+                    record={editingRecord}
+                    currentIndex={editingRecordIndex}
+                    columns={columns}
+                    cabinTypeCodes={cabinTypeCodes}
+                    taxCodes={taxCodes}></AddNewModal>
+            </ModalWithPrevNext>
         </div>
     );
 }
