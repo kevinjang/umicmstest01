@@ -1,6 +1,29 @@
 import { connect } from 'umi'
-import { Table, Button } from 'antd'
+import { Table, Button, Popconfirm } from 'antd'
+import { useEffect, useState } from 'react'
+import { getNumberForInput } from '../../utils/utils'
+import moment from 'moment'
+var first = true
 const Aladin = (props) => {
+    var originalRecord = null;
+    const [editingRecord, setEditingRecord] = useState();
+    const [editingRecordIndex, setEditingRecordIndex] = useState(0);
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalTitle, setModalTitle] = useState("添加新项目")
+    const { cabinTypeCodes, taxCodes } = props;
+    const numberControls = ['ExpenseTraffic', 'ExpenseBoat'
+        , 'ExpenseBaggage', 'ExpenseHotel', 'ExpenseMeal', 'ExpenseOther']
+    const drpControls = ['ExpenseHotelTaxCode', 'CabinType']
+
+    const EditClick = (record) => {
+        originalRecord = { ...record }
+        let index = dataSource.findIndex(item => item.key === record.key);
+        setEditingRecord(record)
+        setEditingRecordIndex(index)
+        setModalOpen(true);
+        setModalTitle("编辑项目")
+    }
+
     const columns = [
         {
             title: '序号',
@@ -33,7 +56,7 @@ const Aladin = (props) => {
             visible: true,
             width: '8.2%',
             render: (text, record, index) => {
-                return this.CabinTypeCodes.find(item => item.key === text).text;
+                return cabinTypeCodes.find(item => item.key === text).text;
             }
         },
         {
@@ -93,7 +116,7 @@ const Aladin = (props) => {
             visible: true,
             width: '8.2%',
             render: (text, record, index) => {
-                return this.TaxCodes.find(item => item.key === text).text
+                return taxCodes.find(item => item.key === text).text
             }
         },
         {
@@ -117,8 +140,8 @@ const Aladin = (props) => {
             visible: true,
             render: (text, record, index) => {
                 let sum = 0;
-                this.numberControls.map(item => {
-                    sum += this.getNumberForInput(record[item]);
+                numberControls.map(item => {
+                    sum += getNumberForInput(record[item]);
                 })
 
                 return sum;
@@ -137,31 +160,57 @@ const Aladin = (props) => {
             dataIndex: 'operation',
             fixed: 'right',
             render: (text, record) =>
-                this.state.dataSource.length >= 1 ?
+                dataSource.length >= 1 ?
                     (
                         <div>
                             <Popconfirm title='确定删除吗?'
                                 onConfirm={() => this.handleDelete(record.key)}>
-                                <a href='javascript:;'>删除</a>
+                                <a href='/#'>删除</a>
                                 {/* <Button>删除</Button> */}
                             </Popconfirm>
                             |
-                            <a href='javascript:;' onClick={() => this.EditClick(record)}>编辑</a>
+                            <a href='javascript:;' onClick={() => EditClick(record)}>编辑</a>
                             {/* <Button onClick={() => this.EditClick(record)} type='primary'>编辑</Button> */}
                         </div>
                     ) : null
 
         }
-    ]
+    ];
+
+
+    // const [dataSource, setDataSource] = useState(props.er_data);
+    var dataSource = props.er_data;
+
+    useEffect(() => {
+        const { dispatch } = props;
+        if (first && dispatch) {
+            first = false;
+            dispatch({
+                type: 'er_data/fetchRemoteData'
+            })
+            // const { er_data } = props
+            // console.log(er_data)
+            // dataSource = props.er_data;
+        }
+
+    })
+
+    // useEffect(() => {
+    //     const { er_data } = props
+    //     console.log(er_data)
+    // })
     return (
         <div>
-            <Table columns={columns}></Table>
+            {console.log(props.er_data)}
+            <Table columns={columns} dataSource={dataSource}></Table>
             <Button type="primary" >添加新项目</Button>
         </div>
     );
 }
 
-export default connect(({ cabinTypeCodes, taxCodes }) => ({
-    cabinTypeCodes: cabinTypeCodes.values
-    , taxCodes: taxCodes.values
+export default connect(({ cabinTypeCodes, taxCodes, er_data, loading }) => ({
+    cabinTypeCodes: cabinTypeCodes.values,
+    taxCodes: taxCodes.values,
+    er_data: er_data.remoteDataSource,
+    fetchRemoteData: loading.effects["er_data/fetchRemoteData"]
 }))(Aladin)
