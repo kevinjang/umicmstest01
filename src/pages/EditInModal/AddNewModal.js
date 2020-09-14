@@ -2,7 +2,7 @@
  * ANCHOR: 20200914 kevinjang
  * TODO: 传入id，到model中获取指定数据后渲染到页面上，
  * NOTE: 所有修改只在本页面内执行，
- * 只有当点击确定以后才能推送到服务器端保存
+ * NOTE: 只有当点击确定以后才能推送到服务器端保存
  * REVIEW: 因目前都是mock的数据
  * TODO: 所以推送到服务器端的操作留待后续实现
 */
@@ -15,6 +15,7 @@ import {
     Button, Icon, InputNumber
 } from 'antd';
 import moment from 'moment'
+import {DownOutlined} from '@ant-design/icons'
 
 const dateFormat = 'YYYY/MM/DD';
 const FormItem = Form.Item;
@@ -34,6 +35,11 @@ class AddNewModal extends React.Component {
         this.originalRecord = {
             ...this.editingRecord
         }
+        this.state = {
+            expenseSum: this.editingRecord["ExpenseSum"]
+        }
+        this.cabinTypeCodes = props.cabinTypeCodes;
+        this.taxCodes = props.taxCodes;
     }
 
     componentDidMount() {
@@ -45,20 +51,74 @@ class AddNewModal extends React.Component {
 
     renderFormContent = () => {
         const record = this.editingRecord;
-        return <Row gutter={12}>
-            <Col span={4}>费用日期</Col>
-            <Col span={8}>
-                <FormItem name={"ExpenseTime"} rules={[{
-                    required: true,
-                    message: ''
-                }]} initialValue={moment(record["ExpenseTime"], dateFormat)} >
-                    <DatePicker //NOTE: onChange={this.onDatePickerChange}
-                    >
-                        {moment(record['ExpenseTime'], dateFormat)}
-                    </DatePicker>
-                </FormItem>
-            </Col>
-        </Row>
+
+        const tcMenu = (
+            <Menu >
+                {
+                    this.cabinTypeCodes.map(item => (
+                        <Menu.Item key={item.key}>
+                            {item.text}
+                        </Menu.Item>
+                    ))
+                }
+            </Menu>
+        )
+        const tcTaxCode = (
+            <Menu onClick={this.taxCodeClicked}>
+                {
+                    this.taxCodes.map((item, index) => {
+                        return <Menu.Item key={item.key}>
+                            {item.text}
+                        </Menu.Item>
+                    })
+                }
+            </Menu>
+        );
+
+
+        return (
+            <div>
+                <Row gutter={12}>
+                    <Col span={4}>费用日期</Col>
+                    <Col span={8}>
+                        <FormItem name={"ExpenseTime"} rules={[{
+                            required: true,
+                            message: ''
+                        }]} initialValue={moment(record["ExpenseTime"], dateFormat)} >
+                            <DatePicker //NOTE: onChange={this.onDatePickerChange}
+                            >
+                                {moment(record['ExpenseTime'], dateFormat)}
+                            </DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span={4} >费用发生地</Col>
+                    <Col span={8} >
+                        <FormItem name="ExpenseAddress" rules={[
+                            {
+                                required: true,
+                                message: '费用发生地是必填项'
+                            }
+                        ]} initialValue={record['ExpenseAddress']}>
+                            <Input
+                            // FIXME: onChange={this.onExpenseAddressChange}
+                            ></Input>
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row gutter={12}>
+                    <Col span={4}>舱位</Col>
+                    <Col span={8}>
+                        <FormItem>
+                            <Dropdown.Button overlay={tcMenu} icon={<DownOutlined />}>
+                                {
+                                    this.cabinTypeCodes.find(item1 => item1.key === this.editingRecord.key).text
+                                }
+                            </Dropdown.Button>
+                        </FormItem>
+                    </Col>
+                </Row>
+            </div>
+        )
     }
 
     render() {
@@ -72,6 +132,8 @@ class AddNewModal extends React.Component {
     }
 }
 
-export default connect(({ er_data, loading }) => ({
-    editingRecord: er_data.editingRecord
+export default connect(({ er_data, cabinTypeCodes, taxCodes, loading }) => ({
+    editingRecord: er_data.editingRecord,
+    cabinTypeCodes: cabinTypeCodes.values,
+    taxCodes: taxCodes.values
 }))(AddNewModal);

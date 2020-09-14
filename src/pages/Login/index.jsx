@@ -46,7 +46,7 @@ const Login1 = (props) => {
                         htmlType="submit"
                         type="primary"
                         onClick={() => {
-                            history.push('/mainframe')
+                            // history.push('/mainframe')
                             const promiseRet = checkBackEndRunning();
                             console.log('process:', process)
                             promiseRet.then(data => {
@@ -68,7 +68,7 @@ const Login1 = (props) => {
                             });
                         }}
                         onSubmit={() => {
-                            history.push('/mainframe')
+                            // history.push('/mainframe')
                         }}>登录</Button>
                 </Form.Item>
             </Tab>
