@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import { getNumberForInput } from '../../utils/utils'
 import moment from 'moment'
 import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
-import AddNewModal from '../treetest/AddNewModal'
+// import AddNewModal from '../treetest/AddNewModal'
+import AddNewModal from './AddNewModal'
 
 var first = true
 const dateFormat = 'YYYY/MM/DD';
 const Aladin = (props) => {
     var originalRecord = null;
-    var originalDataSource  = null;
+    var originalDataSource = null;
     const [editingRecord, setEditingRecord] = useState();
     const [editingRecordIndex, setEditingRecordIndex] = useState(0);
     const [modalOpen, setModalOpen] = useState(false)
@@ -61,7 +62,7 @@ const Aladin = (props) => {
             ExpenseSum: 0,
             InvoiceNo: ''
         };
-        
+
         setModalOpen(true)
         setEditingRecordIndex(count);
         setEditingRecord(newData);
@@ -70,6 +71,14 @@ const Aladin = (props) => {
     const EditClick = (record) => {
         originalRecord = { ...record }
         let index = dataSource.findIndex(item => item.key === record.key);
+        const { key } = record;
+        const { dispatch } = props;
+        if (dispatch) {
+            dispatch({
+                type: 'er_data/setEditingRecord',
+                payload: { id: key }
+            })
+        }
         setEditingRecord(record)
         setEditingRecordIndex(index)
         setModalOpen(true);
@@ -301,7 +310,7 @@ const Aladin = (props) => {
         <div>
             {console.log(props.er_data)}
             <Table columns={columns} dataSource={dataSource}></Table>
-            <Button type="primary" onClick={()=>handleAdd()} >添加新项目</Button>
+            <Button type="primary" onClick={() => handleAdd()} >添加新项目</Button>
             <ModalWithPrevNext visible={modalOpen}
                 title={modalTitle}
                 onOk={modalOkClick}

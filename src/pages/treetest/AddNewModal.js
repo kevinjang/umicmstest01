@@ -117,13 +117,11 @@ class AddNewModal extends React.Component {
     }
 
     componentDidMount = (e) => {
-        // console.log('did mount props',this.props);
         this.onControlChange();
         _FORM = this.formRef.current
     }
 
     componentWillReceiveProps = (e) => {
-        // console.log('will receive props - e - this.state',e, this.state);
         const { record } = e;
         this.setState({
             record,
@@ -131,25 +129,6 @@ class AddNewModal extends React.Component {
         }, () => {
             this.onControlChange();
         })
-    }
-
-    componentDidUpdate = (e) => {
-        // console.log('did update this.state.record', this.state.record)
-    }
-
-    componentWillUnmount = () => {
-        // console.log('AddNewModal will unmount now!')
-        // 此处触发校验
-        // console.log('this.state.modalButtonClicked',this.state.modalButtonClicked)
-        if (this.state.modalButtonClicked === 'ok') {
-            // 此处触发校验
-            // console.log('AddNewModal will unmount now!')
-        }
-
-    }
-
-    componentWillUpdate = (e) => {
-        const { record } = e;
     }
 
     cabinTypeClicked = (e) => {
