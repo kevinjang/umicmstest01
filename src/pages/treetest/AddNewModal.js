@@ -1,54 +1,23 @@
 import React from 'react'
-import { DownOutlined, DollarOutlined } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import {
-    Form, Input, Row, Col, DatePicker, Menu, Dropdown,
-    Button, Icon, InputNumber
+    Form, Input, Row, Col, DatePicker, Menu, Dropdown, InputNumber
 } from 'antd';
-
 import moment from 'moment'
-
 import 'antd/dist/antd.css'
-import cabinTypeCodes from '../../models/cabinTypeCodes';
+import { connect } from 'umi';
+import { debounce } from '../../utils/utils'
 
 const dateFormat = 'YYYY/MM/DD';
 
 const FormItem = Form.Item;
 
-const FormContext = React.createContext();
-
-let timer1 = null;
-
 const _ZERO = 0;
 
 let _FORM;
 
-// const FormContent = ({ form, index, ...props }) => (
-//     <FormContext.Provider value={form}>
-//         <div {...props}></div>
-//     </FormContext.Provider>
-// );
-
-// const FormContextY = Form.create({ name: 'anm' })(FormContent);
-
-
 let timeout = 200;
 let editing = false;
-const debounce = function (fn) {
-    if (editing) {
-        // 编辑中，重新开始计时，不执行计算
-        if (timer1)
-            clearTimeout(timer1);
-
-        timer1 = setTimeout(function () {
-            clearTimeout(timer1);
-            editing = false;
-            fn.call();
-        }, timeout);
-    }
-    else {
-        fn.call();
-    }
-}
 
 const ctValidateF = function (key) {
     // console.log('ctValidateF-key', key)
@@ -362,7 +331,7 @@ class AddNewModal extends React.Component {
                 <Col span={4}>费用合计</Col>
                 <Col span={8}>
                     <FormItem name={"ExpenseSum"} initialValue={expenseSum} >
-                        <InputNumber min={0} readOnly={true} formatter={value=>`￥ ${value}`}>
+                        <InputNumber min={0} readOnly={true} formatter={value => `￥ ${value}`}>
                             {expenseSum}
                         </InputNumber>
                     </FormItem>
@@ -473,7 +442,7 @@ class AddNewModal extends React.Component {
 
     onCTChange = (value1) => {
         // Cabin Type Change Event
-        console.log(value1)
+        // console.log(value1)
 
         ctValidateF(vallue1);
     }
@@ -798,4 +767,8 @@ class AddNewModal extends React.Component {
     }
 }
 
-export default AddNewModal
+export default connect(({
+    er_data
+}) => ({
+    record: er_data.editingRecord
+}))(AddNewModal);
