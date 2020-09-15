@@ -15,7 +15,7 @@ import {
     Button, Icon, InputNumber
 } from 'antd';
 import moment from 'moment'
-import {DownOutlined} from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 
 const dateFormat = 'YYYY/MM/DD';
 const FormItem = Form.Item;
@@ -27,19 +27,84 @@ let _FORM;
 let timeout = 200;
 let editing = false;
 
+const ctValidateF = function (key) {
+    // console.log('ctValidateF-key', key)
+    let ctValidateData;
+    if (key === '0') {
+        ctValidateData = {
+            validateStatus: 'error',
+            message: '请选择舱位信息',
+            value: key
+        }
+    }
+    else {
+        ctValidateData = {
+            validateStatus: 'success',
+            message: null,
+            value: key
+        }
+    }
+
+    return ctValidateData;
+
+}
+
+// NOTE: 只有点击确定按钮的时候才需要把数据推送到Model中去，否则所有的修改都只针对当前数据行发生
+
 class AddNewModal extends React.Component {
     constructor(props) {
         super(props)
         this.formRef = React.createRef();
-        this.editingRecord = props.editingRecord
+        this.editingRecord = { ...props.editingRecord }
         this.originalRecord = {
             ...this.editingRecord
         }
+        let ctValidateData = {
+            // NOTE: 验证结果
+            validateStatus: '',//NOTE: 结果状态 success, error, warning, validating
+            message: '',
+            value: ''
+        }
         this.state = {
-            expenseSum: this.editingRecord["ExpenseSum"]
+            expenseSum: this.editingRecord["ExpenseSum"],
+            ctValidateData,
+            record: {
+                ...props.editingRecord
+            }
         }
         this.cabinTypeCodes = props.cabinTypeCodes;
         this.taxCodes = props.taxCodes;
+    }
+
+    cabinTypeClicked = (e) => {
+
+        const ctValidateData = ctValidateF(e.key);
+
+        this.editingRecord.CabinType = e.key
+
+        const { dispatch } = this.props;
+        if (dispatch) {
+            console.log('dispatch:', dispatch)
+            dispatch({
+                type: 'er_data/setEditingRecordByContent',
+                payload: { ...this.editingRecord }
+            })
+
+            console.log('editingRecord after:', this.editingRecord)
+        }
+
+        this.setState({
+            // record,
+            ctValidateData
+        }, () => {
+            // this.onControlChange();
+        })
+    }
+
+    onCTChange = (value1) => {
+        // NOTE: Cabin Type Change Event
+
+        ctValidateF(vallue1);
     }
 
     componentDidMount() {
@@ -50,10 +115,10 @@ class AddNewModal extends React.Component {
     }
 
     renderFormContent = () => {
-        const record = this.editingRecord;
+        const { record } = this.state;
 
-        const tcMenu = (
-            <Menu >
+        const ctMenu = (
+            <Menu onClick={this.cabinTypeClicked}>
                 {
                     this.cabinTypeCodes.map(item => (
                         <Menu.Item key={item.key}>
@@ -85,7 +150,7 @@ class AddNewModal extends React.Component {
                             required: true,
                             message: ''
                         }]} initialValue={moment(record["ExpenseTime"], dateFormat)} >
-                            <DatePicker //NOTE: onChange={this.onDatePickerChange}
+                            <DatePicker //FIXME: onChange={this.onDatePickerChange}
                             >
                                 {moment(record['ExpenseTime'], dateFormat)}
                             </DatePicker>
@@ -108,12 +173,15 @@ class AddNewModal extends React.Component {
                 <Row gutter={12}>
                     <Col span={4}>舱位</Col>
                     <Col span={8}>
-                        <FormItem>
-                            <Dropdown.Button overlay={tcMenu} icon={<DownOutlined />}>
-                                {
-                                    this.cabinTypeCodes.find(item1 => item1.key === this.editingRecord.key).text
-                                }
-                            </Dropdown.Button>
+                        <FormItem >
+                            <Dropdown overlay={ctMenu}  >
+                                <Button>
+                                    {
+                                        this.cabinTypeCodes.find(item1 => item1.key === this.editingRecord.key).text
+                                    }
+                                    <DownOutlined />
+                                </Button>
+                            </Dropdown>
                         </FormItem>
                     </Col>
                 </Row>
