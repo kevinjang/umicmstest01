@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import { getNumberForInput } from '../../utils/utils'
 import moment from 'moment'
 import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
-// import AddNewModal from '../treetest/AddNewModal'
-import AddNewModal from './AddNewModal'
+// NOTE: original with all sorts of problems, 
+import AddNewModal from '../treetest/AddNewModal'
+// import AddNewModal from './AddNewModal'
+import { update, updateWith, orderBy, find } from 'lodash'
 
 var first = true
 const dateFormat = 'YYYY/MM/DD';
@@ -70,12 +72,13 @@ const Aladin = (props) => {
 
     const EditClick = (record) => {
         originalRecord = { ...record }
+        console.log('edit click originalRecord: ', originalRecord)
         let index = dataSource.findIndex(item => item.key === record.key);
         const { key } = record;
         const { dispatch } = props;
         if (dispatch) {
             dispatch({
-                type: 'er_data/setEditingRecord',
+                type: 'er_data/setEditingRecordById',
                 payload: { id: key }
             })
         }
@@ -94,7 +97,7 @@ const Aladin = (props) => {
     }
 
     const modalOkClick = () => {
-        // 想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
+        //NOTE: 想在这里实现点击校验，校验内容的方法又不在这里实现，有点尴尬，学习去了
         modalClose();
 
         updateDataSource();
@@ -103,11 +106,9 @@ const Aladin = (props) => {
     const modalCancelClick = () => {
         modalClose();
 
+        // console.log('modal cancel click:', originalRecord)
+
         if (originalDataSource) {
-            // setState({
-            //     dataSource: this.originalDataSource,
-            //     modalButtonClicked: 'cancel'
-            // })
             setModalButtonClicked('cancel')
         } else {
             setModalButtonClicked('cancel')
@@ -115,20 +116,38 @@ const Aladin = (props) => {
     }
 
     const updateDataSource = () => {
-        // 点击ok时才会调用的方法，用于更新数据源
-        // let { dataSource, editingRecord } = this.state;
+        //NOTE: 点击ok时才会调用的方法，用于更新数据源
 
-        let item = dataSource.find(item1 => item1.key === editingRecord.key);
-        if (!item) {
-            // item = editingRecord;
-            dataSource[dataSource.length] = editingRecord;
-        } else {
-            let index = dataSource.findIndex(item1 => item1.key === editingRecord.key)
-            item = { ...editingRecord }
-            dataSource[index] = item;
+        const { editingRecord } = props;
+        // console.log('updateDataSource editingRecord:', editingRecord)
+        // let item = dataSource.find(item1 => item1.key === editingRecord.key);
+        // if (!item) {
+        //     dataSource[dataSource.length] = editingRecord;
+        // } else {
+        //     let index = dataSource.findIndex(item1 => item1.key === editingRecord.key)
+        //     item = { ...editingRecord }
+        //     dataSource[index] = item;
+        // }
+
+        // originalDataSource = dataSource;
+
+        //NOTE: 用editingRecord更新dataSource
+        var item = find(dataSource, (it) => { it.key === editingRecord.key });
+        if(item){
+            item = {
+                ...editingRecord
+            }
+            // NOTE: 更新数据
+            
         }
-
-        originalDataSource = dataSource;
+        else{
+            // NOTE: 新增数据
+            item = {
+                ...editingRecord
+            }
+            dataSource.push(item)
+        }
+        //NOTE: 更新数据集合，然后再说
 
         setModalButtonClicked('ok')
     }
@@ -149,7 +168,8 @@ const Aladin = (props) => {
             visible: true,
             width: '8.2%',
             render: (text, record, index) => {
-                return (text && text.format) ? text.format('YYYY/MM/DD') : null;
+                console.log('费用日期：', moment(text, dateFormat))
+                return moment(text).format(dateFormat) || null;
             }
         },
         {
@@ -322,7 +342,7 @@ const Aladin = (props) => {
                 bodyStyle={modalStyle}
                 forceRender={true}
                 updateRecord={updateRecord}
-                record={editingRecord}
+                // record={editingRecord}
                 currentIndex={editingRecordIndex}
                 dataSource={dataSource}
 
@@ -342,5 +362,6 @@ export default connect(({ cabinTypeCodes, taxCodes, er_data, loading }) => ({
     cabinTypeCodes: cabinTypeCodes.values,
     taxCodes: taxCodes.values,
     er_data: er_data.remoteDataSource,
+    editingRecord: er_data.editingRecord,
     fetchRemoteData: loading.effects["er_data/fetchRemoteData"]
 }))(Aladin)
