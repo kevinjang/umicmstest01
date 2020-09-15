@@ -132,15 +132,18 @@ const Aladin = (props) => {
         // originalDataSource = dataSource;
 
         //NOTE: 用editingRecord更新dataSource
-        var item = find(dataSource, (it) => { it.key === editingRecord.key });
-        if(item){
+        var item = find(dataSource, (it) => { return it.key === editingRecord.key });
+        if (item) {
             item = {
                 ...editingRecord
             }
             // NOTE: 更新数据
-            
+            dataSource = [...dataSource.filter(it => it.key !== item.key)];
+            dataSource.push(item);
+
+            dataSource = orderBy(dataSource, "key");
         }
-        else{
+        else {
             // NOTE: 新增数据
             item = {
                 ...editingRecord
@@ -148,6 +151,13 @@ const Aladin = (props) => {
             dataSource.push(item)
         }
         //NOTE: 更新数据集合，然后再说
+        const { dispatch } = props
+        if (dispatch) {
+            dispatch({
+                type: 'er_data/saveDataSource',
+                payload: dataSource
+            })
+        }
 
         setModalButtonClicked('ok')
     }
