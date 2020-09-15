@@ -14,6 +14,12 @@ const erDataModel = {
                 type: 'saveDataSource',
                 payload: data
             })
+        },
+        *updateRemoteData({ dataSource }, { call, put }) {
+            return {
+                ...state,
+                remoteDataSource: [...dataSource]
+            }
         }
     },
     reducers: {
@@ -23,16 +29,23 @@ const erDataModel = {
                 remoteDataSource: payload,
             }
         },
-        'setEditingRecord': (state, { payload }) => {
+        'setEditingRecordById': (state, { payload }) => {
             const { id } = payload;
             const item = find(state.remoteDataSource, (it) => {
                 return it.key === id;
             });
-            
+
             return {
                 ...state,
                 editingRecord: { ...item }
-            }            
+            }
+        },
+        'setEditingRecordByContent': (state, { payload }) => {
+            // console.log('setEditingRecordByContent:', payload)
+            return {
+                ...state,
+                editingRecord: { ...payload }
+            }
         }
     }
 }
