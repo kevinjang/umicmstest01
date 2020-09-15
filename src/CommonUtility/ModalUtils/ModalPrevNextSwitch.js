@@ -3,7 +3,7 @@ import React from 'react'
 import { Modal, message, Button, Icon } from 'antd'
 
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons'
-
+// NOTE: Modal左右切换按钮
 class ModalWithPrevNext extends React.Component {
     constructor(props) {
         super(props);
@@ -15,24 +15,6 @@ class ModalWithPrevNext extends React.Component {
             showButtons: ''
         }
     }
-
-    componentDidMount() {
-        console.log('componentDidMount-props.record:', this.props.record)
-    }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log('Object.is(this.props.record, nextProps.record)', Object.is(this.props.record, nextProps.record));
-    //     if (Object.is(this.props.record, nextProps.record))
-    //         return false;
-    //     else return true;
-    // }
-
-    // componentDidUpdate() {
-    //     console.log('componentDidUpdate-props.record:', this.props.record)
-    //     this.setState({
-    //         showButtons: this.props.record === null ? 'none' : 'block'
-    //     })
-    // }
 
     previousRecord = () => {
         let editingRecordIndex = this.state.editingRecordIndex;
@@ -76,7 +58,6 @@ class ModalWithPrevNext extends React.Component {
     }
 
     render() {
-        // console.log('this.props.record:', this.props.record)
         return (<Modal {...this.props} okText="确定" cancelText="取消">
             <div style={{ display: 'flex' }}>
                 <div style={{
@@ -95,7 +76,7 @@ class ModalWithPrevNext extends React.Component {
                 <div style={{
                     width: '50px', height: '370px',
                     paddingTop: '25%', position: 'relative',
-                    marginLeft: '15px', display: this.state.showButtons
+                    marginLeft: '60px', display: this.state.showButtons
                 }}>
                     {this.props.record && this.props.record.key !== this.state.dataSource.length ?
                         <Button type='link' onClick={this.nextRecord}>
