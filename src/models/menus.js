@@ -63,7 +63,7 @@ const MenusModel = {
                         level: 2,
                         title: "离职查询授权",
                         icon: "Weibo",
-                        urlPath: "LeaveAuthorization",
+                        urlPath: "/mainframe/LeaveAuthorization",
                         nodeInfo: "./BPM_RM/LeaveAuthorization"
                     },
                     {
