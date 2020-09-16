@@ -1,12 +1,13 @@
 import React from 'react'
-import { Form, Row, Input, Col, Radio, Modal } from 'antd'
+import { Form, Row, Input, Col, Radio } from 'antd'
 const FORM_NAME = 'leaveauth_form'
 class LeaveAuthorizationModal extends React.Component {
     constructor(props) {
         super(props);
 
-        const { editingRecord, updateParentState, updateOkButtonAvailable, updateCancelButtonAvailable } = this.props;
+        const { editingRecord, updateParentState, updateOkButtonAvailable, updateCancelButtonAvailable, operation } = this.props;
 
+        this.operation = operation;
         const {
             PersonalID,
             userAD,
@@ -18,9 +19,8 @@ class LeaveAuthorizationModal extends React.Component {
             RowNum,
             key
         } = editingRecord;
-
-        console.log('this.props:', this.props);
-
+        this.formRef = React.createRef();
+        this.form = null;
         this.updateParentState = updateParentState;
         this.updateOkButtonAvailable = updateOkButtonAvailable;
         this.updateCancelButtonAvailable = updateCancelButtonAvailable;
@@ -41,27 +41,23 @@ class LeaveAuthorizationModal extends React.Component {
     };
 
     componentDidMount() {
-        if (this.state.editingRecord) {
-            this.setState({
-                radioChecked: (this.state.valid === "valid")
+        this.form = this.formRef.current;
+        this.setState({
+            radioChecked: (this.state.valid === "valid")
+        }, () => {
+            this.form.setFieldsValue({
+                radioValid: this.state.radioChecked,
+                radioInvalid: !this.state.radioChecked
             })
-        }
-    }
-
-    componentWillUnmount() {
-
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        // console.log('did update prevState:', prevState);
-        // console.log('did update state:', this.state);
-
+            // if (this.operation === "update")
+                this.setoffValidation();
+        })
     }
 
     radioClick = e => {
-        console.log(e.target.value);
+        // console.log(e.target.value);
         this.setState({
-            radioChecked: e.target.value === "valid"
+            valid: e.target.value
         })
     }
 
@@ -71,13 +67,11 @@ class LeaveAuthorizationModal extends React.Component {
         if (!!val && val.indexOf('cofco\\') !== 0) {
             val = "cofco\\" + val;
         }
-        // var id = e.target.id.replace(FORM_NAME+"_","");
-        const { form } = this.props;
         if (val !== "") {
             this.setState({
                 userAD: val
             }, () => {
-                form.setFieldsValue({
+                this.form.setFieldsValue({
                     'leave_ad': this.state.userAD
                 });
 
@@ -97,8 +91,8 @@ class LeaveAuthorizationModal extends React.Component {
             this.setState({
                 quanxianAD: val
             }, () => {
-                const { form } = this.props;
-                form.setFieldsValue({
+                // const { form } = this.props;
+                this.form.setFieldsValue({
                     'auth_ad': this.state.quanxianAD
                 })
                 this.updateParentStateUni();
@@ -118,8 +112,8 @@ class LeaveAuthorizationModal extends React.Component {
             this.setState({
                 PersonalID: val
             }, () => {
-                const { form } = this.props;
-                form.setFieldsValue({
+                // const { form } = this.props;
+                this.form.setFieldsValue({
                     'leave_id': this.state.PersonalID
                 })
                 this.updateParentStateUni();
@@ -138,8 +132,8 @@ class LeaveAuthorizationModal extends React.Component {
             this.setState({
                 quanxianPersonalID: val
             }, () => {
-                const { form } = this.props;
-                form.setFieldsValue({
+                // const { form } = this.props;
+                this.form.setFieldsValue({
                     'auth_id': this.state.quanxianPersonalID
                 })
                 this.updateParentStateUni();
@@ -158,8 +152,8 @@ class LeaveAuthorizationModal extends React.Component {
             this.setState({
                 UserCname: val
             }, () => {
-                const { form } = this.props;
-                form.setFieldsValue({
+                // const { form } = this.props;
+                this.form.setFieldsValue({
                     'leave_name': this.state.UserCname
                 })
                 this.updateParentStateUni();
@@ -176,8 +170,8 @@ class LeaveAuthorizationModal extends React.Component {
             this.setState({
                 quanxianCname: val
             }, () => {
-                const { form } = this.props;
-                form.setFieldsValue({
+                // const { form } = this.props;
+                this.form.setFieldsValue({
                     'auth_name': this.state.quanxianCname
                 })
                 this.updateParentStateUni();
@@ -189,27 +183,44 @@ class LeaveAuthorizationModal extends React.Component {
     }
 
     setoffValidation = () => {
-        const { form } = this.props;
-        form.validateFields([
-            'leave_id',
-            'leave_ad',
-            'leave_name',
-            'auth_id',
-            'auth_ad',
-            'auth_name',
-            // ''
-        ], (err, values) => {
-            if (err) {
-                this.updateOkButtonAvailable(false);
-                this.updateCancelButtonAvailable(false);
-                console.error(err);
-            }
-            else {
+        // const { form } = this.props;
+        // NOTE: antd v4 不支持了
+        // this.form.validateFields([
+        //     'leave_id',
+        //     'leave_ad',
+        //     'leave_name',
+        //     'auth_id',
+        //     'auth_ad',
+        //     'auth_name',
+        //     // ''
+        // ], (err, values) => {
+        //     if (err) {
+        //         this.updateOkButtonAvailable(false);
+        //         this.updateCancelButtonAvailable(false);
+        //         // console.error(err);
+        //     }
+        //     else {
+        //         this.updateOkButtonAvailable(true);
+        //         this.updateCancelButtonAvailable(true);
+        //         // console.log('setoffValidation-values:', values);
+        //     }
+        // })
+        this.form.validateFields()
+            .then(values => {
+                console.log('validateFields values:', values)
                 this.updateOkButtonAvailable(true);
                 this.updateCancelButtonAvailable(true);
-                console.log('setoffValidation-values:', values);
-            }
-        })
+            })
+            .catch(info => {
+                console.log('validateFields error info:', info)
+                if (info && info.errorFields && info.errorFields.length > 0) {
+                    this.updateOkButtonAvailable(false);
+                    this.updateCancelButtonAvailable(false);
+                }
+                else {
+
+                }
+            })
     }
 
     updateParentStateUni = () => {
@@ -240,9 +251,6 @@ class LeaveAuthorizationModal extends React.Component {
     // ----------------------------------------------all blurs ---------------------------------------------------------------
 
     render() {
-
-        const { getFieldDecorator } = this.props.form;
-
         const {
             PersonalID,
             userAD,
@@ -254,97 +262,81 @@ class LeaveAuthorizationModal extends React.Component {
         } = this.state;
 
         return (<div>
-            <Form>
+            <Form ref={this.formRef}>
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item label='离职人员ID'>
-                            {getFieldDecorator('leave_id', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: PersonalID || ''
-                            })(<Input onBlur={this.PersonalIDOnBlur} />)}
+                        <Form.Item label='离职人员ID' name="leave_id" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={PersonalID || ''}>
+                            <Input onBlur={this.PersonalIDOnBlur} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label='授权人员ID'>
-                            {getFieldDecorator('auth_id', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: quanxianPersonalID || ''
-                            })(<Input onBlur={this.quanxianPersonalIDOnBlur} />)}
+                        <Form.Item label='授权人员ID' name="auth_id" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={quanxianPersonalID || ''}>
+                            <Input onBlur={this.quanxianPersonalIDOnBlur} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item label='离职人员AD'>
-                            {getFieldDecorator('leave_ad', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: userAD || ''
-                            })(<Input onBlur={this.PersonalADOnBlur} />)}
+                        <Form.Item label='离职人员AD' name="leave_ad" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={userAD || ''}>
+                            <Input onBlur={this.PersonalADOnBlur} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label='授权人员AD'>
-                            {getFieldDecorator('auth_ad', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: quanxianAD || ''
-                            })(<Input onBlur={this.quanxianPersonalADOnBlur} />)}
+                        <Form.Item label='授权人员AD' name="auth_ad" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={quanxianAD || ''}>
+                            <Input onBlur={this.quanxianPersonalADOnBlur} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item label='离职人员姓名'>
-                            {getFieldDecorator('leave_name', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: UserCname || ''
-                            })(<Input onBlur={this.UserCnameOnBlur} />)}
+                        <Form.Item label='离职人员姓名' name="leave_name" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={UserCname || ''}>
+                            <Input onBlur={this.UserCnameOnBlur} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label='授权人员姓名'>
-                            {getFieldDecorator('auth_name', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '必填！'
-                                    }
-                                ],
-                                initialValue: quanxianCname || ''
-                            })(<Input onBlur={this.quanxianCnameOnBlur} />)}
+                        <Form.Item label='授权人员姓名' name="auth_name" rules={[
+                            {
+                                required: true,
+                                message: '必填！'
+                            }
+                        ]} initialValue={quanxianCname || ''}>
+                            <Input onBlur={this.quanxianCnameOnBlur} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <Radio.Group>
-                            <Radio value='valid' checked={this.state.radioChecked} onClick={this.radioClick}>启用</Radio>
-                            <Radio value='invalid' checked={!this.state.radioChecked} onClick={this.radioClick}>停用</Radio>
-                        </Radio.Group>
+                        <Form.Item>
+                            <Radio.Group value={this.state.valid} onChange={this.radioClick}>
+                                <Radio value='valid' >启用</Radio>
+                                <Radio value='invalid' >停用</Radio>
+                            </Radio.Group>
+                        </Form.Item>
                     </Col>
                 </Row>
             </Form>
@@ -352,26 +344,4 @@ class LeaveAuthorizationModal extends React.Component {
     }
 }
 
-const LeaveAuthorizationModalForm = Form.create({ name: FORM_NAME })(LeaveAuthorizationModal);
-
-class LeaveAuthorizationModalFormComp extends React.Component {
-    constructor(props) {
-        super(props);
-
-        const { editingRecord } = this.props;
-
-        this.state = {
-            editingRecord
-        }
-    }
-    render() {
-        return (
-            <LeaveAuthorizationModalForm editingRecord={this.state.editingRecord}
-                updateParentState={this.props.updateParentState}
-                updateOkButtonAvailable={this.props.updateOkButtonAvailable}
-                updateCancelButtonAvailable={this.props.updateCancelButtonAvailable}></LeaveAuthorizationModalForm>
-        );
-    }
-}
-
-export default LeaveAuthorizationModalFormComp
+export default LeaveAuthorizationModal
