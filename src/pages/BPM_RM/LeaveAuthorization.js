@@ -1,13 +1,10 @@
 import React from 'react'
 import {
     Form, Input, Button, Select, Layout, Row,
-    Col, Icon, Modal, Table, Popconfirm, message, Pagination, Spin
+    Col, Icon, Modal, Table, Popconfirm, message, Pagination, Spin, Space
 } from 'antd'
-
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
-
-import axios from 'axios'
-
+import { FileOutlined, DeleteOutlined } from '@ant-design/icons'
 const { Header } = Layout;
 
 const { Option } = Select;
@@ -25,8 +22,6 @@ import styles from './LeaveAuthorization.css';
 class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
-
-        console.log('la-props:', props);
 
         this.state = {
             modalShow: false,
@@ -49,7 +44,6 @@ class LeaveAuthorization extends React.Component {
             total: 0,
             current: 0,
             onChange: (page, pageSize) => {
-                // console.log('pagination - page:', page);
                 this.pagination.current = page;
                 this.setState({
                     pagi_pageSize: pageSize,
@@ -114,15 +108,17 @@ class LeaveAuthorization extends React.Component {
                 title: '操作',
                 width: '5%',
                 render: (text, record) => {
-                    // console.log('render-this', this)
                     return <div>
                         <a href='javascript:;' onClick={() => this.handleEditRecord(record)}>
-                            <Icon type='file'></Icon>
+                            {/* <Icon type='file'></Icon> */}
+                            <FileOutlined />
                         </a>
                         <Popconfirm title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
                             <a href='javascript:;'>
-                                <Icon type='delete'>
-                                </Icon></a>
+                                {/* <Icon type='delete'>
+                                </Icon> */}
+                                <DeleteOutlined />
+                            </a>
                         </Popconfirm>
                     </div>
                 }
@@ -138,12 +134,13 @@ class LeaveAuthorization extends React.Component {
             <Option value='quanxianAD'>授权人员AD</Option>,
             <Option value='quanxianCname'>授权人员姓名</Option>
         ]
+
+        this.formRef = React.createRef();
+
+        this.form = null;
     }
 
     handleDeleteRecord = (record) => {
-        // this.setState({
-        //     dataSource: this.state.dataSource.filter(item => item.key !== record.key)
-        // })
 
         const item = this.state.dataSource.filter(it => it.key === record.key)[0] || null;
         if (!!item) {
@@ -155,11 +152,12 @@ class LeaveAuthorization extends React.Component {
     }
 
     componentDidMount() {
+        this.form = this.formRef.current;
         this.loadData();
     }
 
     loadData = async () => {
-        const { getFieldValue } = this.props.form;
+        const { getFieldValue } = this.form; // this.props.form;
         var leaveauth_filterKeyWord = getFieldValue('leaveauth_filterKeyWord');
         var leaveauth_filter_text = getFieldValue('leaveauth_filter_text');
         const condition = leaveauth_filterKeyWord === 'none' ? null : {
@@ -167,7 +165,7 @@ class LeaveAuthorization extends React.Component {
             value: leaveauth_filter_text
         }
 
-        console.log('la-condition:', condition)
+        // console.log('la-condition:', condition)
 
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
@@ -197,13 +195,13 @@ class LeaveAuthorization extends React.Component {
             pagi_total,
             spinning
         }, () => {
-            console.log('dataSource:', this.state.dataSource)
+            // console.log('dataSource:', this.state.dataSource)
         })
     }
 
     handleDeleteSelectedRecords = () => {
         const { selectedRowKeys } = this.state;
-        console.log('selectedRowKeys:', selectedRowKeys);
+        // console.log('selectedRowKeys:', selectedRowKeys);
         if (!selectedRowKeys || selectedRowKeys.length === 0) {
             message.info('请选择要删除的记录！');
             return;
@@ -217,7 +215,7 @@ class LeaveAuthorization extends React.Component {
         })
 
         deleteItems(toDeleteItemsIDs, this.loadData).then((response) => {
-            console.log('delete multiple item result:', response.data.result.message)
+            // console.log('delete multiple item result:', response.data.result.message)
             if (response && response.data && response.data.result && response.data.result.message) {
                 message.success(response.data.result.message)
                 this.setState({
@@ -228,9 +226,6 @@ class LeaveAuthorization extends React.Component {
                 message.error(response.statusText);
             }
 
-            // if (callback) {
-            //     callback();
-            // }
             this.loadData();
         }).catch(err => {
             if (err)
@@ -241,7 +236,6 @@ class LeaveAuthorization extends React.Component {
     handleSearch = (e) => {
         // 放大镜-加载按钮
         e.preventDefault();
-        // alert(e.target.value);
         this.loadData();
     }
 
@@ -276,13 +270,12 @@ class LeaveAuthorization extends React.Component {
             const toUpdateRecord = {
                 ...record
             }
-            console.log('update matched item:', item)
+            // console.log('update matched item:', item)
             if (!!item) {
                 toUpdateRecord["ID"] = item.ID;
             }
             update(toUpdateRecord, this.loadData)
         }
-        // ();
     };
 
     handleCancelModal = () => {
@@ -292,7 +285,6 @@ class LeaveAuthorization extends React.Component {
     };
 
     onTableRowSelectedChange = (selectedRowKeys) => {
-        // console.log('onchange selectedrowkeys:', selectedRowKeys)
         this.setState({ selectedRowKeys })
     }
 
@@ -331,17 +323,15 @@ class LeaveAuthorization extends React.Component {
     }
 
     updateEditingRecordState = (record) => {
-        console.log('updateEditingRecordState-record:', record);
+        // console.log('updateEditingRecordState-record:', record);
         this.setState({
             editingRecord: record
         }, () => {
-            console.log('parent-editingRecord:', this.state.editingRecord)
+            // console.log('parent-editingRecord:', this.state.editingRecord)
         })
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
-
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
@@ -381,12 +371,13 @@ class LeaveAuthorization extends React.Component {
 
                         </SearchSquare>
                         <Layout>
-                            <Form style={{ padding: '0 5px' }}>
-                                <Row gutter={8}>
-                                    <Form.Item>
+                            <Form style={{ padding: '0 5px' }} ref={this.formRef}>
+                                <Row gutter={12}>
+                                    <Form.Item style={{ width: '100%' }}>
                                         <Table columns={this.columns}
+                                            
                                             dataSource={this.state.dataSource}
-                                            bordered style={{ paddingBottom: '10px' }}
+                                            bordered style={{ paddingBottom: '10px', width: '99%' }}
                                             rowSelection={rowSelection}
                                             onRow={
                                                 (record, index) => {
@@ -413,13 +404,13 @@ class LeaveAuthorization extends React.Component {
                     </Layout>
                     <Modal visible={this.state.modalShow}
                         title='编辑项目'
-                        // okButtonDisabled={this.state.okButtonAvailable}
+                        operation={this.state.operation}
                         okButtonProps={{ disabled: !this.state.okButtonAvailable }}
-                        // cancelButtonProps={{disabled: !this.state.cancelButtonAvailable}}
-                        // okButtonProps={{}}
                         centered={true}
                         onOk={this.handleOkModal}
                         onCancel={this.handleCancelModal}
+                        okText="保存"
+                        cancelText="取消"
                         destroyOnClose={true}
                         forceRender={true}
                         maskClosable={false}
@@ -438,20 +429,4 @@ class LeaveAuthorization extends React.Component {
     }
 }
 
-const LeaveAuthorizationForm = Form.create({ name: 'leave_authorization' })(LeaveAuthorization);
-
-class LeaveAuthorizationFormComp extends React.Component {
-    constructor(props) {
-        console.log('la-form-props:', props);
-        super(props);
-    }
-    render() {
-        return (
-            <LeaveAuthorizationForm {...this.props}>
-
-            </LeaveAuthorizationForm>
-        );
-    }
-}
-
-export default LeaveAuthorizationFormComp
+export default LeaveAuthorization
