@@ -45,7 +45,8 @@ export default {
                 { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain' },
                 { path: '/mainframe/newaladin', component: '@/pages/EditInModal/index' },
                 { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
-                { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' }
+                { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' },
+                { path: '/mainframe/LeaveAuthorization', component: '@/pages/BPM_RM/LeaveAuthorization' }
 
             ]
         }
