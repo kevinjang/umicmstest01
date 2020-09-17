@@ -58,7 +58,7 @@ class ModalWithPrevNext extends React.Component {
     }
 
     render() {
-        return (<Modal {...this.props} okText="确定" cancelText="取消">
+        return (<Modal {...this.props} okText="确定" cancelText="取消" forceRender>
             <div style={{ display: 'flex' }}>
                 <div style={{
                     width: '50px', height: '370px',
