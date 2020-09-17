@@ -1,28 +1,19 @@
 
-import { Tabs, Form, Input, Button, Space, notification } from 'antd'
+import { Tabs, Form, Input, Button, notification } from 'antd'
 import LoginForm from './components'
-import { UserOutlined, EyeInvisibleOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { checkBackEndRunning } from '../../utils/request'
 import styles from './index.less'
+// NOTE: deleted import { useEffect } from 'react'
 const { Tab } = LoginForm
 
-import { withRouter } from 'umi'
-
-const validateMessages = {
-    required: '`${name}` is required!'
-}
+import { withRouter, connect } from 'umi'
 
 const Login1 = (props) => {
-    const { history } = props;
-    console.log('history:', history)
+    const { history, loginState } = props;
+
     return (
-        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot"
-            onFinish={(values) => {
-                console.log('on finish:', values)
-            }}
-            onValuesChange={(values, allValues) => {
-                console.log('on values change allValues:', allValues)
-            }}>
+        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot">
             <Tab tab="账号密码登录" key="passwordLogin">
                 <Form.Item name="username" rules={[
                     {
@@ -48,7 +39,13 @@ const Login1 = (props) => {
                         onClick={() => {
                             // history.push('/mainframe')
                             const promiseRet = checkBackEndRunning();
-                            console.log('process:', process)
+                            const { dispatch } = props;
+                            if (dispatch) {
+                                dispatch({
+                                    type: 'login/login'
+                                })
+                            }
+                            // console.log('process:', process)
                             promiseRet.then(data => {
                                 const running = data.data.running;
                                 if (!!running) {
@@ -67,13 +64,13 @@ const Login1 = (props) => {
                                 })
                             });
                         }}
-                        onSubmit={() => {
-                            // history.push('/mainframe')
-                        }}>登录</Button>
+                    >登录</Button>
                 </Form.Item>
             </Tab>
         </LoginForm>
     )
 }
 
-export default withRouter(Login1)
+export default connect(({ login }) => ({
+    loginState: login.loginState
+}))(withRouter(Login1));
