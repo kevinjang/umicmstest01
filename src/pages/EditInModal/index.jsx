@@ -1,3 +1,8 @@
+/**
+ * NOTE: 用了treetest下面的 AddNewModal
+ * 
+ */
+
 import { connect } from 'umi'
 import { Table, Button, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
@@ -5,9 +10,9 @@ import { getNumberForInput } from '../../utils/utils'
 import moment from 'moment'
 import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
 // NOTE: original with all sorts of problems, 
-import AddNewModal from '../treetest/AddNewModal'
+import AddNewModal from './AddNewModal'
 // import AddNewModal from './AddNewModal'
-import { update, updateWith, orderBy, find } from 'lodash'
+import { orderBy, find } from 'lodash'
 
 var first = true
 const dateFormat = 'YYYY/MM/DD';
@@ -68,11 +73,17 @@ const Aladin = (props) => {
         setModalOpen(true)
         setEditingRecordIndex(count);
         setEditingRecord(newData);
+        const { dispatch } = props
+        if (dispatch) {
+            dispatch({
+                type: 'er_data/setEditingRecordByContent',
+                payload: newData
+            })
+        }
     }
 
     const EditClick = (record) => {
         originalRecord = { ...record }
-        console.log('edit click originalRecord: ', originalRecord)
         let index = dataSource.findIndex(item => item.key === record.key);
         const { key } = record;
         const { dispatch } = props;
@@ -105,9 +116,6 @@ const Aladin = (props) => {
 
     const modalCancelClick = () => {
         modalClose();
-
-        // console.log('modal cancel click:', originalRecord)
-
         if (originalDataSource) {
             setModalButtonClicked('cancel')
         } else {
@@ -119,17 +127,6 @@ const Aladin = (props) => {
         //NOTE: 点击ok时才会调用的方法，用于更新数据源
 
         const { editingRecord } = props;
-        // console.log('updateDataSource editingRecord:', editingRecord)
-        // let item = dataSource.find(item1 => item1.key === editingRecord.key);
-        // if (!item) {
-        //     dataSource[dataSource.length] = editingRecord;
-        // } else {
-        //     let index = dataSource.findIndex(item1 => item1.key === editingRecord.key)
-        //     item = { ...editingRecord }
-        //     dataSource[index] = item;
-        // }
-
-        // originalDataSource = dataSource;
 
         //NOTE: 用editingRecord更新dataSource
         var item = find(dataSource, (it) => { return it.key === editingRecord.key });
@@ -178,7 +175,6 @@ const Aladin = (props) => {
             visible: true,
             width: '8.2%',
             render: (text, record, index) => {
-                console.log('费用日期：', moment(text, dateFormat))
                 return moment(text).format(dateFormat) || null;
             }
         },
@@ -330,16 +326,19 @@ const Aladin = (props) => {
             dispatch({
                 type: 'er_data/fetchRemoteData'
             })
-            // const { er_data } = props
-            // console.log(er_data)
-            // dataSource = props.er_data;
         }
 
     })
     return (
         <div>
-            {console.log(props.er_data)}
-            <Table columns={columns} dataSource={dataSource}></Table>
+            <Table columns={columns} bordered dataSource={dataSource} onRow={record => {
+                return {
+                    onDoubleClick: event => {
+                        EditClick(record)
+                    }
+                }
+            }
+            }></Table>
             <Button type="primary" onClick={() => handleAdd()} >添加新项目</Button>
             <ModalWithPrevNext visible={modalOpen}
                 title={modalTitle}
