@@ -10,7 +10,7 @@ function getByPage(pageSize, startPage, condition, callback) {
         params: { pageSize, startPage, condition },
         responseType: 'json'
     }).then((response) => {
-        console.log('get-response-data:', response.data);
+        // console.log('get-response-data:', response.data);
         const { data, message: selfMessage } = response.data;
         var results = data.recordsets[0];
         var number = data.recordsets[1][0].count
@@ -37,7 +37,7 @@ function getByPage(pageSize, startPage, condition, callback) {
             message.error(selfMessage)
         }
     }).catch((err) => {
-        console.log({ ...err })
+        // console.log({ ...err })
         callback({
             spinning: false
         })
@@ -54,7 +54,7 @@ function insert(record, callback) {
         params: { record },
         responseType: 'json'
     }).then((response) => {
-        console.log('insert result:', response.data.result.message)
+        // console.log('insert result:', response.data.result.message)
         if (response && response.data && response.data.result && response.data.result.message) {
             message.success(response.data.result.message)
         }
@@ -80,7 +80,7 @@ function update(record, callback) {
         params: { record },
         responseType: 'json'
     }).then((response) => {
-        console.log('update result:', response.data.result.message)
+        // console.log('update result:', response.data.result.message)
         if (response && response.data && response.data.result && response.data.result.message) {
             message.success(response.data.result.message)
         }
@@ -106,7 +106,7 @@ function deleteItem(ID, callback) {
         params: { ID },
         responseType: 'json'
     }).then((response) => {
-        console.log('delete single item result:', response.data.result.message)
+        // console.log('delete single item result:', response.data.result.message)
         if (response && response.data && response.data.result && response.data.result.message) {
             message.success(response.data.result.message)
         }
