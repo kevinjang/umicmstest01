@@ -20,7 +20,7 @@ const MenusModel = {
                     }, {
                         id: "5",
                         level: 2,
-                        title: "EditInModal",
+                        title: "窗口编辑",
                         icon: "PieChart",
                         // path: '/mainframe/treetest',
                         urlPath: "/mainframe/newaladin",
