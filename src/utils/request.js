@@ -6,8 +6,6 @@ const baseUrl = 'http://localhost:3000'
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
 
-    console.log('tabType', tabType);
-
     if (tabType === 'tab1') {
         // 账号登录
         const userInfo = {
