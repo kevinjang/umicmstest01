@@ -15,7 +15,7 @@ async function getUserBaseInfoByAD(userAD, callback) {
         var row = {}
         row = data.recordsets[0][0];
 
-        console.log('row:', row);
+        // console.log('row:', row);
 
         callback({
             userRow: row,
@@ -28,7 +28,7 @@ async function getUserBaseInfoByAD(userAD, callback) {
             message.error(selfMessage)
         }
     }).catch((err) => {
-        console.log({ ...err })
+        // console.log({ ...err })
         callback({
             spinning: false
         })
@@ -49,7 +49,7 @@ async function getOULongNameUserBaseInfoByAD(userAD, callback){
         var row = {}
         row = data.recordsets[0][0];
 
-        console.log('row:', row);
+        // console.log('row:', row);
 
         callback({
             userRow: row,
@@ -62,7 +62,7 @@ async function getOULongNameUserBaseInfoByAD(userAD, callback){
             message.error(selfMessage)
         }
     }).catch((err) => {
-        console.log({ ...err })
+        // console.log({ ...err })
         callback({
             spinning: false
         })
