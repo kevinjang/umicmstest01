@@ -42,7 +42,7 @@ class LeaveAuthorization extends React.Component {
         this.pagination = {
             pageSize: 10,
             total: 0,
-            current: 0,
+            current: 1,
             onChange: (page, pageSize) => {
                 this.pagination.current = page;
                 this.setState({
@@ -113,7 +113,7 @@ class LeaveAuthorization extends React.Component {
                             {/* <Icon type='file'></Icon> */}
                             <FileOutlined />
                         </a>
-                        <Popconfirm title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
+                        <Popconfirm okText="确定删除" cancelText="取消" title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
                             <a href='javascript:;'>
                                 {/* <Icon type='delete'>
                                 </Icon> */}
