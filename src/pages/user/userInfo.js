@@ -1,6 +1,5 @@
 import React from 'react'
-import { Avatar, Badge, Dropdown, Menu, Icon } from 'antd'
-// import '../../../antd/dist/antd.min.css'
+import { Avatar, Dropdown, Menu, Icon } from 'antd'
 import 'antd/lib/avatar/style/index.css'
 import 'antd/lib/badge/style/index.css'
 
@@ -10,8 +9,7 @@ class UserInfo extends React.Component {
 
     constructor(props) {
         super(props);
-
-        // this.
+        
         this.menus = (
             <Menu style={{ marginTop: '45px', width: '150px', marginLeft: '120px' }}>
                 <Menu.Item>
@@ -26,48 +24,19 @@ class UserInfo extends React.Component {
             </Menu>
         )
     }
-    // static contextType = UserContext;// this.context;
     render() {
-        // let userContext = this.context;
-        // console.log('userContext:', userContext);
-        // return (
-        //     <div>
-        //         <Dropdown overlay={this.menus}>
-        //             <div>
-        //                 <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
-        //                     {/* User Name */}
-        //                     {console.log('UserContext:', UserContext)}
-        //                     {userContext.userRow.Username} 
-        //                     {//let value = this.context; 
-        //                         console.log('userContext:', userContext)}
-        //                 </p>
-        //                 <Avatar
-        //                     style={{ float: 'right' }}
-        //                     size='normal'
-        //                     // shape='square'
-        //                     src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
-
-        //             </div>
-        //         </Dropdown>
-        //     </div>
-        // );
-
         return (<UserContext.Consumer>
             {value => {
                 return (
                     <div>
                         <Dropdown overlay={this.menus}>
                             <div>
-                                <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>
-                                    {/* User Name */}
-                                    {/* {console.log('UserContext:', UserContext)} */}
+                                <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>                                    
                                     {value.userRow.Username}
-                                    {/* {let value = this.context; console.log('usercontext-consumer-value:', value)} */}
                                 </p>
                                 <Avatar
                                     style={{ float: 'right' }}
                                     size='normal'
-                                    // shape='square'
                                     src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
 
                             </div>
@@ -78,7 +47,5 @@ class UserInfo extends React.Component {
         </UserContext.Consumer>);
     }
 }
-
-// UserInfo.contextType = UserContext
 
 export default UserInfo
