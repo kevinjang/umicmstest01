@@ -1,0 +1,1 @@
+// NOTE: UserContextInfo 获取用户信息，进而验证用户权限等
