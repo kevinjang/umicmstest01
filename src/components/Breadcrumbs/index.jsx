@@ -31,6 +31,10 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
                 const itemY = find(flatMapDeep(menus, 'children'), (xItem) => {
                     return xItem.urlPath === path;
                 })
+                
+                if(!itemY){
+                    return null
+                }
 
                 return <Breadcrumb.Item key={itemY.id}>
                     {
