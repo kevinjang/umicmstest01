@@ -354,14 +354,14 @@ class AddNewModal extends React.Component {
     }
 
     onDatePickerChange = (e) => {
-        // console.log('onDatePickerChange - e', e)
+        // 修改 费用日期 
         const { record } = this.state;
         record['ExpenseTime'] = e;
 
         this.setState({
             record
         }, () => {
-            console.log('time', record['ExpenseTime'])
+            // console.log('time', record['ExpenseTime'])
         })
     }
 
@@ -372,8 +372,6 @@ class AddNewModal extends React.Component {
 
         this.setState({
             record
-        }, () => {
-            console.log('ExpenseAddress', record['ExpenseAddress'])
         })
     }
 
@@ -449,11 +447,12 @@ class AddNewModal extends React.Component {
 
 
     onTCChange = (value1) => {
+        // NOTE: 税率调整
         console.log(value1)
     }
 
     onControlChange = () => {
-        console.log('form:', _FORM)
+        // console.log('form:', _FORM)
         // 税改联动逻辑
         const { record } = this.state;
         // = 0 ，全部禁用并清零
