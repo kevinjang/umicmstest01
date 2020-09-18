@@ -18,7 +18,7 @@
 
 4. ###### namespace - 数据中心名称用于区别
 
-![tianqi](../../tree/With-Breadcrumn/public/images/tianqi.svg)
+![tianqi](../../tree/With-Breadcrumb/public/images/tianqi.svg)
 
 ##### services发起网络请求
 
