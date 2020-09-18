@@ -458,7 +458,7 @@ class AddNewModal extends React.Component {
     }
 
     onControlChange = () => {
-        console.log('form:', _FORM)
+        // console.log('form:', _FORM)
         // 税改联动逻辑
         const { record } = this.state;
         // = 0 ，全部禁用并清零
