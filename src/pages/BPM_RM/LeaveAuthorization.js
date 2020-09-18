@@ -4,7 +4,7 @@ import {
     Col, Icon, Modal, Table, Popconfirm, message, Pagination, Spin, Space
 } from 'antd'
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
-import { FileOutlined, DeleteOutlined } from '@ant-design/icons'
+import { FileOutlined, DeleteOutlined, SearchOutlined, FileAddOutlined } from '@ant-design/icons'
 const { Header } = Layout;
 
 const { Option } = Select;
@@ -18,10 +18,14 @@ import {
 import SearchSquare from '../../CommonUtility/BPM_RM/SearchSquare'
 
 import styles from './LeaveAuthorization.css';
+import { connect } from 'umi';
 
 class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
+
+        this.dataSource = props.dataSource;
+        this.spinning = props.spinning;
 
         this.state = {
             modalShow: false,
@@ -29,12 +33,12 @@ class LeaveAuthorization extends React.Component {
             cancelButtonAvailable: false,
             selectedRowKeys: [],
             editingRecord: null,
-            dataSource: [],
+            // dataSource,
             allCount: 0,
             pagi_pageSize: 10,
             pagi_total: 0,
             pagi_current: 0,
-            spinning: false,
+            // spinning,
             operation: '',
             filterCol: '-'
         };
@@ -157,25 +161,26 @@ class LeaveAuthorization extends React.Component {
     }
 
     loadData = async () => {
-        const { getFieldValue } = this.form; // this.props.form;
-        var leaveauth_filterKeyWord = getFieldValue('leaveauth_filterKeyWord');
-        var leaveauth_filter_text = getFieldValue('leaveauth_filter_text');
-        const condition = leaveauth_filterKeyWord === 'none' ? null : {
-            name: leaveauth_filterKeyWord,
-            value: leaveauth_filter_text
-        }
+        const { searchCondition } = this.props;
+        const condition = searchCondition ? {
+            name: searchCondition.keyWord,
+            value: searchCondition.keyText
+        } : null;
 
-        // console.log('la-condition:', condition)
 
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
             spinning: true
         })
-        // var baseURL = axios.defaults.baseURL = "http://localhost:3000";
-        // console.log('condition:', condition)
         // 此处调用查询函数
-        getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
+        // getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
+        const {dispatch} = this.props
+        if(dispatch){
+            dispatch({
+                type: 'LeaveAuthModel/fetchData'
+            })
+        }
     }
 
     queryCallBack = (e) => {
@@ -343,40 +348,23 @@ class LeaveAuthorization extends React.Component {
         }
 
         return (
-            <Spin tip="加载中..." spinning={this.state.spinning}>
+            <Spin tip="加载中..." spinning={this.spinning}>
                 <div className={styles.mainContainer}>
                     <Layout>
-                        <SearchSquare
-                            form={this.props.form}
-                            items={
-                                [{
-                                    name: 'leaveauth_add_button',
-                                    obj: <Button type='primary' onClick={this.handleAddRecord}>添加</Button>
-                                }, {
-                                    name: 'leaveauth_delete_button',
-                                    obj: <Button type='danger' onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
-                                }, {
-                                    name: 'leaveauth_filter_text',
-                                    obj: <Input style={{ width: '120px' }}
-                                        onPressEnter={this.handleSearch}
-                                        suffix={<a href="" onClick={this.handleSearch}><Icon type='search' /></a>} />
-                                }, {
-                                    name: 'leaveauth_filterKeyWord',
-                                    obj: <Select style={{ width: '150px' }} >
-                                        {this.options}
-                                    </Select>
-                                }]
-                            }
-                        >
-
-                        </SearchSquare>
+                        <div style={{ width: '100%', float: 'right' }}>
+                            <Space style={{ float: 'right', marginRight: '50px' }}>
+                                <SearchSquare selectOptions={this.options} loadData={this.loadData}></SearchSquare>
+                                <Button icon={<SearchOutlined />} >搜索</Button>
+                                <Button type='danger' onClick={this.handleDeleteSelectedRecords} icon={<DeleteOutlined />}>删除所选</Button>
+                                <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
+                            </Space>
+                        </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
                                 <Row gutter={12}>
                                     <Form.Item style={{ width: '100%' }}>
                                         <Table columns={this.columns}
-                                            
-                                            dataSource={this.state.dataSource}
+                                            dataSource={this.dataSource}
                                             bordered style={{ paddingBottom: '10px', width: '99%' }}
                                             rowSelection={rowSelection}
                                             onRow={
@@ -429,4 +417,9 @@ class LeaveAuthorization extends React.Component {
     }
 }
 
-export default LeaveAuthorization
+export default connect(({ LeaveAuthModel }) => ({
+    LeaveAuthModel,
+    dataSource: LeaveAuthModel.dataSource,
+    spinning: LeaveAuthModel.spinning,
+    searchCondition: LeaveAuthModel.searchCondition
+}))(LeaveAuthorization)
