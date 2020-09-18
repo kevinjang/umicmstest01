@@ -300,9 +300,10 @@ const Aladin = (props) => {
                     (
                         <div>
                             <Popconfirm title='确定删除吗?'
+                                okText="确定删除"
+                                cancelText="取消"
                                 onConfirm={() => handleDelete(record.key)}>
                                 <a href='/#'>删除</a>
-                                {/* <Button>删除</Button> */}
                             </Popconfirm>
                             |
                             <a href='javascript:;' onClick={() => EditClick(record)}>编辑</a>
