@@ -38,6 +38,13 @@ const errorHandler = (error) => {
     }
 }
 
-const request = extend({errorHandler, credentials: 'include'});
+const request = extend({
+    errorHandler,
+    // credentials: 'include',
+    headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+        'Content-Type': 'application/json'
+    }
+});
 
 export default request;
