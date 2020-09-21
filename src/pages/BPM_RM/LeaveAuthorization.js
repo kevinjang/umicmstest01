@@ -33,10 +33,10 @@ class LeaveAuthorization extends React.Component {
             cancelButtonAvailable: false,
             selectedRowKeys: [],
             editingRecord: null,
-            // dataSource,
+            dataSource: this.dataSource,
             allCount: 0,
             pagi_pageSize: 10,
-            pagi_total: 0,
+            // pagi_total: 0,
             pagi_current: 0,
             // spinning,
             operation: '',
@@ -141,7 +141,10 @@ class LeaveAuthorization extends React.Component {
 
         this.formRef = React.createRef();
 
+        this.formRefSearch = React.createRef();
+
         this.form = null;
+        this.formSearch = null;
     }
 
     handleDeleteRecord = (record) => {
@@ -157,15 +160,21 @@ class LeaveAuthorization extends React.Component {
 
     componentDidMount() {
         this.form = this.formRef.current;
+        this.formSearch = this.formRefSearch.current;
         this.loadData();
     }
 
     loadData = async () => {
-        const { searchCondition } = this.props;
-        const condition = searchCondition ? {
-            name: searchCondition.keyWord,
-            value: searchCondition.keyText
-        } : null;
+        // const { searchCondition } = this.props;
+        // const condition = searchCondition ? {
+        //     name: searchCondition.keyWord,
+        //     value: searchCondition.keyText
+        // } : null;
+
+        const condition = {
+            name: this.formSearch.getFieldValue("condition_select"),
+            value: this.formSearch.getFieldValue("condition_input")
+        }
 
 
         const { activeKey, selfID } = this.props;
@@ -175,11 +184,20 @@ class LeaveAuthorization extends React.Component {
         })
         // 此处调用查询函数
         // getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
-        const {dispatch} = this.props
-        if(dispatch){
+        const { dispatch } = this.props
+        if (dispatch) {
+            console.log('typeof dispatch:', typeof dispatch)
             dispatch({
-                type: 'LeaveAuthModel/fetchData'
+                type: 'LeaveAuthModel/fetchData',
+                payload: {
+                    pageSize: this.state.pagi_pageSize,
+                    startPage: this.state.pagi_current,
+                    condition,
+                    callback: this.queryCallBack
+                }
             })
+
+
         }
     }
 
@@ -352,19 +370,51 @@ class LeaveAuthorization extends React.Component {
                 <div className={styles.mainContainer}>
                     <Layout>
                         <div style={{ width: '100%', float: 'right' }}>
-                            <Space style={{ float: 'right', marginRight: '50px' }}>
-                                <SearchSquare selectOptions={this.options} loadData={this.loadData}></SearchSquare>
-                                <Button icon={<SearchOutlined />} >搜索</Button>
-                                <Button type='danger' onClick={this.handleDeleteSelectedRecords} icon={<DeleteOutlined />}>删除所选</Button>
-                                <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
-                            </Space>
+                            {/* <SearchSquare selectOptions={this.options} loadData={this.loadData}></SearchSquare> */}
+                            <Form ref={this.formRefSearch}>
+                                <Space style={{ float: 'right', marginRight: '50px' }}>
+                                    <Form.Item name="condition_select">
+                                        <Select style={{ width: '150px' }} >
+                                            {this.options}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name="condition_input">
+                                        <Input style={{ width: '120px' }}
+                                            onPressEnter={() => {
+                                                // NOTE: dispatch更新searchCondition去
+                                                // setCondition();
+                                            }}
+                                            onBlur={() => {
+                                                // NOTE: dispatch更新searchCondition去
+                                                // setCondition();
+                                            }}
+                                            onChange={() => {
+                                                // NOTE: dispatch更新searchCondition去
+                                                // setCondition();
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button icon={<SearchOutlined />} onClick={() => {
+                                            const { dataSource } = this.props
+                                            console.log('dataSource newest:', dataSource)
+                                        }}>搜索</Button>
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button type='danger' onClick={this.handleDeleteSelectedRecords} icon={<DeleteOutlined />}>删除所选</Button>
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
+                                    </Form.Item>
+                                </Space>
+                            </Form>
                         </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
                                 <Row gutter={12}>
                                     <Form.Item style={{ width: '100%' }}>
                                         <Table columns={this.columns}
-                                            dataSource={this.dataSource}
+                                            dataSource={this.state.dataSource}
                                             bordered style={{ paddingBottom: '10px', width: '99%' }}
                                             rowSelection={rowSelection}
                                             onRow={
@@ -413,7 +463,7 @@ class LeaveAuthorization extends React.Component {
                         </LeaveAuthorizationModal>
                     </Modal>
                 </div >
-            </Spin>);
+            </Spin >);
     }
 }
 
