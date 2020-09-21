@@ -61,7 +61,7 @@ class LeaveAuthorization extends React.Component {
         this.columns = [
             {
                 title: '序号',
-                dataIndex: 'RowNum',
+                dataIndex: 'key',
                 width: '3.3%',
                 visible: true,
                 editable: false
@@ -290,7 +290,7 @@ class LeaveAuthorization extends React.Component {
             insert(record, this.loadData);
         else if (operation === 'update') {
             const { RowNum } = record;
-            const item = this.state.dataSource.filter(it => it.new_id === RowNum)[0] || null;
+            const item = this.state.dataSource.filter(it => it.key === RowNum)[0] || null;
             const toUpdateRecord = {
                 ...record
             }
@@ -308,7 +308,7 @@ class LeaveAuthorization extends React.Component {
         });
     };
 
-    onTableRowSelectedChange = (selectedRowKeys) => {
+    onTableRowSelectedChange = (selectedRowKeys, selectedRows) => {
         this.setState({ selectedRowKeys })
     }
 
