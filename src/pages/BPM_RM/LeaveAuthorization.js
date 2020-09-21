@@ -182,6 +182,7 @@ class LeaveAuthorization extends React.Component {
         this.setState({
             spinning: true
         })
+        console.log('this.state.pagi_current:', this.state.pagi_current)
         // 此处调用查询函数
         // getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
         const { dispatch } = this.props
