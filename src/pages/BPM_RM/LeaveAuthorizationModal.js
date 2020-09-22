@@ -15,7 +15,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid,
+            valid = "valid",
             RowNum,
             key
         } = editingRecord;
@@ -61,7 +61,7 @@ class LeaveAuthorizationModal extends React.Component {
         })
     }
 
-    // ----------------------------------------------all blurs ---------------------------------------------------------------
+    // NOTE: ----------------------------------------------all blurs ---------------------------------------------------------------
     PersonalADOnBlur = (e) => {
         let val = (e.target.value || '').toString();
         if (!!val && val.indexOf('cofco\\') !== 0) {
@@ -208,6 +208,10 @@ class LeaveAuthorizationModal extends React.Component {
         this.form.validateFields()
             .then(values => {
                 console.log('validateFields values:', values)
+
+                
+
+
                 this.updateOkButtonAvailable(true);
                 this.updateCancelButtonAvailable(true);
             })
@@ -235,7 +239,6 @@ class LeaveAuthorizationModal extends React.Component {
             key
         } = this.state;
 
-        // console.log('updateParentState-before-state:', this.state);
         this.updateParentState({
             PersonalID,
             userAD,
@@ -262,7 +265,7 @@ class LeaveAuthorizationModal extends React.Component {
         } = this.state;
 
         return (<div>
-            <Form ref={this.formRef}>
+            <Form name={FORM_NAME} ref={this.formRef} labelAlign="left" style={{width: '100%'}}>
                 <Row gutter={24}>
                     <Col span={12}>
                         <Form.Item label='离职人员ID' name="leave_id" rules={[
@@ -270,7 +273,10 @@ class LeaveAuthorizationModal extends React.Component {
                                 required: true,
                                 message: '必填！'
                             }
-                        ]} initialValue={PersonalID || ''}>
+                        ]} labelCol={{
+                            span: '6'
+                        }}
+                        initialValue={PersonalID || ''}>
                             <Input onBlur={this.PersonalIDOnBlur} />
                         </Form.Item>
                     </Col>
@@ -280,14 +286,18 @@ class LeaveAuthorizationModal extends React.Component {
                                 required: true,
                                 message: '必填！'
                             }
-                        ]} initialValue={quanxianPersonalID || ''}>
+                        ]} labelCol={{
+                            span: '6'
+                        }} initialValue={quanxianPersonalID || ''}>
                             <Input onBlur={this.quanxianPersonalIDOnBlur} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item label='离职人员AD' name="leave_ad" rules={[
+                        <Form.Item label='离职人员AD' name="leave_ad" labelCol={{
+                            span: '6'
+                        }} rules={[
                             {
                                 required: true,
                                 message: '必填！'
@@ -297,7 +307,9 @@ class LeaveAuthorizationModal extends React.Component {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label='授权人员AD' name="auth_ad" rules={[
+                        <Form.Item label='授权人员AD' labelCol={{
+                            span: '6'
+                        }} name="auth_ad" rules={[
                             {
                                 required: true,
                                 message: '必填！'
@@ -309,7 +321,9 @@ class LeaveAuthorizationModal extends React.Component {
                 </Row>
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item label='离职人员姓名' name="leave_name" rules={[
+                        <Form.Item label='离职人员姓名' labelCol={{
+                            span: '6'
+                        }} name="leave_name" rules={[
                             {
                                 required: true,
                                 message: '必填！'
@@ -319,7 +333,9 @@ class LeaveAuthorizationModal extends React.Component {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label='授权人员姓名' name="auth_name" rules={[
+                        <Form.Item label='授权人员姓名' labelCol={{
+                            span: '6'
+                        }} name="auth_name" rules={[
                             {
                                 required: true,
                                 message: '必填！'
