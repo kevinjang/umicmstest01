@@ -63,6 +63,9 @@ class LeaveAuthorizationModal extends React.Component {
 
     // NOTE: ----------------------------------------------all blurs ---------------------------------------------------------------
     PersonalADOnBlur = (e) => {
+        // const {editingRecord} = this.props
+        // console.log('editingRecord value:', editingRecord.userAD)
+
         let val = (e.target.value || '').toString();
         if (!!val && val.indexOf('cofco\\') !== 0) {
             val = "cofco\\" + val;

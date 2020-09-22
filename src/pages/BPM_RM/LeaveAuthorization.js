@@ -276,40 +276,97 @@ class LeaveAuthorization extends React.Component {
         })
     }
 
+    getUpdateColumns = (record) => {
+        const { remoteCurrentEditingRecord: editingRecord } = this.props
+        const updateColumns = [];
+        if (editingRecord["PersonalID"] !== record["PersonalID"]) {
+            updateColumns.push({
+                name: "PersonalID",
+                value: record["PersonalID"]
+            })
+        }
+        if (editingRecord["userAD"] !== record["userAD"]) {
+            updateColumns.push({
+                name: "userAD",
+                value: record["userAD"]
+            })
+        }
+        if (editingRecord["UserCname"] !== record["UserCname"]) {
+            updateColumns.push({
+                name: "UserCname",
+                value: record["UserCname"]
+            })
+        }
+        if (editingRecord["quanxianPersonalID"] !== record["quanxianPersonalID"]) {
+            updateColumns.push({
+                name: "quanxianPersonalID",
+                value: record["quanxianPersonalID"]
+            })
+        }
+        if (editingRecord["quanxianAD"] !== record["quanxianAD"]) {
+            updateColumns.push({
+                name: "quanxianAD",
+                value: record["quanxianAD"]
+            })
+        }
+        if (editingRecord["quanxianCname"] !== record["quanxianCname"]) {
+            updateColumns.push({
+                name: "quanxianCname",
+                value: record["quanxianCname"]
+            })
+        }
+        return updateColumns
+    }
+
     handleOkModal = () => {
         this.setState({
             modalShow: false
         });
 
-        let record = {...this.state.editingRecord};
+        let record = { ...this.state.editingRecord };
         const { dispatch } = this.props
         var methodName = "insertItem";
 
         const { operation } = this.state;
-        if (operation === 'insert')
-            // insert(record, this.loadData);
+        if (operation === 'insert') {
             methodName = "insertItem";
+            if (dispatch) {
+                dispatch({
+                    type: `LeaveAuthModel/${methodName}`,
+                    payload: {
+                        record,
+                        callback: this.loadData
+                    }
+                })
+            }
+        }
         else if (operation === 'update') {
             const { RowNum } = record;
             const item = this.state.dataSource.filter(it => it.key === RowNum)[0] || null;
             // const toUpdateRecord = {
             //     ...record
             // }
+
+            // NOTE: 需要更新的列及新值
+            const ucls = this.getUpdateColumns(record)
+
             if (!!item) {
                 // toUpdateRecord["ID"] = item.ID;
                 record["ID"] = item.ID;
             }
             methodName = "updateItem";
+            if (dispatch) {
+                dispatch({
+                    type: `LeaveAuthModel/${methodName}`,
+                    payload: {
+                        record,
+                        updates: ucls,
+                        where: ` ID = '${record["key"]}'`,
+                        callback: this.loadData
+                    }
+                })
+            }
             // update(toUpdateRecord, this.loadData)
-        }
-        if(dispatch){
-            dispatch({
-                type:  `LeaveAuthModel/${methodName}`,
-                payload:{
-                    record,
-                    callback: this.loadData
-                }
-            })
         }
     };
 
@@ -336,6 +393,16 @@ class LeaveAuthorization extends React.Component {
             editingRecord: record,
             modalShow: true
         })
+
+        const { dispatch } = this.props
+        if (dispatch) {
+            dispatch({
+                type: "LeaveAuthModel/setCurrentEditingRecord",
+                payload: {
+                    record
+                }
+            })
+        }
     }
 
     handleAddRecord = () => {
@@ -489,5 +556,6 @@ export default connect(({ LeaveAuthModel }) => ({
     LeaveAuthModel,
     dataSource: LeaveAuthModel.dataSource,
     spinning: LeaveAuthModel.spinning,
-    searchCondition: LeaveAuthModel.searchCondition
+    searchCondition: LeaveAuthModel.searchCondition,
+    remoteCurrentEditingRecord: LeaveAuthModel.currentEditingRecord
 }))(LeaveAuthorization)

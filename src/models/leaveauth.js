@@ -1,5 +1,5 @@
 import { getByPage } from '../utils/toserver/BasePeopleUtil'
-import { queryLeaveAuthData, insertNewLeaveAuthData } from '../services/leaveauth'
+import { queryLeaveAuthData, insertNewLeaveAuthData, updateLeaveAuthDataItem } from '../services/leaveauth'
 import { message as messageComp } from 'antd'
 const LeaveAuth = {
     namespace: 'LeaveAuthModel',
@@ -16,7 +16,8 @@ const LeaveAuth = {
         // NOTE: 查询条件
         searchCondition: null,
         // NOTE: 加载中
-        spinning: false
+        spinning: false,
+        currentEditingRecord: null
     },
     effects: {
         *fetchData({ payload }, { call, put, select }) {
@@ -55,13 +56,31 @@ const LeaveAuth = {
                 const response = yield insertNewLeaveAuthData(record)
                 // response.then(data=>{
                 console.log('response :', response)
+                if(response && response.result){
+                    messageComp.info(response.result.message)
+                }
+                if(callback) callback()
             }
             catch (err) {
                 console.log('insert item outer catch:', err)
+                messageComp.error("插入数据失败："+err.message)
             }
-            // }).catch(error=>{
-            //     console.log('insert leave auth catch error:', error);
-            // })
+        },
+        *updateItem({payload}, {call, put}){
+            const { record, updates,where, callback } = payload;
+            try {
+                const response = yield updateLeaveAuthDataItem({updates,where})
+                // response.then(data=>{
+                console.log('response :', response)
+                if(response && response.result){
+                    messageComp.info(response.result.message)
+                }
+                if(callback) callback()
+            }
+            catch (err) {
+                console.log('update item outer catch:', err)
+                messageComp.error("更新数据失败："+err.message)
+            }
         }
     },
     reducers: {
@@ -86,6 +105,13 @@ const LeaveAuth = {
                 searchCondition: {
                     ...payload
                 }
+            }
+        },
+        'setCurrentEditingRecord':(state,{payload})=>{
+            const {record} = payload
+            return {
+                ...state,
+                currentEditingRecord: record
             }
         }
     }

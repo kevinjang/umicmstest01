@@ -27,3 +27,17 @@ export async function insertNewLeaveAuthData(record) {
         responseType: 'json'
     })
 }
+
+export async function updateLeaveAuthDataItem({updates, where}){
+    return request(baseUrl + "/updateBasePeople", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        data:  qs.stringify({
+            updates,
+            where
+        }),
+        responseType: 'json'
+    })
+}
