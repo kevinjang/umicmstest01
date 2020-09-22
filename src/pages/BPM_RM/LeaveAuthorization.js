@@ -36,9 +36,7 @@ class LeaveAuthorization extends React.Component {
             dataSource: this.dataSource,
             allCount: 0,
             pagi_pageSize: 10,
-            // pagi_total: 0,
             pagi_current: 0,
-            // spinning,
             operation: '',
             filterCol: '-'
         };
@@ -47,8 +45,12 @@ class LeaveAuthorization extends React.Component {
             pageSize: 10,
             total: 0,
             current: 1,
+            locale: {
+                'page': '页'
+            },
             onChange: (page, pageSize) => {
                 this.pagination.current = page;
+                this.pagination.pageSize = pageSize;
                 this.setState({
                     pagi_pageSize: pageSize,
                     pagi_current: page
@@ -64,53 +66,61 @@ class LeaveAuthorization extends React.Component {
                 dataIndex: 'key',
                 width: '3.3%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '离职人员ID',
                 dataIndex: 'PersonalID',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '离职人员AD',
                 dataIndex: 'userAD',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '离职人员姓名',
                 dataIndex: 'UserCname',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '授权人员ID',
                 dataIndex: 'quanxianPersonalID',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '授权人员AD',
                 dataIndex: 'quanxianAD',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '授权人员姓名',
                 dataIndex: 'quanxianCname',
                 width: '15%',
                 visible: true,
-                editable: false
+                editable: false,
+                align: 'center'
             },
             {
                 title: '操作',
                 width: '5%',
+                align: 'center',
                 render: (text, record) => {
                     return <div>
                         <a href='javascript:;' onClick={() => this.handleEditRecord(record)}>
@@ -165,26 +175,19 @@ class LeaveAuthorization extends React.Component {
     }
 
     loadData = async () => {
-        // const { searchCondition } = this.props;
-        // const condition = searchCondition ? {
-        //     name: searchCondition.keyWord,
-        //     value: searchCondition.keyText
-        // } : null;
+        const name = this.formSearch.getFieldValue("condition_select");
 
-        const condition = {
+        const condition = name === "none" ? null : {
             name: this.formSearch.getFieldValue("condition_select"),
             value: this.formSearch.getFieldValue("condition_input")
         }
-
 
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
             spinning: true
         })
-        console.log('this.state.pagi_current:', this.state.pagi_current)
         // 此处调用查询函数
-        // getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.queryCallBack);
         const { dispatch } = this.props
         if (dispatch) {
             console.log('typeof dispatch:', typeof dispatch)
@@ -197,8 +200,6 @@ class LeaveAuthorization extends React.Component {
                     callback: this.queryCallBack
                 }
             })
-
-
         }
     }
 
@@ -218,14 +219,11 @@ class LeaveAuthorization extends React.Component {
             allCount,
             pagi_total,
             spinning
-        }, () => {
-            // console.log('dataSource:', this.state.dataSource)
         })
     }
 
     handleDeleteSelectedRecords = () => {
         const { selectedRowKeys } = this.state;
-        // console.log('selectedRowKeys:', selectedRowKeys);
         if (!selectedRowKeys || selectedRowKeys.length === 0) {
             message.info('请选择要删除的记录！');
             return;
@@ -239,7 +237,6 @@ class LeaveAuthorization extends React.Component {
         })
 
         deleteItems(toDeleteItemsIDs, this.loadData).then((response) => {
-            // console.log('delete multiple item result:', response.data.result.message)
             if (response && response.data && response.data.result && response.data.result.message) {
                 message.success(response.data.result.message)
                 this.setState({
@@ -284,21 +281,35 @@ class LeaveAuthorization extends React.Component {
             modalShow: false
         });
 
-        let record = this.state.editingRecord;
+        let record = {...this.state.editingRecord};
+        const { dispatch } = this.props
+        var methodName = "insertItem";
+
         const { operation } = this.state;
         if (operation === 'insert')
-            insert(record, this.loadData);
+            // insert(record, this.loadData);
+            methodName = "insertItem";
         else if (operation === 'update') {
             const { RowNum } = record;
             const item = this.state.dataSource.filter(it => it.key === RowNum)[0] || null;
-            const toUpdateRecord = {
-                ...record
-            }
-            // console.log('update matched item:', item)
+            // const toUpdateRecord = {
+            //     ...record
+            // }
             if (!!item) {
-                toUpdateRecord["ID"] = item.ID;
+                // toUpdateRecord["ID"] = item.ID;
+                record["ID"] = item.ID;
             }
-            update(toUpdateRecord, this.loadData)
+            methodName = "updateItem";
+            // update(toUpdateRecord, this.loadData)
+        }
+        if(dispatch){
+            dispatch({
+                type:  `LeaveAuthModel/${methodName}`,
+                payload:{
+                    record,
+                    callback: this.loadData
+                }
+            })
         }
     };
 
@@ -308,7 +319,7 @@ class LeaveAuthorization extends React.Component {
         });
     };
 
-    onTableRowSelectedChange = (selectedRowKeys, selectedRows) => {
+    onTableRowSelectedChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys })
     }
 
@@ -347,11 +358,8 @@ class LeaveAuthorization extends React.Component {
     }
 
     updateEditingRecordState = (record) => {
-        // console.log('updateEditingRecordState-record:', record);
         this.setState({
             editingRecord: record
-        }, () => {
-            // console.log('parent-editingRecord:', this.state.editingRecord)
         })
     }
 
@@ -371,7 +379,6 @@ class LeaveAuthorization extends React.Component {
                 <div className={styles.mainContainer}>
                     <Layout>
                         <div style={{ width: '100%', float: 'right' }}>
-                            {/* <SearchSquare selectOptions={this.options} loadData={this.loadData}></SearchSquare> */}
                             <Form ref={this.formRefSearch}>
                                 <Space style={{ float: 'right', marginRight: '50px' }}>
                                     <Form.Item name="condition_select">
@@ -397,8 +404,12 @@ class LeaveAuthorization extends React.Component {
                                     </Form.Item>
                                     <Form.Item>
                                         <Button icon={<SearchOutlined />} onClick={() => {
-                                            const { dataSource } = this.props
-                                            console.log('dataSource newest:', dataSource)
+                                            this.pagination.current = 1;
+                                            this.setState({
+                                                pagi_current: 1
+                                            }, () => {
+                                                this.loadData();
+                                            })
                                         }}>搜索</Button>
                                     </Form.Item>
                                     <Form.Item>
@@ -418,6 +429,7 @@ class LeaveAuthorization extends React.Component {
                                             dataSource={this.state.dataSource}
                                             bordered style={{ paddingBottom: '10px', width: '99%' }}
                                             rowSelection={rowSelection}
+
                                             onRow={
                                                 (record, index) => {
                                                     return {
@@ -425,7 +437,6 @@ class LeaveAuthorization extends React.Component {
                                                             this.setState({
                                                                 operation: 'update'
                                                             })
-                                                            // console.log('dclick record:', record)
                                                             this.handleEditRecord(record);
                                                         }
                                                     }
@@ -442,10 +453,16 @@ class LeaveAuthorization extends React.Component {
                         </Layout>
                     </Layout>
                     <Modal visible={this.state.modalShow}
+                        // style={{width: '50%'}}
+                        width="48%"
+                        style={{
+                            minWidth: '920px'
+                        }}
                         title='编辑项目'
                         operation={this.state.operation}
                         okButtonProps={{ disabled: !this.state.okButtonAvailable }}
                         centered={true}
+
                         onOk={this.handleOkModal}
                         onCancel={this.handleCancelModal}
                         okText="保存"
