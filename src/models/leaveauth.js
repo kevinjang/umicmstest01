@@ -1,5 +1,5 @@
 import { getByPage } from '../utils/toserver/BasePeopleUtil'
-import { queryLeaveAuthData } from '../services/leaveauth'
+import { queryLeaveAuthData, insertNewLeaveAuthData } from '../services/leaveauth'
 import { message as messageComp } from 'antd'
 const LeaveAuth = {
     namespace: 'LeaveAuthModel',
@@ -47,12 +47,25 @@ const LeaveAuth = {
             else {
                 messageComp.error("请求离职授权查询数据失败：" + message);
             }
+        },
+        *insertItem({ payload }, { call, put, select }) {
+            const { record, callback } = payload;
+            // console.log('insert record & callback:', record, callback)
+            try {
+                const response = yield insertNewLeaveAuthData(record)
+                // response.then(data=>{
+                console.log('response :', response)
+            }
+            catch (err) {
+                console.log('insert item outer catch:', err)
+            }
+            // }).catch(error=>{
+            //     console.log('insert leave auth catch error:', error);
+            // })
         }
     },
     reducers: {
         'saveDataWithRemoteResponse': (state, { payload }) => {
-            // console.log('pauload:', payload)
-
             const { data, callback } = payload
             callback({
                 PaginationTotal: data.recordsets && data.recordsets[1][0].count,
@@ -65,16 +78,7 @@ const LeaveAuth = {
                 ...state,
                 allCount: data.recordset && data.recordset.length,
                 dataSource: data.recordset
-                // pageSize: 
-                // totalPageCount: 
             }
-
-            // return {
-            //     ...state,
-            //     allCount: payload.allCount,
-            //     spinning: payload.spinning,
-            //     dataSource: [...payload.dataSource]
-            // }
         },
         'setSearchCondition': (state, { payload }) => {
             return {
