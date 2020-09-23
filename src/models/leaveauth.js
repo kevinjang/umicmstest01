@@ -44,6 +44,8 @@ const LeaveAuth = {
                     type: 'saveDataWithRemoteResponse',
                     payload: { data, callback }
                 })
+
+                messageComp.success("查询成功！");
             }
             else {
                 messageComp.error("请求离职授权查询数据失败：" + message);
