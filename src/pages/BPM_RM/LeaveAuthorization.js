@@ -9,14 +9,6 @@ const { Header } = Layout;
 
 const { Option } = Select;
 
-import {
-    getByPage,
-    insert, update, deleteItem,
-    deleteItems
-} from '../../utils/toserver/BasePeopleUtil';
-
-import SearchSquare from '../../CommonUtility/BPM_RM/SearchSquare'
-
 import styles from './LeaveAuthorization.css';
 import { connect } from 'umi';
 
@@ -38,7 +30,8 @@ class LeaveAuthorization extends React.Component {
             pagi_pageSize: 10,
             pagi_current: 0,
             operation: '',
-            filterCol: '-'
+            filterCol: '-',
+            notificationModalShow: false
         };
 
         this.pagination = {
@@ -167,11 +160,11 @@ class LeaveAuthorization extends React.Component {
             const ids = [item.key]
             console.log('ids:', ids)
             //NOTE: old version with the situation of  deleteItem(item.ID, this.loadData);
-            const {dispatch} = this.props
-            if(dispatch){
+            const { dispatch } = this.props
+            if (dispatch) {
                 dispatch({
                     type: 'LeaveAuthModel/deleteItems',
-                    payload:{
+                    payload: {
                         ids,
                         callback: this.loadData
                     }
@@ -198,12 +191,13 @@ class LeaveAuthorization extends React.Component {
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
-            spinning: true
+            spinning: true,
+            selectedRowKeys: []
         })
         // 此处调用查询函数
         const { dispatch } = this.props
         if (dispatch) {
-            console.log('typeof dispatch:', typeof dispatch)
+            // console.log('typeof dispatch:', typeof dispatch)
             dispatch({
                 type: 'LeaveAuthModel/fetchData',
                 payload: {
@@ -236,6 +230,11 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleDeleteSelectedRecords = () => {
+        this.setState({
+            notificationModalShow: false
+        })
+
+
         const { selectedRowKeys } = this.state;
         if (!selectedRowKeys || selectedRowKeys.length === 0) {
             message.info('请选择要删除的记录！');
@@ -249,22 +248,17 @@ class LeaveAuthorization extends React.Component {
             toDeleteItemsIDs.push(it.ID);
         })
 
-        deleteItems(toDeleteItemsIDs, this.loadData).then((response) => {
-            if (response && response.data && response.data.result && response.data.result.message) {
-                message.success(response.data.result.message)
-                this.setState({
-                    selectedRowKeys: []
-                })
-            }
-            else {
-                message.error(response.statusText);
-            }
+        const { dispatch } = this.props
+        if (dispatch) {
+            dispatch({
+                type: 'LeaveAuthModel/deleteItems',
+                payload: {
+                    ids: toDeleteItemsIDs,
+                    callback: this.loadData
+                }
+            })
+        }
 
-            this.loadData();
-        }).catch(err => {
-            if (err)
-                console.log('delete multiple item error:', err);
-        });
     }
 
     handleSearch = (e) => {
@@ -493,7 +487,11 @@ class LeaveAuthorization extends React.Component {
                                         }}>搜索</Button>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type='danger' onClick={this.handleDeleteSelectedRecords} icon={<DeleteOutlined />}>删除所选</Button>
+                                        <Button type='danger' onClick={()=>{
+                                            this.setState({
+                                                notificationModalShow: true
+                                            })
+                                        }} icon={<DeleteOutlined />}>删除所选</Button>
                                     </Form.Item>
                                     <Form.Item>
                                         <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
@@ -559,6 +557,18 @@ class LeaveAuthorization extends React.Component {
                             updateCancelButtonAvailable={(value) => this.updateCancelButtonAvailable(value)}>
 
                         </LeaveAuthorizationModal>
+                    </Modal>
+                    <Modal title="确认提示"
+                        okText="确认删除"
+                        cancelText="不删除"
+                        visible={this.state.notificationModalShow}
+                        onOk={this.handleDeleteSelectedRecords} 
+                        onCancel={() => {
+                            this.setState({
+                                notificationModalShow: false
+                            })
+                         }}>
+                        确认删除选中数据吗？
                     </Modal>
                 </div >
             </Spin >);
