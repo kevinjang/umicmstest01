@@ -164,7 +164,20 @@ class LeaveAuthorization extends React.Component {
             this.setState({
                 selectedRowKeys: []
             })
-            deleteItem(item.ID, this.loadData);
+            const ids = [item.key]
+            console.log('ids:', ids)
+            //NOTE: old version with the situation of  deleteItem(item.ID, this.loadData);
+            const {dispatch} = this.props
+            if(dispatch){
+                dispatch({
+                    type: 'LeaveAuthModel/deleteItems',
+                    payload:{
+                        ids,
+                        callback: this.loadData
+                    }
+                })
+            }
+
         }
     }
 

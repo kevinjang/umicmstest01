@@ -28,15 +28,29 @@ export async function insertNewLeaveAuthData(record) {
     })
 }
 
-export async function updateLeaveAuthDataItem({updates, where}){
+export async function updateLeaveAuthDataItem({ updates, where }) {
     return request(baseUrl + "/updateBasePeople", {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        data:  qs.stringify({
+        data: qs.stringify({
             updates,
             where
+        }),
+        responseType: 'json'
+    })
+}
+
+export async function deleteLeaveAuthDataItems(ids) {
+    // NOTE: 不考虑单删or复删的情况了，以后都一样，反正选中的都是key数组
+    return request(baseUrl + "/deleteMultipleBasePeople", {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: qs.stringify({
+            ids
         }),
         responseType: 'json'
     })

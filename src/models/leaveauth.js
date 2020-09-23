@@ -1,5 +1,5 @@
-import { getByPage } from '../utils/toserver/BasePeopleUtil'
-import { queryLeaveAuthData, insertNewLeaveAuthData, updateLeaveAuthDataItem } from '../services/leaveauth'
+// import { getByPage } from '../utils/toserver/BasePeopleUtil'
+import { queryLeaveAuthData, insertNewLeaveAuthData, updateLeaveAuthDataItem, deleteLeaveAuthDataItems } from '../services/leaveauth'
 import { message as messageComp } from 'antd'
 const LeaveAuth = {
     namespace: 'LeaveAuthModel',
@@ -56,30 +56,43 @@ const LeaveAuth = {
                 const response = yield insertNewLeaveAuthData(record)
                 // response.then(data=>{
                 console.log('response :', response)
-                if(response && response.result){
+                if (response && response.result) {
                     messageComp.info(response.result.message)
                 }
-                if(callback) callback()
+                if (callback) callback()
             }
             catch (err) {
                 console.log('insert item outer catch:', err)
-                messageComp.error("插入数据失败："+err.message)
+                messageComp.error("插入数据失败：" + err.message)
             }
         },
-        *updateItem({payload}, {call, put}){
-            const { record, updates,where, callback } = payload;
+        *updateItem({ payload }, { call, put }) {
+            const { record, updates, where, callback } = payload;
             try {
-                const response = yield updateLeaveAuthDataItem({updates,where})
+                const response = yield updateLeaveAuthDataItem({ updates, where })
                 // response.then(data=>{
                 console.log('response :', response)
-                if(response && response.result){
+                if (response && response.result) {
                     messageComp.info(response.result.message)
                 }
-                if(callback) callback()
+                if (callback) callback()
             }
             catch (err) {
                 console.log('update item outer catch:', err)
-                messageComp.error("更新数据失败："+err.message)
+                messageComp.error("更新数据失败：" + err.message)
+            }
+        },
+        *deleteItems({ payload }, { call, put }) {
+            const { ids, callback } = payload;
+            try {
+                const response = yield deleteLeaveAuthDataItems(ids);
+                if (response && response.result) {
+                    messageComp.info(response.result.message)
+                }
+                if (callback) callback()
+            } catch (error) {
+                console.log('delete items outer catch:', err)
+                messageComp.error("删除数据失败：" + err.message)
             }
         }
     },
@@ -107,8 +120,8 @@ const LeaveAuth = {
                 }
             }
         },
-        'setCurrentEditingRecord':(state,{payload})=>{
-            const {record} = payload
+        'setCurrentEditingRecord': (state, { payload }) => {
+            const { record } = payload
             return {
                 ...state,
                 currentEditingRecord: record
