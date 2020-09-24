@@ -152,12 +152,12 @@ class LeaveAuthorization extends React.Component {
 
     handleDeleteRecord = (record) => {
 
-        const item = this.state.dataSource.filter(it => it.key === record.key)[0] || null;
+        const item = this.state.dataSource.filter(it => it.ID === record.ID)[0] || null;
         if (!!item) {
             this.setState({
                 selectedRowKeys: []
             })
-            const ids = [item.key]
+            const ids = [item.ID];
             console.log('ids:', ids)
             //NOTE: old version with the situation of  deleteItem(item.ID, this.loadData);
             const { dispatch } = this.props
@@ -488,6 +488,11 @@ class LeaveAuthorization extends React.Component {
                                     </Form.Item>
                                     <Form.Item>
                                         <Button type='danger' onClick={()=>{
+                                            // const {selectedRowKeys} = this.state
+                                            if(selectedRowKeys.length === 0){
+                                                message.info("请选择要删除的数据");
+                                                return false;
+                                            }
                                             this.setState({
                                                 notificationModalShow: true
                                             })
@@ -501,7 +506,6 @@ class LeaveAuthorization extends React.Component {
                         </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
-                                <Row gutter={12}>
                                     <Form.Item style={{ width: '100%' }}>
                                         <Table columns={this.columns}
                                             dataSource={this.state.dataSource}
@@ -526,7 +530,8 @@ class LeaveAuthorization extends React.Component {
 
                                         </Table>
                                     </Form.Item>
-                                </Row>
+                                {/* <Row gutter={12}>
+                                </Row> */}
                             </Form>
                         </Layout>
                     </Layout>
