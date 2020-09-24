@@ -1,25 +1,25 @@
-.card-container>.ant-tabs-card>.ant-tabs-content {
+.card-container > .ant-tabs-card > .ant-tabs-content {
   height: 120px;
   /* margin-top: -16px; */
 }
 
-.card-container>.ant-tabs-card>.ant-tabs-content>.ant-tabs-tabpane {
+.card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
   background: #fff;
   /* padding: 16px; */
 }
 
-.card-container>.ant-tabs-card>.ant-tabs-bar {
+.card-container > .ant-tabs-card > .ant-tabs-bar {
   border-color: #fff;
   margin: 0;
 }
 
-.card-container>.ant-tabs-card>.ant-tabs-bar .ant-tabs-tab {
+.card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
   border-color: transparent;
   background: transparent;
   margin: 0;
 }
 
-.card-container>.ant-tabs-card>.ant-tabs-bar .ant-tabs-tab-active {
+.card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
   border-color: #fff;
   background: #fff;
 }
@@ -41,35 +41,48 @@
 
 .userInfoNode {
   float: right;
-  margin-top: 15px;
+  display: flex;
+  /* margin-top: 15px; */
   /* border: 1px solid white; */
-  width: 250px
+  width: 250px;
 }
 .bannerHeader {
-  color:white;
+  color: white;
   font-size: 32px;
 }
 
-.bannerHeaderUserInfo{
-  margin-top: 30px;
-  left: 1000px;
+.bannerHeaderUserInfo {
+  /* margin-top: 30px;
+  left: 1000px; */
 }
 
-.sidebarLayout{
+.bannerDock {
+  height: center;
+  text-align: center;
+  color: lightgray;
+}
+
+.bannerDock:hover {
+  /* background: rgba(0,21,41, .025); */
+  background: rgba(0, 0, 0, 0.025);
+  color: white;
+}
+
+.sidebarLayout {
   max-height: calc(100vh - 64px);
 }
 
-.siderbar{
+.siderbar {
   min-height: 91.5vh;
   color: white;
   padding-top: 16px;
 }
 
-.contentLayout{
+.contentLayout {
   background-color: #f0f2f5;
 }
 
-.content{
+.content {
   /* margin-top: 16px; */
   margin-left: 16px;
   margin-right: 16px;
@@ -78,7 +91,7 @@
   min-height: calc(100vh - 153px);
 }
 
-.footer{
+.footer {
   background-color: white;
   height: 48px;
   padding: 10px 50px;
