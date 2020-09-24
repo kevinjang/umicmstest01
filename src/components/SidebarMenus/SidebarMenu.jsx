@@ -13,6 +13,7 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
      className, ...restProps }) => {
     // const { menus, theme, menuMode, menuCollapsed } = props;
     const [activeSubMenuId, setActiveSubMenuId] = useState()
+    const [collapsed, setCollapsed] = useState(false)
     // const currentPath = location.pathname;
     // console.log('currentPath:', currentPath.split('/'));
     // const subMenuItem = 
@@ -25,12 +26,15 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
     }
 
     return (
-        <Sider collapsed={menuCollapsed} theme={theme} collapsible={collapsible} 
+        <Sider collapsed={collapsed} theme={theme} collapsible={collapsible} onCollapse={
+            ()=>{
+                setCollapsed(!collapsed)
+            }
+        }
             className={className}>
             <Scrollbars>
                 <Menu theme={theme} mode={menuMode}>
                     {menus.map((item, index) => {
-                        // const Icon = await LoadOnDemand.loader(item.icon)
                         if (item.children) {
                             return (<SubMenu
                                 key={item.id}
@@ -44,8 +48,6 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                         return (
                                             <MenuItem
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
-                                                {/* <Icon type={cItem.icon}></Icon> */}
-                                                {/* <IconX name={cItem.icon} /> */}
                                                 {
                                                     React.createElement(
                                                         Icon[`${cItem.icon}Outlined`], {
@@ -58,10 +60,6 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                                         style={{ color: 'white' }}
                                                         to={cItem.urlPath}
                                                         key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
-                                                        // onClick={() => notification.info({
-                                                        //     message: 'test',
-                                                        //     description: 'test'
-                                                        // })}
                                                     >
                                                         {cItem.title}
                                                     </Link>
