@@ -9,9 +9,9 @@ class UserInfo extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
         this.menus = (
-            <Menu style={{ marginTop: '45px', width: '150px', marginLeft: '120px' }}>
+            <Menu style={{ width: '150px' }}>
                 <Menu.Item>
                     <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                         设置
@@ -28,20 +28,18 @@ class UserInfo extends React.Component {
         return (<UserContext.Consumer>
             {value => {
                 return (
-                    <div>
-                        <Dropdown overlay={this.menus}>
-                            <div>
-                                <p style={{ color: 'white', float: 'right', marginTop: '-15px', fontSize: '20px', marginLeft: '5px' }}>                                    
-                                    {value.userRow.Username}
-                                </p>
+                    <Dropdown overlay={this.menus}>
+                        <div style={{ height: 'fit-content', display: 'flex',textAlign: 'center' }}>
+                            <div style={{ fontSize: '16px', marginLeft: '5px' }}>
                                 <Avatar
-                                    style={{ float: 'right' }}
+                                    // style={{ float: 'right' }}
                                     size='normal'
                                     src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
-
+                                {value.userRow.Username}
                             </div>
-                        </Dropdown>
-                    </div>
+
+                        </div>
+                    </Dropdown>
                 );
             }}
         </UserContext.Consumer>);
