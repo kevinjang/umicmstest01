@@ -11,44 +11,26 @@ export default {
     // },
     routes: [
         {
-            // path: '/', component: '../layout',
-            // routes: [
-            //     { path: '/', component: './Login/Login' },
-            //     {
-            //         path: '/', component: './MainFrame',
-            //         routes: [
-            //             {
-            //                 path: '/dashboard', component: './dashboard/dashboard'
-            //             },
-            //             {
-            //                 path: '/treetest', component: './treetest/treetest'
-            //             },
-            //             {
-            //                 path: '/aladin', component: './treetest/aladin'
-            //             },
-            //             {
-            //                 path: '/formtest', component: './treetest/FormTest'
-            //             },
-            //             {
-            //                 path: '/LeaveAuthorization', component: './BPM_RM/LeaveAuthorization'
-            //             },
-            //         ]
-            //     },
-            //     { component: './404' }
-            // ]
             path: '/', component: '@/pages/Login'
         },
         {
             path: '/mainframe', component: '@/pages/MainFrame',
+            wrappers:['@/pages/user/UrlPathGuard'],
             routes: [
                 { path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard' },
                 { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain' },
                 { path: '/mainframe/newaladin', component: '@/pages/EditInModal/index' },
                 { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
                 { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' },
-                { path: '/mainframe/LeaveAuthorization', component: '@/pages/BPM_RM/LeaveAuthorization' }
+                { path: '/mainframe/LeaveAuthorization', component: '@/pages/BPM_RM/LeaveAuthorization' },
+                { path: '/mainframe/OUUsersMaintenance', component: '@/pages/OUUsersMaintenance/index' }
 
             ]
+        },
+        {
+            path: '/404', component: '@/pages/404'
+        },{
+            path: '/*'
         }
     ]
 }
