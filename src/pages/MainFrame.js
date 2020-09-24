@@ -1,8 +1,8 @@
 import React from 'react'
-import { Layout, Spin } from 'antd'
+import { Layout, Row, Space, Spin, Col } from 'antd'
 import { connect } from 'umi'
 import styles from './MainFrame.css'
-import UserInfo from './user/userInfo'
+import UserInfo from './user/UserInfo'
 const { Header, Footer, Content } = Layout
 import { UserContext, GetData, MyUserData } from './UserContextMock';
 import { Scrollbars } from 'react-custom-scrollbars'
@@ -61,14 +61,20 @@ class KLayout extends React.Component {
                 {UserContext ?
                     <UserContext.Provider value={MyUserData}>
                         <Layout style={{ height: '100vh' }}>
-                            <Header  style={{ color: 'white' }} className={styles.bannerHeader}>
+                            <Header style={{ color: 'white' }} className={styles.bannerHeader}>
                                 <ChromeFilled />
                                 <span>导航</span>
                                 <div className={styles.userInfoNode}>
-                                    <div style={{ float: 'left', marginTop: '-10px' }}>
-                                        <GlobalHeaderDropdown />
+                                    <div style={{ width: '70%' }}>
+                                        <Row gutter={8} justify="center">
+                                            <Col span={8} className={styles.bannerDock}>
+                                                <GlobalHeaderDropdown />
+                                            </Col>
+                                            <Col span={16} className={styles.bannerDock}>
+                                                <UserInfo />
+                                            </Col>
+                                        </Row>
                                     </div>
-                                    <UserInfo className={styles.bannerHeaderUserInfo}></UserInfo>
                                 </div>
                             </Header>
 
@@ -76,7 +82,7 @@ class KLayout extends React.Component {
                                 <SidebarMenu width={200}
                                     className={styles.siderbar}
                                     theme={this.state.theme}
-                                    collapsible
+                                    collapsible={true}
                                     // menus={this.props.menus.menus}
                                     menuMode={'inline'}
                                     menuCollapsed={this.state.collapsed} />
