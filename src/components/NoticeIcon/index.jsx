@@ -26,14 +26,13 @@ const NoticeIcon = (props) => {
             </Spin>
         );
     }
-    const NoticeBellIcon = bell || <BellOutlined 
-    // className={styles.icon}
-     />
+    const NoticeBellIcon = bell || <BellOutlined style={{fontSize: '16px'}} />
     const trigger = (
-        <span >
-            <Badge count={11}
+        <span>
+            <Badge count={11} 
                 style={{
                     boxShadow: 'none',
+                    // fontSize: '20px'
                 }}
             // className={styles.badge}
             >
