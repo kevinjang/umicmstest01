@@ -2,7 +2,7 @@ const MenusModel = {
     namespace: "menus",
     /* 32了*/
     state: {
-        menus:[
+        menus: [
             {
                 id: "1",
                 level: 1,
@@ -283,6 +283,22 @@ const MenusModel = {
                         urlPath: "FileUploadTest",
                         nodeInfo: "./FileUploadTest/FileUploadTest1"
                     }
+                ]
+            },
+            {
+                id: '36',
+                level: 1,
+                title: '数据维护',
+                icon: 'Setting',
+                children: [
+                    {
+                        id: "37",
+                        level: 2,
+                        title: "黄页结构",
+                        icon: "Windows",
+                        urlPath: "/mainframe/OUUsersMaintenance",
+                        // nodeInfo: "./OUUsersMaintenance/index"
+                    },
                 ]
             }
         ],
