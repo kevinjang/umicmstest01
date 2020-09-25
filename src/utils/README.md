@@ -27,8 +27,7 @@ import AESEncryption, { AESTYPE } from '../src/encryption';
 const _encryption = new AESEncryption();
  
 const key = 'FB32D61111CBE2D012E7A12209322CF5FB32D671D6CBE2D012E7A12209322CF5'
-const data = { ic_num: '48948feafe879-eferfe-234233-afeafeafew' }
- 
+const data = { ic_num: '48948feafe879-eferfe-234233-afeafeafew' } 
 ```
 
 **2、加密**
