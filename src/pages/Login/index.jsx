@@ -11,6 +11,9 @@ import { withRouter, connect } from 'umi'
 
 const Login1 = (props) => {
     const { history, loginState } = props;
+    // const validateForm = ()=>{
+
+    // }
 
     return (
         <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot">
@@ -20,7 +23,9 @@ const Login1 = (props) => {
                         required: true,
                         message: '请填写用户名！'
                     }
-                ]} key={"fi_un"}><Input placeholder="用户名" key="userName" size="large" prefix={<UserOutlined />} /></Form.Item>
+                ]} key={"fi_un"}>
+                    <Input placeholder="用户名" key="userName" size="large" prefix={<UserOutlined />} />
+                </Form.Item>
                 <Form.Item name="password" rules={[
                     {
                         required: true,
