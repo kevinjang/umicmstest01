@@ -35,7 +35,7 @@ const debounce = (fn, editing) => {
 const setCookie = (key, value) => {
     const timestamp = Date.now();
     const expiresDatetime = timestamp + 1000 * 60 * 60; // 一小时后过期
-    const cookieItem = window.atob({
+    const cookieItem = encrypt({
         username: value,
         expiresDatetime
     })
@@ -72,8 +72,8 @@ const encrypt = (value) => {
         return null;
     }
 }
-const decrypt = (value)=>{
-    try {        
+const decrypt = (value) => {
+    try {
         const _encryption = new AESEncryption();
         return _encryption.encryption(value, encryptKey)
     } catch (error) {
@@ -84,4 +84,4 @@ const decrypt = (value)=>{
     }
 }
 
-export { getNumberForInput, debounce, getCookie, setCookie, clearCookie, encrypt, }
+export { getNumberForInput, debounce, getCookie, setCookie, clearCookie, encrypt, decrypt }

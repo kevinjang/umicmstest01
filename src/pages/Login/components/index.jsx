@@ -1,6 +1,7 @@
 import LoginContext from './LoginContext'
 import LoginTab from './LoginTab'
 import { Form, Tabs } from 'antd'
+import {useEffect} from 'react'
 const { TabPane } = Tabs
 const Login = props => {
     console.log('Login props:', props)
@@ -13,6 +14,10 @@ const Login = props => {
             TabChildren.push(<TabPane key={"tp_m"} {...child.props}>{child.props.children}</TabPane>)
         }
     })
+    useEffect(()=>{
+        console.log("ref:", {...props})
+    })
+
     return (
         <Form {...props}>
             <Tabs centered>

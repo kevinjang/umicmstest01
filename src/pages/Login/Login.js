@@ -6,6 +6,7 @@ import { validateUserInfo } from '../../utils/request'
 import { connect, withRouter } from 'umi'
 import { Alert } from 'antd'
 import styles from './Login.css'
+import {setCookie} from '../../utils/utils'
 // import validatorRules from '../../models/validatorRules'
 
 class Login1 extends React.Component {

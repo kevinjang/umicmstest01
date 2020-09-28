@@ -3,6 +3,8 @@ import { Tabs, Form, Input, Button, notification } from 'antd'
 import LoginForm from './components'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { checkBackEndRunning } from '../../utils/request'
+import { setCookie } from '../../utils/utils'
+import React, { useEffect } from 'react'
 import styles from './index.less'
 // NOTE: deleted import { useEffect } from 'react'
 const { Tab } = LoginForm
@@ -10,13 +12,15 @@ const { Tab } = LoginForm
 import { withRouter, connect } from 'umi'
 
 const Login1 = (props) => {
+    const formRef = React.createRef();
+    var form = null;
     const { history, loginState } = props;
-    // const validateForm = ()=>{
-
-    // }
-
+    useEffect(()=>{
+        form = formRef.current;
+        console.log('login form:', form)
+    })
     return (
-        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot">
+        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot" ref={formRef}>
             <Tab tab="账号密码登录" key="passwordLogin">
                 <Form.Item name="username" rules={[
                     {
@@ -42,7 +46,6 @@ const Login1 = (props) => {
                         htmlType="submit"
                         type="primary"
                         onClick={() => {
-                            // history.push('/mainframe')
                             const promiseRet = checkBackEndRunning();
                             const { dispatch } = props;
                             if (dispatch) {
@@ -50,7 +53,6 @@ const Login1 = (props) => {
                                     type: 'login/login'
                                 })
                             }
-                            // console.log('process:', process)
                             promiseRet.then(data => {
                                 const running = data.data.running;
                                 if (!!running) {
