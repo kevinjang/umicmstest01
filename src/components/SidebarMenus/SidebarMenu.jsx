@@ -9,15 +9,10 @@ import * as Icon from '@ant-design/icons'
 
 
 const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
-     menuMode, menuCollapsed, collapsible,
-     className, ...restProps }) => {
-    // const { menus, theme, menuMode, menuCollapsed } = props;
+    menuMode, menuCollapsed, collapsible,
+    className, ...restProps }) => {
     const [activeSubMenuId, setActiveSubMenuId] = useState()
     const [collapsed, setCollapsed] = useState(false)
-    // const currentPath = location.pathname;
-    // console.log('currentPath:', currentPath.split('/'));
-    // const subMenuItem = 
-    // console.log('IconX:', IconX)
 
     const getActiveSubmenu = () => {
         if (!activeSubMenu) {
@@ -27,7 +22,7 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
 
     return (
         <Sider collapsed={collapsed} theme={theme} collapsible={collapsible} onCollapse={
-            ()=>{
+            () => {
                 setCollapsed(!collapsed)
             }
         }
@@ -40,7 +35,7 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                 key={item.id}
                                 title={
                                     <span>{
-                                        React.createElement(Icon[`${item.icon}Outlined`], {})
+                                        item.icon ? React.createElement(Icon[`${item.icon}Outlined`], {}) : null
                                     }<span>{item.title}</span></span>
                                 }>
                                 {
@@ -49,11 +44,11 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                             <MenuItem
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
                                                 {
-                                                    React.createElement(
+                                                    cItem.icon ? React.createElement(
                                                         Icon[`${cItem.icon}Outlined`], {
 
                                                     }
-                                                    )
+                                                    ) : null
                                                 }
                                                 <span>
                                                     <Link
@@ -72,14 +67,12 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                         }
                         else
                             return <MenuItem key={item.id}>
-                                {/* <Icon type={item.icon}></Icon> */}
-                                {/* <IconX name={cItem.icon} /> */}
                                 {
-                                    React.createElement(
+                                    cItem.icon ? React.createElement(
                                         Icon[`${cItem.icon}Outlined`], {
 
                                     }
-                                    )
+                                    ) : null
                                 }
                                 <span>
                                     <Link style={{ color: 'white' }} to={cItem.urlPath} key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}

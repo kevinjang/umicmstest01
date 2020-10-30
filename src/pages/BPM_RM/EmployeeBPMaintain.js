@@ -137,7 +137,8 @@ class EmployeeBPMaintain extends React.Component {
       }
     ];
 
-    this.form = this.props.form;
+    this.form = null;
+    this.formRef = React.createRef();
 
     // console.log('my form:', this.form);
 
@@ -149,6 +150,7 @@ class EmployeeBPMaintain extends React.Component {
       });
 
     this.options.unshift(<Option value="-" key="-" >请选择</Option>);
+
 
     // this.myRef = React.createRef();
   }
@@ -266,7 +268,7 @@ class EmployeeBPMaintain extends React.Component {
     // }, 200);
 
     // this.myRef.current = this;
-
+    this.form = this.formRef.current;
     this.loadData();
   }
 
@@ -280,11 +282,11 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   getQueryConditions = () => {
-    console.log('this.props.form:', this.props.form);
-    const { fields } = this.props.form;
-    console.log(`fields['ebm_filter_combo']:`, fields['ebm_filter_combo'])
-    var ebm_filterKeyWord = fields['ebm_filter_combo'].value;
-    var ebm_filter_text = fields['ebm_filter_text'].value;
+    // console.log('this.props.form:', this.props.form);
+    const { getFieldValue } = this.form;
+    console.log(`fields['ebm_filter_combo']:`, getFieldValue('ebm_filter_combo'))
+    var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');//fields['ebm_filter_combo'].value;
+    var ebm_filter_text = getFieldValue('ebm_filter_text');//fields['ebm_filter_text'].value;
     const condition = ebm_filterKeyWord === 'none' ? null : {
       name: ebm_filterKeyWord,
       value: ebm_filter_text
@@ -353,14 +355,12 @@ class EmployeeBPMaintain extends React.Component {
         <Layout style={{ width: '100%' }}>
           <Form onFieldsChange={(changedFields, allFields)=>{
             
-          }}>
+          }} ref={this.formRef}>
             <Form.Item>
               <Table
                 columns={this.columns}
                 bordered
-                // style={{backgroundColor: 'orangered'}}
-                size={"default"}
-                // footer={tableFooter}
+                size={"small"}
                 dataSource={this.state.dataSource}
                 pagination={this.pagination}
                 rowSelection={rowSelection}

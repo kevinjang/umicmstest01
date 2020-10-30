@@ -11,6 +11,7 @@ import { CopyrightCircleOutlined, ChromeFilled } from '@ant-design/icons'
 import moment from 'moment'
 import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 import KBreadcrumbs from '@/components/Breadcrumbs/'
+import config from '../../config/config'
 
 class KLayout extends React.Component {
     constructor(props) {
@@ -44,6 +45,8 @@ class KLayout extends React.Component {
     }
 
     componentDidMount() {
+        const { routes } = config
+        console.log('config:', routes)
         this.setState({
             breadcrumbs: this.props.breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'Chrome' }]
         })

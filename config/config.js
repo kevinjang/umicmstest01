@@ -15,7 +15,7 @@ export default {
         },
         {
             path: '/mainframe', component: '@/pages/MainFrame',
-            wrappers:['@/pages/user/UrlPathGuard'],
+            wrappers: ['@/pages/user/UrlPathGuard'],
             routes: [
                 { path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard' },
                 { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain' },
@@ -29,7 +29,7 @@ export default {
         },
         {
             path: '/404', component: '@/pages/404'
-        },{
+        }, {
             path: '/*'
         }
     ]
