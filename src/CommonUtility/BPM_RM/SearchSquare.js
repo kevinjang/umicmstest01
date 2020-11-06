@@ -6,7 +6,11 @@ const { Header } = Layout;
 
 
 const SearchSquare = (props) => {
-    const { selectOptions, loadData } = props
+    const { loadData, columns } = props
+
+    const selectOptions = !!columns && Array.isArray(columns) ? columns.map((item, index)=>{
+    return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
+    }) : null;
     const formRef = React.createRef();
     const getConditions = () => {
         if (formRef && formRef.current) {

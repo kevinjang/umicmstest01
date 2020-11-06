@@ -15,6 +15,8 @@ import { getByPage, insert, update, deleteItem, deleteItems } from '../../utils/
 
 import ModalFooter from '../../CommonUtility/ModalUtils/ModalFooter'
 
+import { FileOutlined, DeleteOutlined } from '@ant-design/icons'
+
 class EmployeeBPMaintain extends React.Component {
   constructor(props) {
     super(props);
@@ -39,7 +41,7 @@ class EmployeeBPMaintain extends React.Component {
       total: 0,
       current: 0,
       showSizeChanger: true,
-      showQuickJumper:true,
+      showQuickJumper: true,
       onChange: (page, pageSize) => {
         // console.log('pagination - page:', page);
         console.log(pageSize)
@@ -63,8 +65,8 @@ class EmployeeBPMaintain extends React.Component {
           this.loadData()
         })
       },
-      showTotal: function(total, range){
-        return `11共计${total}条数据，当前显示${range.toString().replace(',','~')}`
+      showTotal: function (total, range) {
+        return `11共计${total}条数据，当前显示${range.toString().replace(',', '~')}`
       }
     }
 
@@ -72,12 +74,14 @@ class EmployeeBPMaintain extends React.Component {
       {
         key: 'RowNum',
         dataIndex: 'RowNum',
-        title: '序号'
+        title: '序号',
+        width: '50px'
       },
       {
         key: 'BPNo',
         dataIndex: 'BPNo',
-        title: 'BP号'
+        title: 'BP号',
+        width: '100px'
       },
       {
         key: 'EmployeeName',
@@ -88,20 +92,21 @@ class EmployeeBPMaintain extends React.Component {
       {
         key: 'PriDept',
         dataIndex: 'PriDept',
-        title: '一级部门'
+        title: '一级部门',
+        width: '200px'
       },
       {
         key: 'SecDept',
         dataIndex: 'SecDept',
         title: '二级部门',
-        // width: '100px',
+        width: '200px',
         ellipsis: true
       },
       {
         key: 'BankAccount',
         dataIndex: 'BankAccount',
         title: '银行账号',
-        width: '100px'
+        width: '200px'
       },
       {
         key: 'BankName',
@@ -126,11 +131,11 @@ class EmployeeBPMaintain extends React.Component {
         render: (text, record) => {
           // console.log('render-this', this)
           return <div>
-            <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <Icon type='file'></Icon></a>
-            <Popconfirm title='确定删除吗？' onConfirm={() => this.handleDeleteRecord(record)}>
+            <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <FileOutlined /></a>
+            <Popconfirm title='确定删除吗？' okText="确定" cancelText="取消" onConfirm={() => this.handleDeleteRecord(record)}>
               <a href='javascript:;'>
-                <Icon type='delete'>
-                </Icon></a>
+                <DeleteOutlined />
+              </a>
             </Popconfirm>
           </div>
         }
@@ -140,8 +145,6 @@ class EmployeeBPMaintain extends React.Component {
     this.form = null;
     this.formRef = React.createRef();
 
-    // console.log('my form:', this.form);
-
     this.options = this.columns.filter(item => (item.key !== 'RowNum' && item.title !== '操作'))
       .map(item => {
         return <Option value={item.key} key={item.key} >
@@ -150,9 +153,6 @@ class EmployeeBPMaintain extends React.Component {
       });
 
     this.options.unshift(<Option value="-" key="-" >请选择</Option>);
-
-
-    // this.myRef = React.createRef();
   }
 
   handleSearch = (e) => {
@@ -261,13 +261,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   componentDidMount() {
-    // setTimeout(() => {
-    //   this.setState({
-    //     spinning: false
-    //   })
-    // }, 200);
-
-    // this.myRef.current = this;
     this.form = this.formRef.current;
     this.loadData();
   }
@@ -276,22 +269,31 @@ class EmployeeBPMaintain extends React.Component {
     const { activeKey, selfID } = this.props;
     if (activeKey !== selfID) return false;
 
-    const condition = this.getQueryConditions();
+    // const condition = this.getQueryConditions();
 
-    getByPage(this.state.pagi_pageSize, this.state.pagi_current, condition, this.callbackAfterQuery);
+    getByPage(this.state.pagi_pageSize, this.state.pagi_current, null, this.callbackAfterQuery);
   }
 
   getQueryConditions = () => {
-    // console.log('this.props.form:', this.props.form);
-    const { getFieldValue } = this.form;
-    console.log(`fields['ebm_filter_combo']:`, getFieldValue('ebm_filter_combo'))
-    var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');//fields['ebm_filter_combo'].value;
-    var ebm_filter_text = getFieldValue('ebm_filter_text');//fields['ebm_filter_text'].value;
-    const condition = ebm_filterKeyWord === 'none' ? null : {
-      name: ebm_filterKeyWord,
-      value: ebm_filter_text
-    }
+    // const { getFieldValue } = this.form;
+    // console.log(`fields['ebm_filter_combo']:`, getFieldValue('ebm_filter_combo'))
+    // var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');//fields['ebm_filter_combo'].value;
+    // var ebm_filter_text = getFieldValue('ebm_filter_text');//fields['ebm_filter_text'].value;
+    // const condition = ebm_filterKeyWord === 'none' ? null : {
+    //   name: ebm_filterKeyWord,
+    //   value: ebm_filter_text
+    // }
+    var condition = null;
+    try {
+      const { dispatch } = this.props
+      if(dispatch){
+        dispatch({
+          type: ''
+        })
+      }
+    } catch (error) {
 
+    }
     return condition;
   }
 
@@ -333,6 +335,7 @@ class EmployeeBPMaintain extends React.Component {
       <div>
         <SearchSquare
           form={this.form}
+          columns={this.columns}
           items={
             [{
               name: 'ebm_add_btn',
@@ -351,10 +354,11 @@ class EmployeeBPMaintain extends React.Component {
                 {this.options}
               </Select>
             }]
-          }></SearchSquare>
+          }
+          loadData={this.loadData}></SearchSquare>
         <Layout style={{ width: '100%' }}>
-          <Form onFieldsChange={(changedFields, allFields)=>{
-            
+          <Form onFieldsChange={(changedFields, allFields) => {
+
           }} ref={this.formRef}>
             <Form.Item>
               <Table
@@ -412,20 +416,4 @@ class EmployeeBPMaintain extends React.Component {
   }
 }
 
-// const EmployeeBPMaintainForm = Form.create({ name: 'employee_bp_maintain' })(EmployeeBPMaintain);
-
-// class EmployeeBPMaintainFormComp extends React.Component {
-//   constructor(props) {
-//     super(props);
-
-//     // console.log('EmployeeBPMaintainFormComp-props:', props);
-//   }
-
-//   render() {
-//     return (
-//       <EmployeeBPMaintainForm {...this.props}></EmployeeBPMaintainForm>
-//     );
-//   }
-// }
-
-export default EmployeeBPMaintain
+export default  EmployeeBPMaintain

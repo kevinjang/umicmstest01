@@ -31,8 +31,6 @@ class EmployeeBPMaintainItemModal extends React.Component {
       Remark,
       ID
     }
-
-    // console.log('EmployeeBPMaintainItemModal-props:', props);
   }
   onBPNoBlur = (e) => {
     let val = (e.target.value || '').toString();
@@ -44,8 +42,6 @@ class EmployeeBPMaintainItemModal extends React.Component {
         form.setFieldsValue({
           'ebmi_modal_bpNo': val
         });
-
-
       })
     }
     else {
@@ -84,7 +80,6 @@ class EmployeeBPMaintainItemModal extends React.Component {
 
 
   render() {
-    // const { getFieldDecorator } = this.props.form;
     const {
       BPNo,
       EmployeeName,
@@ -162,14 +157,14 @@ class EmployeeBPMaintainItemModal extends React.Component {
                   message: 'Email必填！'
                 }
               ]} initialValue={Email}>
-                <Input type="email" />)
+                <Input type="email" />
               </FItem>
             </Col>
           </Row>
           <Row gutter={4}>
             <Col span={24}>
               <FItem label="备注" name="ebmi_modal_email" initialValue={Remark}>
-                <Input />)
+                <Input />
               </FItem>
             </Col>
           </Row>
@@ -178,21 +173,5 @@ class EmployeeBPMaintainItemModal extends React.Component {
     );
   }
 }
-
-// const EmployeeBPMaintainItemModalForm = Form.create('ebmi_modal')(EmployeeBPMaintainItemModal);
-
-// class EmployeeBPMaintainItemModalFormComp extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     console.log('EmployeeBPMaintainItemModalFormComp-props:', this.props);
-//   }
-//   render() {
-//     return (
-//       <EmployeeBPMaintainItemModalForm {...this.props}>
-
-//       </EmployeeBPMaintainItemModalForm>
-//     );
-//   }
-// }
 
 export default EmployeeBPMaintainItemModal
