@@ -16,7 +16,7 @@ class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
 
-        this.dataSource = props.dataSource;
+        // this.dataSource = props.dataSource;
         this.spinning = props.spinning;
 
         this.state = {
@@ -25,7 +25,7 @@ class LeaveAuthorization extends React.Component {
             cancelButtonAvailable: false,
             selectedRowKeys: [],
             editingRecord: null,
-            dataSource: this.dataSource,
+            dataSource: props.dataSource,
             allCount: 0,
             pagi_pageSize: 10,
             pagi_current: 0,

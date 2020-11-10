@@ -17,56 +17,74 @@ import ModalFooter from '../../CommonUtility/ModalUtils/ModalFooter'
 
 import { FileOutlined, DeleteOutlined } from '@ant-design/icons'
 
+import styles from './EmployeeBPMaintain.css'
+import { connect } from 'umi';
+import UserBPMaintain from '../../models/userBPMaintain';
+
 class EmployeeBPMaintain extends React.Component {
   constructor(props) {
     super(props);
 
+    console.log('props:', props.dataSource)
     this.state = {
       modalShow: false,
-      spinning: true,
-      dataSource: [],
+      dataSource: props.dataSource,
       filterCol: '-',
       allCount: 0,
-      pagi_pageSize: 10,
-      pagi_total: 0,
-      pagi_current: 0,
+      pageSize: 10,
+      total: props.total,
+      current: 0,
       operation: '',
       // 编辑项
       editingRecord: null,
-      okBtnAvailable: false
+      okBtnAvailable: false,
+      spinning: props.spinning
     }
+    // this.spinning = props.spinning
+    console.log(' props.pageSize:', props.pageSize)
+
+    this.paginationModel = props.paginationModel
 
     this.pagination = {
-      pageSize: this.state.pagi_pageSize,
-      total: 0,
-      current: 0,
+      pageSize: this.state.pageSize, //this.state.pagi_pageSize,
+      total: this.state.total,
+      current: this.state.current,
       showSizeChanger: true,
       showQuickJumper: true,
-      onChange: (page, pageSize) => {
-        // console.log('pagination - page:', page);
-        console.log(pageSize)
-        this.pagination.current = page;
+      onChange: (current, pageSize) => {
+        // this.pagination.current = page;
+        // this.setState({
+        //   pagi_pageSize: pageSize,
+        //   pagi_current: page
+        // }, () => {
+        //   this.loadData();
+        // })
+
+        // this.updatePagination(page, pageSize)
         this.setState({
-          pagi_pageSize: pageSize,
-          pagi_current: page
-        }, () => {
-          this.loadData();
+          pageSize,
+          current
         })
       },
-      onShowSizeChange: (current, size) => {
-        this.pagination.current = current;
-        console.log('showsizechanger-size:', size)
-        this.pagination.pageSize = size;
-        this.setState({
-          pagi_pageSize: size,
-          pagi_current: current
-        }, () => {
+      onShowSizeChange: (current, pageSize) => {
+        // this.pagination.current = current;
+        // this.pagination.pageSize = size;
+        // this.setState({
+        //   pagi_pageSize: size,
+        //   pagi_current: current
+        // }, () => {
+        //   this.loadData()
+        // })
 
-          this.loadData()
+
+        // this.updatePagination(current, size);
+        this.setState({
+          current,
+          pageSize
         })
       },
       showTotal: function (total, range) {
-        return `11共计${total}条数据，当前显示${range.toString().replace(',', '~')}`
+        return `共计${total}条数据，当前显示${range.toString().replace(',', '~')}`
       }
     }
 
@@ -124,12 +142,9 @@ class EmployeeBPMaintain extends React.Component {
         title: '备注'
       },
       {
-        // key: 'BPNo',
-        // dataIndex: '',
         title: '操作',
         width: '5%',
         render: (text, record) => {
-          // console.log('render-this', this)
           return <div>
             <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <FileOutlined /></a>
             <Popconfirm title='确定删除吗？' okText="确定" cancelText="取消" onConfirm={() => this.handleDeleteRecord(record)}>
@@ -153,6 +168,9 @@ class EmployeeBPMaintain extends React.Component {
       });
 
     this.options.unshift(<Option value="-" key="-" >请选择</Option>);
+
+    this.dispatch = props.dispatch;
+
   }
 
   handleSearch = (e) => {
@@ -161,7 +179,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   handleEditRecord = (e) => {
-    // console.log('edit-e:', e);
     this.setState({
       editingRecord: e,
       modalShow: true,
@@ -190,7 +207,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   handleDeleteRecord = (e) => {
-    console.log('delete-e:', e);
     const { ID } = e;
     deleteItem(ID, this.loadData);
   }
@@ -241,7 +257,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   onFilterSelectChange = (e) => {
-    // console.log('onFilterSelectChange-e', e);
     this.setState({
       filterCol: e
     }, () => {
@@ -250,7 +265,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   onTableRowSelectedChange = (selectedRowKeys) => {
-    // console.log('onTableRowSelectedChange-selectedRowKeys:', selectedRowKeys);
     this.setState({ selectedRowKeys })
   }
 
@@ -262,21 +276,43 @@ class EmployeeBPMaintain extends React.Component {
 
   componentDidMount() {
     this.form = this.formRef.current;
-    this.loadData();
+    this.loadDataTest();
   }
 
   loadData = async () => {
     const { activeKey, selfID } = this.props;
     if (activeKey !== selfID) return false;
 
-    // const condition = this.getQueryConditions();
-
     getByPage(this.state.pagi_pageSize, this.state.pagi_current, null, this.callbackAfterQuery);
+  }
+
+  loadDataTest = async () => {
+    const { dispatch } = this.props
+    if (dispatch) {
+      dispatch({
+        type: 'UserBPMaintainModel/fetchData',
+        payload: {
+          pageSize: this.state.pageSize,
+          current: this.state.current
+        }
+      })
+    }
+  }
+
+  updatePagination = (current, pageSize) => {
+    if (this.dispatch) {
+      this.dispatch({
+        type: 'UserBPMaintainModel/setPagination',
+        payload: {
+          current,
+          pageSize
+        }
+      })
+    }
   }
 
   getQueryConditions = () => {
     // const { getFieldValue } = this.form;
-    // console.log(`fields['ebm_filter_combo']:`, getFieldValue('ebm_filter_combo'))
     // var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');//fields['ebm_filter_combo'].value;
     // var ebm_filter_text = getFieldValue('ebm_filter_text');//fields['ebm_filter_text'].value;
     // const condition = ebm_filterKeyWord === 'none' ? null : {
@@ -286,7 +322,7 @@ class EmployeeBPMaintain extends React.Component {
     var condition = null;
     try {
       const { dispatch } = this.props
-      if(dispatch){
+      if (dispatch) {
         dispatch({
           type: ''
         })
@@ -317,14 +353,9 @@ class EmployeeBPMaintain extends React.Component {
 
       console.log('this.state.pagi_pageSize-after reload:', this.state.pagi_pageSize);
     })
-    // message.info('ok')
   }
 
   render() {
-    const tableFooter = () => {
-      return `共计${this.state.allCount}条数据`
-    }
-
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -334,6 +365,7 @@ class EmployeeBPMaintain extends React.Component {
     return <Spin spinning={this.state.spinning}>
       <div>
         <SearchSquare
+          className={styles.searchSquare}
           form={this.form}
           columns={this.columns}
           items={
@@ -355,7 +387,11 @@ class EmployeeBPMaintain extends React.Component {
               </Select>
             }]
           }
-          loadData={this.loadData}></SearchSquare>
+          dispatch={this.dispatch}
+          modelType={"UserBPMaintainModel"}
+          setSearchConditionType={"UserBPMaintainModel/setCondition"}
+        // loadData={this.loadDataTest}
+        ></SearchSquare>
         <Layout style={{ width: '100%' }}>
           <Form onFieldsChange={(changedFields, allFields) => {
 
@@ -365,6 +401,7 @@ class EmployeeBPMaintain extends React.Component {
                 columns={this.columns}
                 bordered
                 size={"small"}
+                // dataSource={this.state.dataSource}
                 dataSource={this.state.dataSource}
                 pagination={this.pagination}
                 rowSelection={rowSelection}
@@ -416,4 +453,13 @@ class EmployeeBPMaintain extends React.Component {
   }
 }
 
-export default  EmployeeBPMaintain
+export default connect(({ UserBPMaintainModel, loading }) => {
+  console.log('UserBPMaintainModel:', UserBPMaintainModel)
+  return {
+    UserBPMaintainModel,
+    // fetchData: loading.effects["UserBPMaintainModel/fetchData"],
+    dataSource: UserBPMaintainModel.data,
+    total: UserBPMaintainModel.total,
+    spinning: !UserBPMaintainModel.loading
+  }
+})(EmployeeBPMaintain);

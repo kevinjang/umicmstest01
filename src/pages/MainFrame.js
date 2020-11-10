@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Row, Space, Spin, Col } from 'antd'
+import { Layout, Row, Space, Spin, Col, ConfigProvider } from 'antd'
 import { connect } from 'umi'
 import styles from './MainFrame.css'
 import UserInfo from './user/UserInfo'
@@ -12,6 +12,7 @@ import moment from 'moment'
 import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 import KBreadcrumbs from '@/components/Breadcrumbs/'
 import config from '../../config/config'
+import zhCN from 'antd/lib/locale/zh_CN'
 
 class KLayout extends React.Component {
     constructor(props) {
@@ -59,52 +60,56 @@ class KLayout extends React.Component {
             width: '100%', height: 'calc(100vh - 0px)'
             , textAlign: `${this.state.textAlign}`, paddingTop: `${this.state.paddingTop}`
         }}>
-            <Spin spinning={this.state.spinning && !UserContext}
-                size="large" >
-                {UserContext ?
-                    <UserContext.Provider value={MyUserData}>
-                        <Layout style={{ height: '100vh' }}>
-                            <Header style={{ color: 'white' }} className={styles.bannerHeader}>
-                                <ChromeFilled />
-                                <span>导航</span>
-                                <div className={styles.userInfoNode}>
-                                    <div style={{ width: '70%' }}>
-                                        <Row gutter={8} justify="center">
-                                            <Col span={8} className={styles.bannerDock}>
-                                                <GlobalHeaderDropdown />
-                                            </Col>
-                                            <Col span={16} className={styles.bannerDock}>
-                                                <UserInfo />
-                                            </Col>
-                                        </Row>
+            <ConfigProvider locale={
+                zhCN
+            }>
+                <Spin spinning={this.state.spinning && !UserContext}
+                    size="large" >
+                    {UserContext ?
+                        <UserContext.Provider value={MyUserData}>
+                            <Layout style={{ height: '100vh' }}>
+                                <Header style={{ color: 'white' }} className={styles.bannerHeader}>
+                                    <ChromeFilled />
+                                    <span>导航</span>
+                                    <div className={styles.userInfoNode}>
+                                        <div style={{ width: '70%' }}>
+                                            <Row gutter={8} justify="center">
+                                                <Col span={8} className={styles.bannerDock}>
+                                                    <GlobalHeaderDropdown />
+                                                </Col>
+                                                <Col span={16} className={styles.bannerDock}>
+                                                    <UserInfo />
+                                                </Col>
+                                            </Row>
+                                        </div>
                                     </div>
-                                </div>
-                            </Header>
+                                </Header>
 
-                            <Layout className={styles.sidebarLayout}>
-                                <SidebarMenu width={200}
-                                    className={styles.siderbar}
-                                    theme={this.state.theme}
-                                    collapsible={true}
-                                    // menus={this.props.menus.menus}
-                                    menuMode={'inline'}
-                                    menuCollapsed={this.state.collapsed} />
-                                <Layout className={styles.contentLayout}>
-                                    <KBreadcrumbs />
-                                    <Scrollbars>
-                                        <Content className={styles.content} style={{ minHeight: 'calc(100vh - 153px)' }}>
-                                            {this.props.children}
-                                        </Content>
-                                    </Scrollbars>
-                                    <Footer className={styles.footer}>
-                                        <CopyrightCircleOutlined />KSNL {moment().year()}
-                                    </Footer>
+                                <Layout className={styles.sidebarLayout}>
+                                    <SidebarMenu width={200}
+                                        className={styles.siderbar}
+                                        theme={this.state.theme}
+                                        collapsible={true}
+                                        // menus={this.props.menus.menus}
+                                        menuMode={'inline'}
+                                        menuCollapsed={this.state.collapsed} />
+                                    <Layout className={styles.contentLayout}>
+                                        <KBreadcrumbs />
+                                        <Scrollbars>
+                                            <Content className={styles.content} style={{ minHeight: 'calc(100vh - 153px)' }}>
+                                                {this.props.children}
+                                            </Content>
+                                        </Scrollbars>
+                                        <Footer className={styles.footer}>
+                                            <CopyrightCircleOutlined />KSNL {moment().year()}
+                                        </Footer>
+                                    </Layout>
                                 </Layout>
                             </Layout>
-                        </Layout>
-                    </UserContext.Provider>
-                    : ''}
-            </Spin>
+                        </UserContext.Provider>
+                        : ''}
+                </Spin>
+            </ConfigProvider>
         </div>
     }
 }

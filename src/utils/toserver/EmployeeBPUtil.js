@@ -1,4 +1,5 @@
 import axios from 'axios'
+import request from '../realRequest'
 import { message } from 'antd'
 var baseURL = axios.defaults.baseURL = "http://localhost:3000";
 function getByPage(pageSize, startPage, condition, callback) {
@@ -24,13 +25,14 @@ function getByPage(pageSize, startPage, condition, callback) {
         });
         // console.log(results[0]);
 
-        callback({
-            PaginationTotal: parseInt(number) || 0,
-            dataSource: results,
-            allCount: number,
-            pagi_total: number,
-            spinning: false
-        })
+        if (callback)
+            callback({
+                PaginationTotal: parseInt(number) || 0,
+                dataSource: results,
+                allCount: number,
+                pagi_total: number,
+                spinning: false
+            })
         if (selfMessage === 'succeeded') {
             message.success('员工BP号-加载成功')
         }
@@ -57,10 +59,10 @@ function insert(record, callback) {
         },
         responseType: 'json'
     }).then(response => {
-        const {data, message: selfMessage} = response.data;
+        const { data, message: selfMessage } = response.data;
         var results = data.recordsets[0];
         var number = data.recordsets[1][0].count;
-        results = results.map((item, index)=>{})
+        results = results.map((item, index) => { })
         if (response && response.data && response.data.result && response.data.result.message) {
             message.success(response.data.result.message)
         }
