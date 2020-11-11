@@ -102,9 +102,9 @@ const LeaveAuth = {
         'saveDataWithRemoteResponse': (state, { payload }) => {
             const { data, callback } = payload
             callback({
-                PaginationTotal: data.recordsets && data.recordsets[1][0].count,
+                // PaginationTotal: data.recordsets && data.recordsets[1][0].count, // 20201111 文档指导删除
                 allCount: data.recordsets && data.recordsets[1][0].count,
-                pagi_total: 10,
+                // pagi_total: 10,
                 spinning: false,
                 dataSource: data.recordset
             })

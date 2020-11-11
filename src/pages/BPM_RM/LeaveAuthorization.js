@@ -16,9 +16,6 @@ class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
 
-        // this.dataSource = props.dataSource;
-        this.spinning = props.spinning;
-
         this.state = {
             modalShow: false,
             okButtonAvailable: false,
@@ -27,8 +24,8 @@ class LeaveAuthorization extends React.Component {
             editingRecord: null,
             dataSource: props.dataSource,
             allCount: 0,
-            pagi_pageSize: 10,
-            pagi_current: 0,
+            pageSize: 10,
+            current: 0,
             operation: '',
             filterCol: '-',
             notificationModalShow: false
@@ -38,18 +35,19 @@ class LeaveAuthorization extends React.Component {
             pageSize: 10,
             total: 0,
             current: 1,
-            locale: {
-                'page': '页'
-            },
+            showQuickJumper: true,
             onChange: (page, pageSize) => {
                 this.pagination.current = page;
                 this.pagination.pageSize = pageSize;
                 this.setState({
-                    pagi_pageSize: pageSize,
-                    pagi_current: page
+                    pageSize,
+                    current: page
                 }, () => {
                     this.loadData();
                 })
+            },
+            showTotal: function (total, range) {
+                return `共计${total}条数据，当前显示${range.toString().replace(',', '~')}`
             }
         }
 
@@ -132,6 +130,17 @@ class LeaveAuthorization extends React.Component {
             }
         ];
 
+        this.tableOptions = {
+            pagination: this.pagination,
+            columns: this.columns,
+            // dataSource: this.state.dataSource,
+            style: {
+                paddingBottom: '10px', 
+                width: '99%'
+            },
+            bordered: true
+        }
+
         this.options = [
             <Option value='none'>请选择过滤字段</Option>,
             <Option value='PersonalID'>离职人员ID</Option>,
@@ -158,7 +167,7 @@ class LeaveAuthorization extends React.Component {
                 selectedRowKeys: []
             })
             const ids = [item.ID];
-            console.log('ids:', ids)
+            // console.log('ids:', ids)
             //NOTE: old version with the situation of  deleteItem(item.ID, this.loadData);
             const { dispatch } = this.props
             if (dispatch) {
@@ -182,27 +191,27 @@ class LeaveAuthorization extends React.Component {
 
     loadData = async () => {
         const name = this.formSearch.getFieldValue("condition_select");
-
+        const value = this.formSearch.getFieldValue("condition_input");
         const condition = name === "none" ? null : {
-            name: this.formSearch.getFieldValue("condition_select"),
-            value: this.formSearch.getFieldValue("condition_input")
+            name,
+            value
         }
 
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
-            spinning: true,
+            // spinning: true,
             selectedRowKeys: []
         })
         // 此处调用查询函数
         const { dispatch } = this.props
+        const { pageSize, current } = this.state
         if (dispatch) {
-            // console.log('typeof dispatch:', typeof dispatch)
             dispatch({
                 type: 'LeaveAuthModel/fetchData',
                 payload: {
-                    pageSize: this.state.pagi_pageSize,
-                    startPage: this.state.pagi_current,
+                    pageSize,
+                    startPage: current,
                     condition,
                     callback: this.queryCallBack
                 }
@@ -212,19 +221,16 @@ class LeaveAuthorization extends React.Component {
 
     queryCallBack = (e) => {
         const {
-            PaginationTotal,
             dataSource,
             allCount,
-            pagi_total,
             spinning
         } = e;
 
-        this.pagination.total = PaginationTotal;
+        this.pagination.total = allCount;
 
         this.setState({
             dataSource,
             allCount,
-            pagi_total,
             spinning
         })
     }
@@ -236,10 +242,11 @@ class LeaveAuthorization extends React.Component {
 
 
         const { selectedRowKeys } = this.state;
-        if (!selectedRowKeys || selectedRowKeys.length === 0) {
-            message.info('请选择要删除的记录！');
-            return;
-        }
+        // if (!selectedRowKeys || selectedRowKeys.length === 0) {
+        //     message.info('请选择要删除的记录！');
+        //     return;
+        // }
+        // 重复代码，20201111删除
 
         var toDeleteItemsIDs = [];
         var toDeleteItems = this.state.dataSource.filter(it => selectedRowKeys.includes(it.key));
@@ -258,17 +265,12 @@ class LeaveAuthorization extends React.Component {
                 }
             })
         }
-
     }
 
     handleSearch = (e) => {
         // 放大镜-加载按钮
         e.preventDefault();
         this.loadData();
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault();
     }
 
     updateOkButtonAvailable = (value) => {
@@ -284,6 +286,7 @@ class LeaveAuthorization extends React.Component {
     }
 
     getUpdateColumns = (record) => {
+        // 获取需要更新的列信息
         const { remoteCurrentEditingRecord: editingRecord } = this.props
         const updateColumns = [];
         if (editingRecord["PersonalID"] !== record["PersonalID"]) {
@@ -383,11 +386,14 @@ class LeaveAuthorization extends React.Component {
         });
     };
 
-    onTableRowSelectedChange = (selectedRowKeys) => {
-        this.setState({ selectedRowKeys })
+    handleTableRowSelectedChange = (selectedRowKeys) => {
+
+        this.setState({ selectedRowKeys }, () => {
+            console.info(this.state.selectedRowKeys)
+        })
     }
 
-    onFilterSelectChange = (e) => {
+    handleFilterSelectChange = (e) => {
         this.setState({
             filterCol: e
         });
@@ -441,15 +447,21 @@ class LeaveAuthorization extends React.Component {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
-            onChange: this.onTableRowSelectedChange
+            onChange: this.handleTableRowSelectedChange,
+            onClick: (e) => {
+
+            },
+            onSelectInvert: (selectedRowKeys) => {
+
+            }
         }
 
         const tableFooter = () => {
-            return `共计${this.state.allCount}条数据`
+            return '';//`共计${this.state.allCount}条数据`
         }
 
         return (
-            <Spin tip="加载中..." spinning={this.spinning}>
+            <Spin tip="加载中..." spinning={this.props.spinning}>
                 <div className={styles.mainContainer}>
                     <Layout>
                         <div style={{ width: '100%', float: 'right' }}>
@@ -487,9 +499,9 @@ class LeaveAuthorization extends React.Component {
                                         }}>搜索</Button>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type='danger' onClick={()=>{
+                                        <Button type='danger' onClick={() => {
                                             // const {selectedRowKeys} = this.state
-                                            if(selectedRowKeys.length === 0){
+                                            if (selectedRowKeys.length === 0) {
                                                 message.info("请选择要删除的数据");
                                                 return false;
                                             }
@@ -506,37 +518,44 @@ class LeaveAuthorization extends React.Component {
                         </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
-                                    <Form.Item style={{ width: '100%' }}>
-                                        <Table columns={this.columns}
-                                            dataSource={this.state.dataSource}
-                                            bordered style={{ paddingBottom: '10px', width: '99%' }}
-                                            rowSelection={rowSelection}
+                                <Form.Item style={{ width: '100%' }}>
+                                    <Table 
+                                        // columns={this.columns}
+                                        dataSource={this.state.dataSource}
+                                        // style={{ paddingBottom: '10px', width: '99%' }}
+                                        // pagination={this.pagination}
 
-                                            onRow={
-                                                (record, index) => {
-                                                    return {
-                                                        onDoubleClick: (event) => {
-                                                            this.setState({
-                                                                operation: 'update'
-                                                            })
-                                                            this.handleEditRecord(record);
-                                                        }
+                                        // bordered 
+                                        rowSelection={rowSelection}
+                                        onRow={
+                                            (record, index) => {
+                                                return {
+                                                    onDoubleClick: (event) => {
+                                                        this.setState({
+                                                            operation: 'update'
+                                                        })
+                                                        this.handleEditRecord(record);
+                                                    },
+                                                    onClick: (event) => {
+                                                        // const { ID } = record;
+
+                                                        // const { selectedRowKeys } = this.state;
+
+                                                        // rowSelection.onChange.call(this, [...selectedRowKeys, ID.toString()]);
                                                     }
                                                 }
                                             }
-                                            pagination={this.pagination}
-                                            footer={tableFooter}
-                                        >
+                                        }
+                                        footer={tableFooter}
+                                        {...this.tableOptions}
+                                    >
 
-                                        </Table>
-                                    </Form.Item>
-                                {/* <Row gutter={12}>
-                                </Row> */}
+                                    </Table>
+                                </Form.Item>
                             </Form>
                         </Layout>
                     </Layout>
                     <Modal visible={this.state.modalShow}
-                        // style={{width: '50%'}}
                         width="48%"
                         style={{
                             minWidth: '920px'
@@ -545,7 +564,6 @@ class LeaveAuthorization extends React.Component {
                         operation={this.state.operation}
                         okButtonProps={{ disabled: !this.state.okButtonAvailable }}
                         centered={true}
-
                         onOk={this.handleOkModal}
                         onCancel={this.handleCancelModal}
                         okText="保存"
@@ -567,12 +585,12 @@ class LeaveAuthorization extends React.Component {
                         okText="确认删除"
                         cancelText="不删除"
                         visible={this.state.notificationModalShow}
-                        onOk={this.handleDeleteSelectedRecords} 
+                        onOk={this.handleDeleteSelectedRecords}
                         onCancel={() => {
                             this.setState({
                                 notificationModalShow: false
                             })
-                         }}>
+                        }}>
                         确认删除选中数据吗？
                     </Modal>
                 </div >
