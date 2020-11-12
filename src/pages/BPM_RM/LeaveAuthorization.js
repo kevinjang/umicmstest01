@@ -135,7 +135,7 @@ class LeaveAuthorization extends React.Component {
             columns: this.columns,
             // dataSource: this.state.dataSource,
             style: {
-                paddingBottom: '10px', 
+                paddingBottom: '10px',
                 width: '99%'
             },
             bordered: true
@@ -351,17 +351,13 @@ class LeaveAuthorization extends React.Component {
             }
         }
         else if (operation === 'update') {
-            const { RowNum } = record;
-            const item = this.state.dataSource.filter(it => it.key === RowNum)[0] || null;
-            // const toUpdateRecord = {
-            //     ...record
-            // }
+            const { ID } = record;
+            const item = this.state.dataSource.filter(it => it.key === ID)[0] || null;
 
             // NOTE: 需要更新的列及新值
             const ucls = this.getUpdateColumns(record)
 
             if (!!item) {
-                // toUpdateRecord["ID"] = item.ID;
                 record["ID"] = item.ID;
             }
             methodName = "updateItem";
@@ -371,12 +367,11 @@ class LeaveAuthorization extends React.Component {
                     payload: {
                         record,
                         updates: ucls,
-                        where: ` ID = '${record["key"]}'`,
+                        where: ` ID = '${record["ID"]}'`,
                         callback: this.loadData
                     }
                 })
             }
-            // update(toUpdateRecord, this.loadData)
         }
     };
 
@@ -407,15 +402,15 @@ class LeaveAuthorization extends React.Component {
             modalShow: true
         })
 
-        const { dispatch } = this.props
-        if (dispatch) {
-            dispatch({
-                type: "LeaveAuthModel/setCurrentEditingRecord",
-                payload: {
-                    record
-                }
-            })
-        }
+        // const { dispatch } = this.props
+        // if (dispatch) {
+        //     dispatch({
+        //         type: "LeaveAuthModel/setCurrentEditingRecord",
+        //         payload: {
+        //             record
+        //         }
+        //     })
+        // }
     }
 
     handleAddRecord = () => {
@@ -444,12 +439,12 @@ class LeaveAuthorization extends React.Component {
     }
 
     render() {
-        const { selectedRowKeys } = this.state;
+        // const { selectedRowKeys } = this.state;
         const rowSelection = {
-            selectedRowKeys,
+            selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleTableRowSelectedChange,
             onClick: (e) => {
-
+                console.log(this.state.selectedRowKeys)
             },
             onSelectInvert: (selectedRowKeys) => {
 
@@ -519,13 +514,8 @@ class LeaveAuthorization extends React.Component {
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
                                 <Form.Item style={{ width: '100%' }}>
-                                    <Table 
-                                        // columns={this.columns}
+                                    <Table
                                         dataSource={this.state.dataSource}
-                                        // style={{ paddingBottom: '10px', width: '99%' }}
-                                        // pagination={this.pagination}
-
-                                        // bordered 
                                         rowSelection={rowSelection}
                                         onRow={
                                             (record, index) => {
@@ -537,11 +527,21 @@ class LeaveAuthorization extends React.Component {
                                                         this.handleEditRecord(record);
                                                     },
                                                     onClick: (event) => {
-                                                        // const { ID } = record;
+                                                        const { selectedRowKeys } = this.state;
+                                                        const {ID} = record
 
-                                                        // const { selectedRowKeys } = this.state;
+                                                        var newSelectedKeys = [];
 
-                                                        // rowSelection.onChange.call(this, [...selectedRowKeys, ID.toString()]);
+                                                        if(selectedRowKeys.indexOf(ID.toString()>0)){
+                                                            newSelectedKeys = selectedRowKeys.filter(id=>id !== ID);                                                            
+                                                        }
+                                                        else{
+                                                            newSelectedKeys = [...selectedRowKeys, ID.toString()]
+                                                        }
+
+                                                        this.setState({
+                                                            selectedRowKeys: newSelectedKeys
+                                                        })
                                                     }
                                                 }
                                             }

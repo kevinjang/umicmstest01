@@ -17,7 +17,8 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianCname,
             valid = "valid",
             RowNum,
-            key
+            key,
+            ID
         } = editingRecord;
         this.formRef = React.createRef();
         this.form = null;
@@ -36,7 +37,8 @@ class LeaveAuthorizationModal extends React.Component {
             valid,
             okAvailable: true,
             RowNum,
-            key
+            key,
+            ID
         }
     };
 
@@ -211,10 +213,6 @@ class LeaveAuthorizationModal extends React.Component {
         this.form.validateFields()
             .then(values => {
                 console.log('validateFields values:', values)
-
-                
-
-
                 this.updateOkButtonAvailable(true);
                 this.updateCancelButtonAvailable(true);
             })
@@ -239,7 +237,8 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianCname,
             valid,
             RowNum,
-            key
+            key,
+            ID
         } = this.state;
 
         this.updateParentState({
@@ -251,7 +250,8 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianCname,
             valid,
             RowNum,
-            key
+            key,
+            ID
         })
     }
     // ----------------------------------------------all blurs ---------------------------------------------------------------
