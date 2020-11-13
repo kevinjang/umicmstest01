@@ -1,40 +1,45 @@
 import { Form, Button, Select, Input, Space, message } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import {useEffect} from 'react'
 
 const SearchSquare = (props) => {
-    const { dispatch, columns, setSearchConditionType, modelType, ...restProps } = props
+    const { dispatch, columns, modelType, buttons, searchMethod, loadCallback, ...restProps } = props
 
     const selectOptions = !!columns && Array.isArray(columns) ? columns.map((item, index) => {
         return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
     }) : null;
     const formRef = React.createRef();
     const getCondition = () => {
-        if(!dispatch){
+        if (!dispatch) {
             message.warn("dispatch为null，通过connect获取数据模型，然后走起~~");
-            return ;
+            return;
         }
 
         const condition = dispatch({
-            type: modelType+ '/getCondition'
+            type: modelType + '/getCondition'
         })
 
         message.warn(condition)
     }
 
     const loadData = async () => {
+        if (!modelType) {
+            message.info('modelType为空，无法加载数据');
+            return false;
+        }
         if (dispatch) {
             dispatch({
                 type: modelType + '/fetchData',
-                payload: {}
+                payload: {
+                    callback: loadCallback || null
+                }
             })
+        } else {
+            message.info('dispatch为空，无法加载数据');
         }
     }
 
     const setCondition = () => {
-        const condition = composeConditions(); //getConditions();
-        console.log('condition:', condition)
-        // const { dispatch } = props
+        const condition = composeConditions();
         if (condition && dispatch) {
             dispatch({
                 type: modelType + '/setCondition',
@@ -56,10 +61,6 @@ const SearchSquare = (props) => {
         }
     }
 
-    // useEffect(()=>{
-    //     getCondition();
-    // })
-
     return (
         <div {...restProps}>
             <Form style={{ display: 'flex' }} ref={formRef}>
@@ -78,6 +79,13 @@ const SearchSquare = (props) => {
                     <Form.Item name="search_btn">
                         <Button type="primary" onClick={loadData} icon={<SearchOutlined />}>搜索</Button>
                     </Form.Item>
+                    {buttons ?
+                        buttons.map((button) => {
+                            return <Form.Item name={button.name + "_btn_fitem"} key={button.name + "_btn_fitem"}>
+                                {button}
+                            </Form.Item>
+                        }) : null
+                    }
                 </Space>
             </Form>
         </div>
