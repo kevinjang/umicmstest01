@@ -20,10 +20,11 @@ const LeaveAuth = {
         currentEditingRecord: null
     },
     effects: {
-        *fetchData({ payload }, { call, put, select }) {
-            const { pageSize, startPage, condition, callback } = payload
+        *fetchData({ payload }, { call, put, select, take }) {
+            const { pageSize, startPage, callback } = payload
 
-            // console.log('startpage:', startPage)
+            const condition = yield select(state => state.LeaveAuthModel.searchCondition);
+
             const response = yield queryLeaveAuthData({
                 pageSize,
                 startPage,
@@ -51,7 +52,7 @@ const LeaveAuth = {
                 messageComp.error("请求离职授权查询数据失败：" + message);
             }
         },
-        *insertItem({ payload }, { call, put, select }) {
+        *insertItem({ payload }) {
             const { record, callback } = payload;
             // console.log('insert record & callback:', record, callback)
             try {
@@ -68,7 +69,7 @@ const LeaveAuth = {
                 messageComp.error("插入数据失败：" + err.message)
             }
         },
-        *updateItem({ payload }, { call, put }) {
+        *updateItem({ payload }) {
             const { record, updates, where, callback } = payload;
             try {
                 const response = yield updateLeaveAuthDataItem({ updates, where })
@@ -84,7 +85,7 @@ const LeaveAuth = {
                 messageComp.error("更新数据失败：" + err.message)
             }
         },
-        *deleteItems({ payload }, { call, put }) {
+        *deleteItems({ payload }) {
             const { ids, callback } = payload;
             try {
                 const response = yield deleteLeaveAuthDataItems(ids);
@@ -101,20 +102,23 @@ const LeaveAuth = {
     reducers: {
         'saveDataWithRemoteResponse': (state, { payload }) => {
             const { data, callback } = payload
-            callback({
-                // PaginationTotal: data.recordsets && data.recordsets[1][0].count, // 20201111 文档指导删除
-                allCount: data.recordsets && data.recordsets[1][0].count,
-                // pagi_total: 10,
-                spinning: false,
-                dataSource: data.recordset
-            })
+            console.log('data.recordset:', data.recordset)
+            if (callback)
+                callback({
+                    // PaginationTotal: data.recordsets && data.recordsets[1][0].count, // 20201111 文档指导删除
+                    allCount: data.recordsets && data.recordsets[1][0].count,
+                    // pagi_total: 10,
+                    spinning: false,
+                    dataSource: data.recordset
+                })
             return {
                 ...state,
                 allCount: data.recordset && data.recordset.length,
                 dataSource: data.recordset
             }
         },
-        'setSearchCondition': (state, { payload }) => {
+        'setCondition': (state, { payload }) => {
+            console.log('setSearchCondition payload:', payload)
             return {
                 ...state,
                 searchCondition: {
