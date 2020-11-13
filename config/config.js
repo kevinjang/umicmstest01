@@ -6,6 +6,9 @@ export default {
     dva: {
         hmr: true
     },
+    alias:{
+        'ksnlSearchSquare': '@/CommonUtility/BPM_RM/SearchSquare'
+    },
     // dynamicImport: {
     //     loading: '@/components/PageLoading/index'
     // },
