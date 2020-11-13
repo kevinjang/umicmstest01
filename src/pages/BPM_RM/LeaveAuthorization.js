@@ -12,6 +12,8 @@ const { Option } = Select;
 import styles from './LeaveAuthorization.css';
 import { connect } from 'umi';
 
+import SearchSquare from 'ksnlSearchSquare'
+
 class LeaveAuthorization extends React.Component {
     constructor(props) {
         super(props);
@@ -30,6 +32,8 @@ class LeaveAuthorization extends React.Component {
             filterCol: '-',
             notificationModalShow: false
         };
+
+        this.dispatch = props.dispatch;
 
         this.pagination = {
             pageSize: 10,
@@ -190,13 +194,6 @@ class LeaveAuthorization extends React.Component {
     }
 
     loadData = async () => {
-        const name = this.formSearch.getFieldValue("condition_select");
-        const value = this.formSearch.getFieldValue("condition_input");
-        const condition = name === "none" ? null : {
-            name,
-            value
-        }
-
         const { activeKey, selfID } = this.props;
         if (activeKey !== selfID) return false;
         this.setState({
@@ -212,7 +209,7 @@ class LeaveAuthorization extends React.Component {
                 payload: {
                     pageSize,
                     startPage: current,
-                    condition,
+                    condition: null,
                     callback: this.queryCallBack
                 }
             })
@@ -240,13 +237,7 @@ class LeaveAuthorization extends React.Component {
             notificationModalShow: false
         })
 
-
         const { selectedRowKeys } = this.state;
-        // if (!selectedRowKeys || selectedRowKeys.length === 0) {
-        //     message.info('请选择要删除的记录！');
-        //     return;
-        // }
-        // 重复代码，20201111删除
 
         var toDeleteItemsIDs = [];
         var toDeleteItems = this.state.dataSource.filter(it => selectedRowKeys.includes(it.key));
@@ -265,12 +256,6 @@ class LeaveAuthorization extends React.Component {
                 }
             })
         }
-    }
-
-    handleSearch = (e) => {
-        // 放大镜-加载按钮
-        e.preventDefault();
-        this.loadData();
     }
 
     updateOkButtonAvailable = (value) => {
@@ -439,7 +424,6 @@ class LeaveAuthorization extends React.Component {
     }
 
     render() {
-        // const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleTableRowSelectedChange,
@@ -460,8 +444,23 @@ class LeaveAuthorization extends React.Component {
                 <div className={styles.mainContainer}>
                     <Layout>
                         <div style={{ width: '100%', float: 'right' }}>
-                            <Form ref={this.formRefSearch}>
+                        <SearchSquare dispatch={this.dispatch} modelType={"LeaveAuthModel"} 
+                        columns={this.columns} loadCallback={this.queryCallBack}
+                        buttons={
+                            [
+                                <Button key="batch_del_btn" type="danger" icon={
+                                    <DeleteOutlined />
+                                } onClick={
+                                    this.handleDeleteSelectedRecords
+                                } >删除所选</Button>,
+                                <Button key="add_btn" type="primary" icon={
+                                    <FileAddOutlined />
+                                } onClick={this.handleAddRecord}>新增</Button>
+                            ]
+                        } />
+                            {/* <Form ref={this.formRefSearch}>
                                 <Space style={{ float: 'right', marginRight: '50px' }}>
+                                    
                                     <Form.Item name="condition_select">
                                         <Select style={{ width: '150px' }} >
                                             {this.options}
@@ -509,7 +508,7 @@ class LeaveAuthorization extends React.Component {
                                         <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
                                     </Form.Item>
                                 </Space>
-                            </Form>
+                            </Form> */}
                         </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
@@ -598,10 +597,13 @@ class LeaveAuthorization extends React.Component {
     }
 }
 
-export default connect(({ LeaveAuthModel }) => ({
-    LeaveAuthModel,
-    dataSource: LeaveAuthModel.dataSource,
-    spinning: LeaveAuthModel.spinning,
-    searchCondition: LeaveAuthModel.searchCondition,
-    remoteCurrentEditingRecord: LeaveAuthModel.currentEditingRecord
-}))(LeaveAuthorization)
+export default connect(({ LeaveAuthModel }) => {
+    console.log('LeaveAuthModel dataSource:', LeaveAuthModel.dataSource)
+    return {
+        LeaveAuthModel,
+        dataSource: LeaveAuthModel.dataSource,
+        spinning: LeaveAuthModel.spinning,
+        searchCondition: LeaveAuthModel.searchCondition,
+        remoteCurrentEditingRecord: LeaveAuthModel.currentEditingRecord
+    }
+})(LeaveAuthorization)
