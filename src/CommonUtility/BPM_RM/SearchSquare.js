@@ -71,9 +71,10 @@ const SearchSquare = (props) => {
                         </Select>
                     </Form.Item>
                     <Form.Item name="key_text">
-                        <Input style={{ width: '120px' }}
+                        <Input allowClear={true} style={{ width: '120px' }}
                             onPressEnter={setCondition}
                             onBlur={setCondition}
+                            
                         />
                     </Form.Item>
                     <Form.Item name="search_btn">

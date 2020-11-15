@@ -312,13 +312,6 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   getQueryConditions = () => {
-    // const { getFieldValue } = this.form;
-    // var ebm_filterKeyWord = getFieldValue('ebm_filter_combo');//fields['ebm_filter_combo'].value;
-    // var ebm_filter_text = getFieldValue('ebm_filter_text');//fields['ebm_filter_text'].value;
-    // const condition = ebm_filterKeyWord === 'none' ? null : {
-    //   name: ebm_filterKeyWord,
-    //   value: ebm_filter_text
-    // }
     var condition = null;
     try {
       const { dispatch } = this.props
