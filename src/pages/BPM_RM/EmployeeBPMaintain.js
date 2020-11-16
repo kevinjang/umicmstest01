@@ -1,31 +1,28 @@
 import React from 'react'
 import {
-  Spin, Row, Col, Layout, Table, Form, Button, Input,
+  Spin, Layout, Table, Form, Button, Input,
   Icon, Select, Popconfirm, message, Modal
 } from 'antd'
 
 import EmployeeBPMaintainItemModalFormComp from './EmployeeBPMaintainItemModal'
 
-import SearchSquare from '../../CommonUtility/BPM_RM/SearchSquare'
+import SearchSquare from 'ksnlSearchSquare';//'../../CommonUtility/BPM_RM/SearchSquare'
 
-const { Header } = Layout;
 const { Option } = Select;
 
 import { getByPage, insert, update, deleteItem, deleteItems } from '../../utils/toserver/EmployeeBPUtil'
 
 import ModalFooter from '../../CommonUtility/ModalUtils/ModalFooter'
 
-import { FileOutlined, DeleteOutlined } from '@ant-design/icons'
+import { FileOutlined, DeleteOutlined, FileAddOutlined } from '@ant-design/icons'
 
 import styles from './EmployeeBPMaintain.css'
 import { connect } from 'umi';
-import UserBPMaintain from '../../models/userBPMaintain';
 
 class EmployeeBPMaintain extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('props:', props.dataSource)
     this.state = {
       modalShow: false,
       dataSource: props.dataSource,
@@ -33,55 +30,30 @@ class EmployeeBPMaintain extends React.Component {
       allCount: 0,
       pageSize: 10,
       total: props.total,
-      current: 0,
+      current: 1,
       operation: '',
       // 编辑项
       editingRecord: null,
       okBtnAvailable: false,
-      spinning: props.spinning
+      notificationModalShow: false,
+      spinning: false
     }
-    // this.spinning = props.spinning
-    console.log(' props.pageSize:', props.pageSize)
 
-    this.paginationModel = props.paginationModel
+    this.dispatch = props.dispatch;
 
     this.pagination = {
-      pageSize: this.state.pageSize, //this.state.pagi_pageSize,
-      total: this.state.total,
-      current: this.state.current,
+      pageSize: 10,
+      total: 0,
+      current: 1,
       showSizeChanger: true,
       showQuickJumper: true,
       onChange: (current, pageSize) => {
-        // this.pagination.current = page;
-        // this.setState({
-        //   pagi_pageSize: pageSize,
-        //   pagi_current: page
-        // }, () => {
-        //   this.loadData();
-        // })
-
-        // this.updatePagination(page, pageSize)
+        this.pagination.current = current;
+        this.pagination.pageSize = pageSize;
         this.setState({
           pageSize,
           current
-        })
-      },
-      onShowSizeChange: (current, pageSize) => {
-        // this.pagination.current = current;
-        // this.pagination.pageSize = size;
-        // this.setState({
-        //   pagi_pageSize: size,
-        //   pagi_current: current
-        // }, () => {
-        //   this.loadData()
-        // })
-
-
-        // this.updatePagination(current, size);
-        this.setState({
-          current,
-          pageSize
-        })
+        }, () => this.loadData());
       },
       showTotal: function (total, range) {
         return `共计${total}条数据，当前显示${range.toString().replace(',', '~')}`
@@ -91,59 +63,69 @@ class EmployeeBPMaintain extends React.Component {
     this.columns = [
       {
         key: 'RowNum',
-        dataIndex: 'RowNum',
+        dataIndex: 'key',
         title: '序号',
-        width: '50px'
+        width: '50px',
+        asQuery: false
       },
       {
         key: 'BPNo',
         dataIndex: 'BPNo',
         title: 'BP号',
-        width: '100px'
+        width: '100px',
+        asQuery: true
       },
       {
         key: 'EmployeeName',
         dataIndex: 'EmployeeName',
         title: '姓名',
-        width: '100px'
+        width: '100px',
+        asQuery: true
       },
       {
         key: 'PriDept',
         dataIndex: 'PriDept',
         title: '一级部门',
-        width: '200px'
+        width: '200px',
+        asQuery: true
       },
       {
         key: 'SecDept',
         dataIndex: 'SecDept',
         title: '二级部门',
         width: '200px',
-        ellipsis: true
+        ellipsis: true,
+        asQuery: true
       },
       {
         key: 'BankAccount',
         dataIndex: 'BankAccount',
         title: '银行账号',
-        width: '200px'
+        width: '200px',
+        asQuery: true
       },
       {
         key: 'BankName',
         dataIndex: 'BankName',
-        title: '开户行'
+        title: '开户行',
+        asQuery: true
       },
       {
         key: 'Email',
         dataIndex: 'Email',
-        title: 'Email'
+        title: 'Email',
+        asQuery: true
       },
       {
         key: 'Remark',
         dataIndex: 'Remark',
-        title: '备注'
+        title: '备注',
+        asQuery: true
       },
       {
         title: '操作',
         width: '5%',
+        asQuery: false,
         render: (text, record) => {
           return <div>
             <a href='javascript:;' onClick={() => this.handleEditRecord(record)}> <FileOutlined /></a>
@@ -157,25 +139,61 @@ class EmployeeBPMaintain extends React.Component {
       }
     ];
 
+    this.tableOptions = {
+      pagination: this.pagination,
+      columns: this.columns,
+      style: {
+        paddingBottom: '10px',
+        width: '99%'
+      },
+      bordered: true
+    }
+
     this.form = null;
     this.formRef = React.createRef();
-
-    this.options = this.columns.filter(item => (item.key !== 'RowNum' && item.title !== '操作'))
-      .map(item => {
-        return <Option value={item.key} key={item.key} >
-          {item.title}
-        </Option>
-      });
-
-    this.options.unshift(<Option value="-" key="-" >请选择</Option>);
-
-    this.dispatch = props.dispatch;
-
   }
 
-  handleSearch = (e) => {
-    e.preventDefault();
+  componentDidMount() {
+    this.form = this.formRef.current;
     this.loadData();
+  }
+
+  loadData = async () => {
+    const { activeKey, selfID } = this.props;
+    if (activeKey !== selfID) return false;
+
+    this.setState({
+      spinning: true,
+      selectedRowKeys: []
+    })
+
+    const { pageSize, current } = this.state;
+    if (this.dispatch) {
+      this.dispatch({
+        type: 'UserBPMaintainModel/fetchData',
+        payload: {
+          pageSize,
+          current,
+          condition: null,
+          callback: this.callbackAfterQuery
+        }
+      })
+    }
+  }
+
+  callbackAfterQuery = (e) => {
+    const {
+      dataSource,
+      allCount
+    } = e;
+
+    this.pagination.total = allCount;
+
+    this.setState({
+      dataSource,
+      allCount,
+      spinning: false
+    })
   }
 
   handleEditRecord = (e) => {
@@ -212,7 +230,12 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   handleDeleteSelectedRecords = () => {
+    this.setState({
+      notificationModalShow: false
+    })
+
     const { selectedRowKeys } = this.state;
+
     if (!selectedRowKeys || selectedRowKeys.length === 0) {
       message.info('请选择要删除的记录！');
       return;
@@ -256,95 +279,13 @@ class EmployeeBPMaintain extends React.Component {
 
   }
 
-  onFilterSelectChange = (e) => {
-    this.setState({
-      filterCol: e
-    }, () => {
-      console.log(this.state.filterCol)
-    })
-  }
-
   onTableRowSelectedChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys })
   }
 
-  onModalOK = () => {
+  handleModalOK = () => {
     this.setState({
       modalShow: false
-    })
-  }
-
-  componentDidMount() {
-    this.form = this.formRef.current;
-    this.loadDataTest();
-  }
-
-  loadData = async () => {
-    const { activeKey, selfID } = this.props;
-    if (activeKey !== selfID) return false;
-
-    getByPage(this.state.pagi_pageSize, this.state.pagi_current, null, this.callbackAfterQuery);
-  }
-
-  loadDataTest = async () => {
-    const { dispatch } = this.props
-    if (dispatch) {
-      dispatch({
-        type: 'UserBPMaintainModel/fetchData',
-        payload: {
-          pageSize: this.state.pageSize,
-          current: this.state.current
-        }
-      })
-    }
-  }
-
-  updatePagination = (current, pageSize) => {
-    if (this.dispatch) {
-      this.dispatch({
-        type: 'UserBPMaintainModel/setPagination',
-        payload: {
-          current,
-          pageSize
-        }
-      })
-    }
-  }
-
-  getQueryConditions = () => {
-    var condition = null;
-    try {
-      const { dispatch } = this.props
-      if (dispatch) {
-        dispatch({
-          type: ''
-        })
-      }
-    } catch (error) {
-
-    }
-    return condition;
-  }
-
-  callbackAfterQuery = (e) => {
-    const {
-      PaginationTotal,
-      dataSource,
-      allCount,
-      pagi_total,
-      spinning } = e;
-
-    this.pagination.total = PaginationTotal;
-
-    this.setState({
-      dataSource,
-      allCount,
-      pagi_total,
-      spinning
-    }, () => {
-      console.log('this.pagination.pageSize:', this.pagination.pageSize);
-
-      console.log('this.state.pagi_pageSize-after reload:', this.state.pagi_pageSize);
     })
   }
 
@@ -355,76 +296,71 @@ class EmployeeBPMaintain extends React.Component {
       onChange: this.onTableRowSelectedChange
     }
 
-    return <Spin spinning={this.state.spinning}>
-      <div>
-        <SearchSquare
-          className={styles.searchSquare}
-          form={this.form}
-          columns={this.columns}
-          items={
-            [{
-              name: 'ebm_add_btn',
-              obj: <Button type="primary" style={{ marginBottom: '0px' }} onClick={this.handleAddRecord}>添加</Button>
-            }, {
-              name: 'ebm_delete_btn',
-              obj: <Button type='danger' style={{ marginBottom: '0px' }} onClick={this.handleDeleteSelectedRecords}>删除所选</Button>
-            }, {
-              name: 'ebm_filter_text',
-              obj: <Input onPressEnter={this.handleSearch} style={{ marginBottom: '0px' }}
-                suffix={<a href="" onClick={this.handleSearch}
-                ><Icon type='search' /></a>} ></Input>
-            }, {
-              name: 'ebm_filter_combo',
-              obj: <Select style={{ minWidth: '100px', marginBottom: '0px' }} onChange={this.onFilterSelectChange}>
-                {this.options}
-              </Select>
-            }]
-          }
-          dispatch={this.dispatch}
-          modelType={"UserBPMaintainModel"}
-          setSearchConditionType={"UserBPMaintainModel/setCondition"}
-        // loadData={this.loadDataTest}
-        ></SearchSquare>
-        <Layout style={{ width: '100%' }}>
-          <Form onFieldsChange={(changedFields, allFields) => {
-
-          }} ref={this.formRef}>
-            <Form.Item>
-              <Table
-                columns={this.columns}
-                bordered
-                size={"small"}
-                // dataSource={this.state.dataSource}
-                dataSource={this.state.dataSource}
-                pagination={this.pagination}
-                rowSelection={rowSelection}
-                onRow={
-                  (record, index) => {
-                    return {
-                      onDoubleClick: (event) => {
-                        this.setState({
-                          modalShow: true,
-                          editingRecord: record,
-                          operation: 'update'
-                        })
+    return <Spin tip="加载中..." spinning={this.state.spinning}>
+      <div className={styles.mainContainer}>
+        <Layout>
+          <div style={{ width: '100%', float: 'right' }}>
+            <SearchSquare
+              dispatch={this.dispatch}
+              modelType={"UserBPMaintainModel"}
+              // className={styles.searchSquare}
+              loadCallback={this.callbackAfterQuery}
+              columns={this.columns}
+              buttons={
+                [
+                  <Button key="batch_del_btn" type="danger" icon={
+                    <DeleteOutlined />
+                  } onClick={
+                    this.handleDeleteSelectedRecords
+                  } >删除所选</Button>,
+                  <Button key="add_btn" type="primary" icon={
+                    <FileAddOutlined />
+                  } onClick={this.handleAddRecord}>新增</Button>
+                ]
+              }
+            ></SearchSquare>
+          </div>
+          <Layout style={{ width: '100%' }}>
+            <Form style={{ padding: '0 5px' }} ref={this.formRef}>
+              <Form.Item style={{ width: '100%' }}>
+                <Table
+                  size={"small"}
+                  dataSource={this.state.dataSource}
+                  rowSelection={rowSelection}
+                  onRow={
+                    (record, index) => {
+                      return {
+                        onDoubleClick: (event) => {
+                          this.setState({
+                            modalShow: true,
+                            editingRecord: record,
+                            operation: 'update'
+                          })
+                        }
                       }
                     }
                   }
-                }>
+                  footer={()=>("")}
+                  {...this.tableOptions}>
 
-              </Table>
-            </Form.Item>
-          </Form>
+                </Table>
+              </Form.Item>
+            </Form>
+          </Layout>
         </Layout>
       </div>
       <Modal
-        // footer={<ModalFooter></ModalFooter>}
         visible={this.state.modalShow}
         title="编辑项目"
         maskClosable={false}
+        width="48%"
+        style={{
+            minWidth: '920px'
+        }}
+        forceRender={true}
         destroyOnClose={true}
         centered={true}
-        onOk={this.onModalOK}
+        onOk={this.handleModalOK}
         okButtonProps={{
           disabled: !this.state.okBtnAvailable
         }}
@@ -450,9 +386,6 @@ export default connect(({ UserBPMaintainModel, loading }) => {
   console.log('UserBPMaintainModel:', UserBPMaintainModel)
   return {
     UserBPMaintainModel,
-    // fetchData: loading.effects["UserBPMaintainModel/fetchData"],
     dataSource: UserBPMaintainModel.data,
-    total: UserBPMaintainModel.total,
-    spinning: !UserBPMaintainModel.loading
   }
 })(EmployeeBPMaintain);
