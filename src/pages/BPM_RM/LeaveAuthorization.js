@@ -1,11 +1,9 @@
 import React from 'react'
 import {
-    Form, Input, Button, Select, Layout, Row,
-    Col, Icon, Modal, Table, Popconfirm, message, Pagination, Spin, Space
+    Form, Button, Select, Layout, Modal, Table, Popconfirm, Spin, message
 } from 'antd'
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
-import { FileOutlined, DeleteOutlined, SearchOutlined, FileAddOutlined } from '@ant-design/icons'
-const { Header } = Layout;
+import { FileOutlined, DeleteOutlined, FileAddOutlined } from '@ant-design/icons'
 
 const { Option } = Select;
 
@@ -20,17 +18,18 @@ class LeaveAuthorization extends React.Component {
 
         this.state = {
             modalShow: false,
-            okButtonAvailable: false,
+            dataSource: props.dataSource,
             cancelButtonAvailable: false,
             selectedRowKeys: [],
             editingRecord: null,
-            dataSource: props.dataSource,
             allCount: 0,
             pageSize: 10,
             current: 0,
             operation: '',
             filterCol: '-',
-            notificationModalShow: false
+            notificationModalShow: false,
+            okButtonAvailable: false,
+            spinning: false
         };
 
         this.dispatch = props.dispatch;
@@ -40,12 +39,12 @@ class LeaveAuthorization extends React.Component {
             total: 0,
             current: 1,
             showQuickJumper: true,
-            onChange: (page, pageSize) => {
-                this.pagination.current = page;
+            onChange: (current, pageSize) => {
+                this.pagination.current = current;
                 this.pagination.pageSize = pageSize;
                 this.setState({
                     pageSize,
-                    current: page
+                    current
                 }, () => {
                     this.loadData();
                 })
@@ -62,7 +61,8 @@ class LeaveAuthorization extends React.Component {
                 width: '3.3%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: false
             },
             {
                 title: '离职人员ID',
@@ -70,7 +70,8 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '离职人员AD',
@@ -78,7 +79,8 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '离职人员姓名',
@@ -86,7 +88,8 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '授权人员ID',
@@ -94,7 +97,8 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '授权人员AD',
@@ -102,7 +106,8 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '授权人员姓名',
@@ -110,12 +115,14 @@ class LeaveAuthorization extends React.Component {
                 width: '15%',
                 visible: true,
                 editable: false,
-                align: 'center'
+                align: 'center',
+                asQuery: true
             },
             {
                 title: '操作',
                 width: '5%',
                 align: 'center',
+                asQuery: false,
                 render: (text, record) => {
                     return <div>
                         <a href='javascript:;' onClick={() => this.handleEditRecord(record)}>
@@ -137,7 +144,6 @@ class LeaveAuthorization extends React.Component {
         this.tableOptions = {
             pagination: this.pagination,
             columns: this.columns,
-            // dataSource: this.state.dataSource,
             style: {
                 paddingBottom: '10px',
                 width: '99%'
@@ -145,22 +151,95 @@ class LeaveAuthorization extends React.Component {
             bordered: true
         }
 
-        this.options = [
-            <Option value='none'>请选择过滤字段</Option>,
-            <Option value='PersonalID'>离职人员ID</Option>,
-            <Option value='userAD'>离职人员AD</Option>,
-            <Option value='UserCname'>离职人员姓名</Option>,
-            <Option value='quanxianPersonalID'>授权人员ID</Option>,
-            <Option value='quanxianAD'>授权人员AD</Option>,
-            <Option value='quanxianCname'>授权人员姓名</Option>
-        ]
-
         this.formRef = React.createRef();
-
-        this.formRefSearch = React.createRef();
-
         this.form = null;
-        this.formSearch = null;
+    }
+
+    componentDidMount() {
+        this.form = this.formRef.current;
+        this.loadData();
+    }
+
+    loadData = async () => {
+        const { activeKey, selfID } = this.props;
+        if (activeKey !== selfID) return false;
+
+        this.setState({
+            spinning: true,
+            selectedRowKeys: []
+        })
+
+        // 此处调用查询函数
+        const { pageSize, current } = this.state
+        if (this.dispatch) {
+            this.dispatch({
+                type: 'LeaveAuthModel/fetchData',
+                payload: {
+                    pageSize,
+                    startPage: current,
+                    condition: null,
+                    callback: this.queryCallBack
+                }
+            })
+        }
+    }
+
+    queryCallBack = (e) => {
+        const {
+            dataSource,
+            allCount,
+            // spinning
+        } = e;
+
+        this.pagination.total = allCount;
+
+        this.setState({
+            dataSource,
+            allCount,
+            spinning: false
+        })
+    }
+
+    handleDeleteSelectedRecords = () => {
+        this.setState({
+            notificationModalShow: false
+        })
+
+        const { selectedRowKeys } = this.state;
+
+        if (!selectedRowKeys || selectedRowKeys.length === 0) {
+            message.info('请选择要删除的记录！');
+            return;
+        }
+
+        var toDeleteItemsIDs = [];
+        var toDeleteItems = this.state.dataSource.filter(it => selectedRowKeys.includes(it.key));
+
+        toDeleteItems.forEach(it => {
+            toDeleteItemsIDs.push(it.ID);
+        })
+
+        Modal.confirm({
+            centered: true,
+            content: '确认删除已选中的行吗？',
+            cancelText: '放弃删除',
+            okText: '确认删除',
+            onCancel:()=>{
+                return ;
+            },
+            onOk:()=>{
+                const { dispatch } = this.props
+                if (dispatch) {
+                    dispatch({
+                        type: 'LeaveAuthModel/deleteItems',
+                        payload: {
+                            ids: toDeleteItemsIDs,
+                            callback: this.loadData
+                        }
+                    })
+                }
+            }
+        });        
     }
 
     handleDeleteRecord = (record) => {
@@ -184,77 +263,6 @@ class LeaveAuthorization extends React.Component {
                 })
             }
 
-        }
-    }
-
-    componentDidMount() {
-        this.form = this.formRef.current;
-        this.formSearch = this.formRefSearch.current;
-        this.loadData();
-    }
-
-    loadData = async () => {
-        const { activeKey, selfID } = this.props;
-        if (activeKey !== selfID) return false;
-        this.setState({
-            // spinning: true,
-            selectedRowKeys: []
-        })
-        // 此处调用查询函数
-        const { dispatch } = this.props
-        const { pageSize, current } = this.state
-        if (dispatch) {
-            dispatch({
-                type: 'LeaveAuthModel/fetchData',
-                payload: {
-                    pageSize,
-                    startPage: current,
-                    condition: null,
-                    callback: this.queryCallBack
-                }
-            })
-        }
-    }
-
-    queryCallBack = (e) => {
-        const {
-            dataSource,
-            allCount,
-            spinning
-        } = e;
-
-        this.pagination.total = allCount;
-
-        this.setState({
-            dataSource,
-            allCount,
-            spinning
-        })
-    }
-
-    handleDeleteSelectedRecords = () => {
-        this.setState({
-            notificationModalShow: false
-        })
-
-        const { selectedRowKeys } = this.state;
-
-        var toDeleteItemsIDs = [];
-        var toDeleteItems = this.state.dataSource.filter(it => selectedRowKeys.includes(it.key));
-
-        toDeleteItems.forEach(it => {
-            toDeleteItemsIDs.push(it.ID);
-        })
-
-        const { dispatch } = this.props
-        if (dispatch) {
-            dispatch({
-                type: 'LeaveAuthModel/deleteItems',
-                payload: {
-                    ids: toDeleteItemsIDs,
-                    callback: this.loadData
-                }
-            })
         }
     }
 
@@ -379,7 +387,6 @@ class LeaveAuthorization extends React.Component {
         });
     }
 
-
     handleEditRecord = (record) => {
         this.setState({
             operation: 'update',
@@ -440,80 +447,30 @@ class LeaveAuthorization extends React.Component {
         }
 
         return (
-            <Spin tip="加载中..." spinning={this.props.spinning}>
+            <Spin tip="加载中..." spinning={this.state.spinning}>
                 <div className={styles.mainContainer}>
                     <Layout>
                         <div style={{ width: '100%', float: 'right' }}>
-                        <SearchSquare dispatch={this.dispatch} modelType={"LeaveAuthModel"} 
-                        columns={this.columns} loadCallback={this.queryCallBack}
-                        buttons={
-                            [
-                                <Button key="batch_del_btn" type="danger" icon={
-                                    <DeleteOutlined />
-                                } onClick={
-                                    this.handleDeleteSelectedRecords
-                                } >删除所选</Button>,
-                                <Button key="add_btn" type="primary" icon={
-                                    <FileAddOutlined />
-                                } onClick={this.handleAddRecord}>新增</Button>
-                            ]
-                        } />
-                            {/* <Form ref={this.formRefSearch}>
-                                <Space style={{ float: 'right', marginRight: '50px' }}>
-                                    
-                                    <Form.Item name="condition_select">
-                                        <Select style={{ width: '150px' }} >
-                                            {this.options}
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item name="condition_input">
-                                        <Input style={{ width: '120px' }}
-                                            onPressEnter={() => {
-                                                // NOTE: dispatch更新searchCondition去
-                                                // setCondition();
-                                            }}
-                                            onBlur={() => {
-                                                // NOTE: dispatch更新searchCondition去
-                                                // setCondition();
-                                            }}
-                                            onChange={() => {
-                                                // NOTE: dispatch更新searchCondition去
-                                                // setCondition();
-                                            }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button icon={<SearchOutlined />} onClick={() => {
-                                            this.pagination.current = 1;
-                                            this.setState({
-                                                pagi_current: 1
-                                            }, () => {
-                                                this.loadData();
-                                            })
-                                        }}>搜索</Button>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button type='danger' onClick={() => {
-                                            // const {selectedRowKeys} = this.state
-                                            if (selectedRowKeys.length === 0) {
-                                                message.info("请选择要删除的数据");
-                                                return false;
-                                            }
-                                            this.setState({
-                                                notificationModalShow: true
-                                            })
-                                        }} icon={<DeleteOutlined />}>删除所选</Button>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button type="primary" onClick={this.handleAddRecord} icon={<FileAddOutlined />}>添加</Button>
-                                    </Form.Item>
-                                </Space>
-                            </Form> */}
+                            <SearchSquare dispatch={this.dispatch} modelType={"LeaveAuthModel"}
+                                columns={this.columns} loadCallback={this.queryCallBack}
+                                buttons={
+                                    [
+                                        <Button key="batch_del_btn" type="danger" icon={
+                                            <DeleteOutlined />
+                                        } onClick={
+                                            this.handleDeleteSelectedRecords
+                                        } >删除所选</Button>,
+                                        <Button key="add_btn" type="primary" icon={
+                                            <FileAddOutlined />
+                                        } onClick={this.handleAddRecord}>新增</Button>
+                                    ]
+                                } />
                         </div>
                         <Layout>
                             <Form style={{ padding: '0 5px' }} ref={this.formRef}>
                                 <Form.Item style={{ width: '100%' }}>
                                     <Table
+                                        size="small"
                                         dataSource={this.state.dataSource}
                                         rowSelection={rowSelection}
                                         onRow={
@@ -527,14 +484,14 @@ class LeaveAuthorization extends React.Component {
                                                     },
                                                     onClick: (event) => {
                                                         const { selectedRowKeys } = this.state;
-                                                        const {ID} = record
+                                                        const { ID } = record
 
                                                         var newSelectedKeys = [];
 
-                                                        if(selectedRowKeys.indexOf(ID.toString()>0)){
-                                                            newSelectedKeys = selectedRowKeys.filter(id=>id !== ID);                                                            
+                                                        if (selectedRowKeys.indexOf(ID.toString() > 0)) {
+                                                            newSelectedKeys = selectedRowKeys.filter(id => id !== ID);
                                                         }
-                                                        else{
+                                                        else {
                                                             newSelectedKeys = [...selectedRowKeys, ID.toString()]
                                                         }
 
@@ -580,7 +537,7 @@ class LeaveAuthorization extends React.Component {
 
                         </LeaveAuthorizationModal>
                     </Modal>
-                    <Modal title="确认提示"
+                    {/* <Modal title="确认提示"
                         okText="确认删除"
                         cancelText="不删除"
                         visible={this.state.notificationModalShow}
@@ -591,18 +548,17 @@ class LeaveAuthorization extends React.Component {
                             })
                         }}>
                         确认删除选中数据吗？
-                    </Modal>
+                    </Modal> */}
                 </div >
             </Spin >);
     }
 }
 
 export default connect(({ LeaveAuthModel }) => {
-    console.log('LeaveAuthModel dataSource:', LeaveAuthModel.dataSource)
+    // console.log('LeaveAuthModel dataSource:', LeaveAuthModel.dataSource)
     return {
         LeaveAuthModel,
         dataSource: LeaveAuthModel.dataSource,
-        spinning: LeaveAuthModel.spinning,
         searchCondition: LeaveAuthModel.searchCondition,
         remoteCurrentEditingRecord: LeaveAuthModel.currentEditingRecord
     }
