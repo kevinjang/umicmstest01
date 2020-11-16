@@ -102,13 +102,9 @@ const LeaveAuth = {
     reducers: {
         'saveDataWithRemoteResponse': (state, { payload }) => {
             const { data, callback } = payload
-            console.log('data.recordset:', data.recordset)
             if (callback)
                 callback({
-                    // PaginationTotal: data.recordsets && data.recordsets[1][0].count, // 20201111 文档指导删除
                     allCount: data.recordsets && data.recordsets[1][0].count,
-                    // pagi_total: 10,
-                    spinning: false,
                     dataSource: data.recordset
                 })
             return {
@@ -118,7 +114,12 @@ const LeaveAuth = {
             }
         },
         'setCondition': (state, { payload }) => {
-            console.log('setSearchCondition payload:', payload)
+            console.log('setCondition payload:', payload)
+            if(!payload || (payload && !payload.name)){
+                return {
+                    ...state
+                }
+            }
             return {
                 ...state,
                 searchCondition: {
