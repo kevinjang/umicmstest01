@@ -4,23 +4,16 @@ import { SearchOutlined } from '@ant-design/icons'
 const SearchSquare = (props) => {
     const { dispatch, columns, modelType, buttons, searchMethod, loadCallback, ...restProps } = props
 
-    const selectOptions = !!columns && Array.isArray(columns) ? columns.map((item, index) => {
+    const selectOptions = !!columns && Array.isArray(columns) ? columns.filter(col=>!!col.asQuery).map((item, index) => {
         return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
     }) : null;
-    const formRef = React.createRef();
-    const getCondition = () => {
-        if (!dispatch) {
-            message.warn("dispatch为null，通过connect获取数据模型，然后走起~~");
-            return;
-        }
-
-        const condition = dispatch({
-            type: modelType + '/getCondition'
-        })
-
-        message.warn(condition)
+    if(selectOptions){
+        selectOptions.unshift(
+            <Select.Option value={""} key="-"></Select.Option>
+        )
     }
-
+    const formRef = React.createRef();
+    
     const loadData = async () => {
         if (!modelType) {
             message.info('modelType为空，无法加载数据');
@@ -63,7 +56,7 @@ const SearchSquare = (props) => {
 
     return (
         <div {...restProps}>
-            <Form style={{ display: 'flex' }} ref={formRef}>
+            <Form style={{ display: 'flex', float: 'right', marginRight:'20px' }} ref={formRef}>
                 <Space>
                     <Form.Item name="key_name">
                         <Select style={{ width: '150px' }} onChange={setCondition}>
@@ -92,5 +85,7 @@ const SearchSquare = (props) => {
         </div>
     );
 }
+
+SearchSquare.dispatch = null
 
 export default SearchSquare;
