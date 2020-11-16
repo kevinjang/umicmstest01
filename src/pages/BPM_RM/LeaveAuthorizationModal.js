@@ -52,7 +52,7 @@ class LeaveAuthorizationModal extends React.Component {
                 radioInvalid: !this.state.radioChecked
             })
             // if (this.operation === "update")
-                this.setoffValidation();
+            this.setoffValidation();
         })
     }
 
@@ -268,7 +268,7 @@ class LeaveAuthorizationModal extends React.Component {
         } = this.state;
 
         return (<div>
-            <Form name={FORM_NAME} ref={this.formRef} labelAlign="left" style={{width: '100%'}}>
+            <Form name={FORM_NAME} ref={this.formRef} labelAlign="left" style={{ width: '100%' }}>
                 <Row gutter={24}>
                     <Col span={12}>
                         <Form.Item label='离职人员ID' name="leave_id" rules={[
@@ -279,7 +279,7 @@ class LeaveAuthorizationModal extends React.Component {
                         ]} labelCol={{
                             span: '6'
                         }}
-                        initialValue={PersonalID || ''}>
+                            initialValue={PersonalID || ''}>
                             <Input onBlur={this.PersonalIDOnBlur} />
                         </Form.Item>
                     </Col>
