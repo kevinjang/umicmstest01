@@ -18,6 +18,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
       Remark,
       ID
     } = this.props.editingRecord;
+    this.formRef = React.createRef();
+    this.form = null;
 
     this.state = {
       editingRecord: this.props.editingRecord,
@@ -32,14 +34,18 @@ class EmployeeBPMaintainItemModal extends React.Component {
       ID
     }
   }
+
+  componentDidMount() {
+    this.form = this.formRef.current;
+  }
+
   onBPNoBlur = (e) => {
     let val = (e.target.value || '').toString();
-    const { form } = this.props;
     if (val !== '') {
       this.setState({
         BPNo: val
       }, () => {
-        form.setFieldsValue({
+        this.form.setFieldsValue({
           'ebmi_modal_bpNo': val
         });
       })
@@ -51,16 +57,14 @@ class EmployeeBPMaintainItemModal extends React.Component {
 
   onEmployeeNameBlur = (e) => {
     let val = (e.target.value || '').toString();
-    const { form } = this.props;
+    // const { form } = this.props;
     if (val !== '') {
       this.setState({
         EmployeeName: val
       }, () => {
-        form.setFieldsValue({
+        this.form.setFieldsValue({
           'ebmi_modal_EmployeeName': val
         });
-
-
       })
     }
     else {
@@ -69,11 +73,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
   }
 
   setoffValidation = () => {
-    const { form } = this.props;
-    form.validateFields([
-      'ebmi_modal_bpNo',
-      'ebmi_modal_EmployeeName'
-    ], (err, values) => {
+    // const { form } = this.props;
+    this.form.validateFields().then().catch(info=>{
 
     })
   }
@@ -92,10 +93,12 @@ class EmployeeBPMaintainItemModal extends React.Component {
     } = this.state;
     return (
       <div>
-        <Form>
+        <Form ref={this.formRef}>
           <Row gutter={4}>
             <Col span={12}>
-              <FItem label="BP号" name="ebmi_modal_bpNo" rules={[
+              <FItem label="BP号" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_bpNo" rules={[
                 {
                   required: true,
                   message: 'BP号必填！'
@@ -105,7 +108,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
               </FItem>
             </Col>
             <Col span={12}>
-              <FItem label="姓名" name="ebmi_modal_EmployeeName" rules={[
+              <FItem label="姓名" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_EmployeeName" rules={[
                 {
                   required: true,
                   message: '姓名必填！'
@@ -117,19 +122,25 @@ class EmployeeBPMaintainItemModal extends React.Component {
           </Row>
           <Row gutter={4}>
             <Col span={12}>
-              <FItem label="一级部门" name="ebmi_modal_pridept" initialValue={PriDept}>
+              <FItem label="一级部门" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_pridept" initialValue={PriDept}>
                 <Input />
               </FItem>
             </Col>
             <Col span={12}>
-              <FItem label="二级部门" name="ebmi_modal_secdept" initialValue={SecDept}>
+              <FItem label="二级部门" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_secdept" initialValue={SecDept}>
                 <Input />
               </FItem>
             </Col>
           </Row>
           <Row gutter={4}>
             <Col span={12}>
-              <FItem label="银行账号" name="ebmi_modal_BankAccount" rules={[
+              <FItem label="银行账号" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_BankAccount" rules={[
                 {
                   required: true,
                   message: '银行账号必填！'
@@ -139,7 +150,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
               </FItem>
             </Col>
             <Col span={12}>
-              <FItem label="开户行" name="ebmi_modal_BankName" rules={[
+              <FItem label="开户行" labelCol={{
+                span: '6'
+              }} name="ebmi_modal_BankName" rules={[
                 {
                   required: true,
                   message: '开户行必填！'
@@ -151,7 +164,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
           </Row>
           <Row gutter={4}>
             <Col span={24}>
-              <FItem label="Email" name="ebmi_modal_email" rules={[
+              <FItem label="Email" labelCol={{
+                span: '3'
+              }} name="ebmi_modal_email" rules={[
                 {
                   required: true,
                   message: 'Email必填！'
@@ -163,7 +178,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
           </Row>
           <Row gutter={4}>
             <Col span={24}>
-              <FItem label="备注" name="ebmi_modal_email" initialValue={Remark}>
+              <FItem label="备注" labelCol={{
+                span: '3'
+              }} name="ebmi_modal_remark" initialValue={Remark}>
                 <Input />
               </FItem>
             </Col>
