@@ -17,7 +17,6 @@ export async function queryLeaveAuthData({ pageSize, startPage, condition }) {
 // NOTE: 在远程服务器端收到的参数通过直接解析req.body就可以获取，如下：
 // NOTE: const { PersonalID, userAD, UserCname, quanxianPersonalID, quanxianAD, quanxianCname } = req.body;
 export async function insertNewLeaveAuthData(record) {
-    console.log('record:', record)
     return request(baseUrl + "/insertBasePeople", {
         method: 'POST',
         headers: {
