@@ -4,16 +4,18 @@ import { SearchOutlined } from '@ant-design/icons'
 const SearchSquare = (props) => {
     const { dispatch, columns, modelType, buttons, searchMethod, loadCallback, ...restProps } = props
 
-    const selectOptions = !!columns && Array.isArray(columns) ? columns.filter(col=>!!col.asQuery).map((item, index) => {
-        return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
-    }) : null;
-    if(selectOptions){
+    const selectOptions = !!columns && Array.isArray(columns) ?
+        columns.filter(col => !!col.asQuery).map((item, index) => {
+            console.log('select key:', item.key);
+            return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
+        }) : null;
+    if (selectOptions) {
         selectOptions.unshift(
             <Select.Option value={""} key="-"></Select.Option>
         )
     }
     const formRef = React.createRef();
-    
+
     const loadData = async () => {
         if (!modelType) {
             message.info('modelType为空，无法加载数据');
@@ -33,6 +35,7 @@ const SearchSquare = (props) => {
 
     const setCondition = () => {
         const condition = composeConditions();
+        console.log('condition:', condition)
         if (condition && dispatch) {
             dispatch({
                 type: modelType + '/setCondition',
@@ -47,16 +50,17 @@ const SearchSquare = (props) => {
         const keyName = form.getFieldValue("key_name")
         const keyValue = form.getFieldValue("key_text") || '';
 
-        return {
+        console.log('keyname:', keyName)
+        return (keyName === '' ? null : {
             keyId,
             name: keyName,
             value: keyValue
-        }
+        });
     }
 
     return (
         <div {...restProps}>
-            <Form style={{ display: 'flex', float: 'right', marginRight:'20px' }} ref={formRef}>
+            <Form style={{ display: 'flex', float: 'right', marginRight: '20px' }} ref={formRef}>
                 <Space>
                     <Form.Item name="key_name">
                         <Select style={{ width: '150px' }} onChange={setCondition}>
@@ -67,7 +71,7 @@ const SearchSquare = (props) => {
                         <Input allowClear={true} style={{ width: '120px' }}
                             onPressEnter={setCondition}
                             onBlur={setCondition}
-                            
+
                         />
                     </Form.Item>
                     <Form.Item name="search_btn">
