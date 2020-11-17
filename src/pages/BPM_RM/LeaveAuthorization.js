@@ -27,7 +27,7 @@ class LeaveAuthorization extends React.Component {
             current: 0,
             operation: '',
             filterCol: '-',
-            notificationModalShow: false,
+            // notificationModalShow: false,
             okButtonAvailable: false,
             spinning: false
         };
@@ -153,6 +153,7 @@ class LeaveAuthorization extends React.Component {
 
         this.formRef = React.createRef();
         this.form = null;
+        this.prevEditingRecord = null;
     }
 
     componentDidMount() {
@@ -201,10 +202,6 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleDeleteSelectedRecords = () => {
-        this.setState({
-            notificationModalShow: false
-        })
-
         const { selectedRowKeys } = this.state;
 
         if (!selectedRowKeys || selectedRowKeys.length === 0) {
@@ -224,13 +221,13 @@ class LeaveAuthorization extends React.Component {
             content: '确认删除已选中的行吗？',
             cancelText: '放弃删除',
             okText: '确认删除',
-            onCancel:()=>{
-                return ;
+            onCancel: () => {
+                return;
             },
-            onOk:()=>{
-                const { dispatch } = this.props
-                if (dispatch) {
-                    dispatch({
+            onOk: () => {
+                // const { dispatch } = this.props
+                if (this.dispatch) {
+                    this.dispatch({
                         type: 'LeaveAuthModel/deleteItems',
                         payload: {
                             ids: toDeleteItemsIDs,
@@ -239,7 +236,7 @@ class LeaveAuthorization extends React.Component {
                     })
                 }
             }
-        });        
+        });
     }
 
     handleDeleteRecord = (record) => {
@@ -250,11 +247,10 @@ class LeaveAuthorization extends React.Component {
                 selectedRowKeys: []
             })
             const ids = [item.ID];
-            // console.log('ids:', ids)
             //NOTE: old version with the situation of  deleteItem(item.ID, this.loadData);
-            const { dispatch } = this.props
-            if (dispatch) {
-                dispatch({
+            // const { dispatch } = this.props
+            if (this.dispatch) {
+                this.dispatch({
                     type: 'LeaveAuthModel/deleteItems',
                     payload: {
                         ids,
@@ -262,7 +258,9 @@ class LeaveAuthorization extends React.Component {
                     }
                 })
             }
-
+            else {
+                message.warn('dispatch为空');
+            }
         }
     }
 
@@ -280,45 +278,58 @@ class LeaveAuthorization extends React.Component {
 
     getUpdateColumns = (record) => {
         // 获取需要更新的列信息
-        const { remoteCurrentEditingRecord: editingRecord } = this.props
-        const updateColumns = [];
-        if (editingRecord["PersonalID"] !== record["PersonalID"]) {
-            updateColumns.push({
-                name: "PersonalID",
-                value: record["PersonalID"]
-            })
-        }
-        if (editingRecord["userAD"] !== record["userAD"]) {
-            updateColumns.push({
-                name: "userAD",
-                value: record["userAD"]
-            })
-        }
-        if (editingRecord["UserCname"] !== record["UserCname"]) {
-            updateColumns.push({
-                name: "UserCname",
-                value: record["UserCname"]
-            })
-        }
-        if (editingRecord["quanxianPersonalID"] !== record["quanxianPersonalID"]) {
-            updateColumns.push({
-                name: "quanxianPersonalID",
-                value: record["quanxianPersonalID"]
-            })
-        }
-        if (editingRecord["quanxianAD"] !== record["quanxianAD"]) {
-            updateColumns.push({
-                name: "quanxianAD",
-                value: record["quanxianAD"]
-            })
-        }
-        if (editingRecord["quanxianCname"] !== record["quanxianCname"]) {
-            updateColumns.push({
-                name: "quanxianCname",
-                value: record["quanxianCname"]
-            })
-        }
-        return updateColumns
+        // const { remoteCurrentEditingRecord: editingRecord } = this.props
+        // const updateColumns = [];
+        // if (editingRecord["PersonalID"] !== record["PersonalID"]) {
+        //     updateColumns.push({
+        //         name: "PersonalID",
+        //         value: record["PersonalID"]
+        //     })
+        // }
+        // if (editingRecord["userAD"] !== record["userAD"]) {
+        //     updateColumns.push({
+        //         name: "userAD",
+        //         value: record["userAD"]
+        //     })
+        // }
+        // if (editingRecord["UserCname"] !== record["UserCname"]) {
+        //     updateColumns.push({
+        //         name: "UserCname",
+        //         value: record["UserCname"]
+        //     })
+        // }
+        // if (editingRecord["quanxianPersonalID"] !== record["quanxianPersonalID"]) {
+        //     updateColumns.push({
+        //         name: "quanxianPersonalID",
+        //         value: record["quanxianPersonalID"]
+        //     })
+        // }
+        // if (editingRecord["quanxianAD"] !== record["quanxianAD"]) {
+        //     updateColumns.push({
+        //         name: "quanxianAD",
+        //         value: record["quanxianAD"]
+        //     })
+        // }
+        // if (editingRecord["quanxianCname"] !== record["quanxianCname"]) {
+        //     updateColumns.push({
+        //         name: "quanxianCname",
+        //         value: record["quanxianCname"]
+        //     })
+        // }
+        // return updateColumns
+
+        const keys = Object.keys(record);
+        const result = keys.filter(key=>{
+            if(this.prevEditingRecord[key]!==record[key]){
+                return {
+                    name: key,
+                    value: record[key]
+                }
+            }
+        })
+
+        this.prevEditingRecord = null;
+        return result;
     }
 
     handleOkModal = () => {
@@ -360,7 +371,7 @@ class LeaveAuthorization extends React.Component {
                     payload: {
                         record,
                         updates: ucls,
-                        where: ` ID = '${record["ID"]}'`,
+                        where: ` ID = '${ID}'`,
                         callback: this.loadData
                     }
                 })
@@ -393,16 +404,6 @@ class LeaveAuthorization extends React.Component {
             editingRecord: record,
             modalShow: true
         })
-
-        // const { dispatch } = this.props
-        // if (dispatch) {
-        //     dispatch({
-        //         type: "LeaveAuthModel/setCurrentEditingRecord",
-        //         payload: {
-        //             record
-        //         }
-        //     })
-        // }
     }
 
     handleAddRecord = () => {
