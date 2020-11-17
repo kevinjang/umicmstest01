@@ -1,4 +1,4 @@
-import { queryERRemoData } from '../services/user'
+import { queryERRemoData } from '../services/UserService'
 import { find } from 'lodash'
 
 const erDataModel = {
