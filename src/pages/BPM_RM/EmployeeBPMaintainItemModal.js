@@ -7,6 +7,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
   constructor(props) {
     super(props);
 
+    const {editingRecord, updateParentState, updateOkButtonAvailable} = props
+
     const {
       BPNo,
       EmployeeName,
@@ -17,9 +19,12 @@ class EmployeeBPMaintainItemModal extends React.Component {
       Email,
       Remark,
       ID
-    } = this.props.editingRecord;
+    } = editingRecord;
     this.formRef = React.createRef();
     this.form = null;
+    this.updateParentState = updateParentState;
+    this.updateOkButtonAvailable = updateOkButtonAvailable;
+    // this.updateCancelButtonAvailable = updateCancelButtonAvailable;
 
     this.state = {
       editingRecord: this.props.editingRecord,
@@ -39,6 +44,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
     this.form = this.formRef.current;
   }
 
+  /* NOTE: All Blurs **************************************************************/
   onBPNoBlur = (e) => {
     let val = (e.target.value || '').toString();
     if (val !== '') {
@@ -48,6 +54,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
         this.form.setFieldsValue({
           'ebmi_modal_bpNo': val
         });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
       })
     }
     else {
@@ -65,6 +74,9 @@ class EmployeeBPMaintainItemModal extends React.Component {
         this.form.setFieldsValue({
           'ebmi_modal_EmployeeName': val
         });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
       })
     }
     else {
@@ -72,13 +84,161 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
   }
 
-  setoffValidation = () => {
-    // const { form } = this.props;
-    this.form.validateFields().then().catch(info=>{
+  handlePriDeptNameBlur = (e)=>{
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        PriDept: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_pridept': val
+        });
 
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  handleSecDeptNameBlur = (e) => {
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        SecDept: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_secdept': val
+        });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }    
+  }
+
+  handleBankAccountBlur = (e) => {
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        BankAccount: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_BankAccount': val
+        });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  handleBankNameBlur = (e) => {
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        BankName: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_BankName': val
+        });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  handleEmailBlur = (e)=>{    
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        Email: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_email': val
+        });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }
+  }
+
+  handleRemarkBlur =(e)=>{  
+    let val = (e.target.value || '').toString();
+    if (val !== '') {
+      this.setState({
+        Remark: val
+      }, () => {
+        this.form.setFieldsValue({
+          'ebmi_modal_remark': val
+        });
+
+        this.updateParentStateUni();
+        this.setoffValidation();
+      })
+    }
+    else {
+      this.setoffValidation();
+    }    
+  }
+
+  /* NOTE: All Blurs End **************************************************************/
+
+  setoffValidation = () => {
+    this.form.validateFields().then(values=>{
+      this.updateOkButtonAvailable(true);      
+    }).catch(info=>{
+      console.log('validateFields error info:', info)
+      if (info && info.errorFields && info.errorFields.length > 0) {
+          this.updateOkButtonAvailable(false);
+      }
+      else {
+
+      }
     })
   }
 
+  updateParentStateUni = () => {
+    const {
+      BPNo,
+      EmployeeName,
+      PriDept,
+      SecDept,
+      BankAccount,
+      BankName,
+      Email,
+      Remark,
+      ID
+    } = this.state;
+
+    this.updateParentState({
+      BPNo,
+      EmployeeName,
+      PriDept,
+      SecDept,
+      BankAccount,
+      BankName,
+      Email,
+      Remark,
+      ID
+    })
+  }
 
   render() {
     const {
@@ -125,14 +285,14 @@ class EmployeeBPMaintainItemModal extends React.Component {
               <FItem label="一级部门" labelCol={{
                 span: '6'
               }} name="ebmi_modal_pridept" initialValue={PriDept}>
-                <Input />
+                <Input onBlur={this.handlePriDeptNameBlur} />
               </FItem>
             </Col>
             <Col span={12}>
               <FItem label="二级部门" labelCol={{
                 span: '6'
               }} name="ebmi_modal_secdept" initialValue={SecDept}>
-                <Input />
+                <Input onBlur={this.handleSecDeptNameBlur} />
               </FItem>
             </Col>
           </Row>
@@ -146,7 +306,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
                   message: '银行账号必填！'
                 }
               ]} initialValue={BankAccount}>
-                <Input />
+                <Input onBlur={this.handleBankAccountBlur} />
               </FItem>
             </Col>
             <Col span={12}>
@@ -158,7 +318,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
                   message: '开户行必填！'
                 }
               ]} initialValue={BankName}>
-                <Input />
+                <Input onBlur={this.handleBankNameBlur} />
               </FItem>
             </Col>
           </Row>
@@ -172,7 +332,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
                   message: 'Email必填！'
                 }
               ]} initialValue={Email}>
-                <Input type="email" />
+                <Input type="email" onBlur={this.handleEmailBlur} />
               </FItem>
             </Col>
           </Row>
@@ -181,7 +341,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
               <FItem label="备注" labelCol={{
                 span: '3'
               }} name="ebmi_modal_remark" initialValue={Remark}>
-                <Input />
+                <Input onBlur={this.handleRemarkBlur} />
               </FItem>
             </Col>
           </Row>

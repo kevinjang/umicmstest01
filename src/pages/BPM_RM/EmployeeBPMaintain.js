@@ -1,21 +1,8 @@
 import React from 'react'
-import {
-  Spin, Layout, Table, Form, Button, Input,
-  Icon, Select, Popconfirm, message, Modal
-} from 'antd'
-
-import EmployeeBPMaintainItemModalFormComp from './EmployeeBPMaintainItemModal'
-
-import SearchSquare from 'ksnlSearchSquare';//'../../CommonUtility/BPM_RM/SearchSquare'
-
-const { Option } = Select;
-
-import { getByPage, insert, update, deleteItem, deleteItems } from '../../utils/toserver/EmployeeBPUtil'
-
-import ModalFooter from '../../CommonUtility/ModalUtils/ModalFooter'
-
+import { Spin, Layout, Table, Form, Button, Popconfirm, message, Modal } from 'antd';
+import EmployeeBPMaintainItemModal from './EmployeeBPMaintainItemModal'
+import SearchSquare from 'ksnlSearchSquare';
 import { FileOutlined, DeleteOutlined, FileAddOutlined } from '@ant-design/icons'
-
 import styles from './EmployeeBPMaintain.css'
 import { connect } from 'umi';
 
@@ -35,7 +22,7 @@ class EmployeeBPMaintain extends React.Component {
       // 编辑项
       editingRecord: null,
       okBtnAvailable: false,
-      notificationModalShow: false,
+      // notificationModalShow: false,
       spinning: false
     }
 
@@ -151,6 +138,9 @@ class EmployeeBPMaintain extends React.Component {
 
     this.form = null;
     this.formRef = React.createRef();
+
+    // 
+    this.prevEditingRecord = null;
   }
 
   componentDidMount() {
@@ -197,6 +187,7 @@ class EmployeeBPMaintain extends React.Component {
   }
 
   handleEditRecord = (e) => {
+    this.prevEditingRecord = { ...e };
     this.setState({
       editingRecord: e,
       modalShow: true,
@@ -224,9 +215,32 @@ class EmployeeBPMaintain extends React.Component {
     })
   }
 
-  handleDeleteRecord = (e) => {
-    const { ID } = e;
-    deleteItem(ID, this.loadData);
+  handleDeleteRecord = (record) => {
+
+    const { dataSource } = this.state;
+
+    const item = dataSource.filter(it => it.ID === record.ID)[0] || null;
+
+    if (!!item) {
+      this.setState({
+        selectedRowKeys: []
+      });
+      const ids = [item.ID];
+
+      if (!this.dispatch) {
+        message.warn("dispatch为空！");
+        return false;
+      }
+      this.dispatch({
+        type: 'UserBPMaintainModel/deleteItems',
+        payload: {
+          ids,
+          callback: this.loadData
+        }
+      });
+    }
+
+
   }
 
   handleDeleteSelectedRecords = () => {
@@ -258,22 +272,33 @@ class EmployeeBPMaintain extends React.Component {
           toDeleteItemsIDs.push(it.ID);
         });
 
-        deleteItems(toDeleteItemsIDs, this.loadData).then(response => {
-          if (response && response.data && response.data.result && response.data.result.message) {
-            message.success(response.data.result.message)
-            this.setState({
-              selectedRowKeys: []
-            })
-          }
-          else {
-            message.error(response.statusText);
-          }
+        if (this.dispatch) {
+          this.dispatch({
+            type: 'UserBPMaintainModel/deleteItems',
+            payload: {
+              ids: toDeleteItemsIDs,
+              callback: this.loadData
+            }
+          })
+        }
 
-          this.loadData();
-        }).catch(err => {
-          if (err)
-            console.log('delete multiple item error:', err);
-        });
+
+        // deleteItems(toDeleteItemsIDs, this.loadData).then(response => {
+        //   if (response && response.data && response.data.result && response.data.result.message) {
+        //     message.success(response.data.result.message)
+        //     this.setState({
+        //       selectedRowKeys: []
+        //     })
+        //   }
+        //   else {
+        //     message.error(response.statusText);
+        //   }
+
+        //   this.loadData();
+        // }).catch(err => {
+        //   if (err)
+        //     console.log('delete multiple item error:', err);
+        // });
       }
     })
 
@@ -287,7 +312,78 @@ class EmployeeBPMaintain extends React.Component {
     this.setState({
       modalShow: false
     })
+
+    let record = { ...this.state.editingRecord };
+    if (this.dispatch) {
+      var methodName = "";
+
+      const { operation } = this.state
+      let payload = null;
+      switch (operation) {
+        case "insert":
+        default:
+          methodName = "insertItem";
+          payload = {
+            record,
+            callback: this.loadData
+          }
+          break;
+        case "update":
+          methodName = "updateItem";
+          const { ID } = record;
+          const item = this.state.dataSource.filter(it => it.key === ID)[0] || null;
+          if (!!item) {
+              record["ID"] = item.ID;
+          }
+          const ulcs = this.getUpdateColumns(record);
+          payload = {
+            record,
+            updates: ulcs,
+            where: ` ID = '${ID}'`,
+            callback: this.loadData
+          }
+          break;
+      }
+
+      this.dispatch({
+        type: `UserBPMaintainModel/${methodName}`,
+        payload
+      })
+    }
   }
+
+  // 新旧数据记录对比，获取需要更新的内容
+  getUpdateColumns = (record) => {
+    // 获取需要更新的列信息
+    const keys =Object.keys(record);   
+    const result = keys.filter(key=>{
+      if(this.prevEditingRecord[key] !== record[key]){
+        return {
+          name: key,
+          value: record[key]
+        };
+      }
+    })
+
+    this.prevEditingRecord = null;
+    return result;
+  }
+
+  /******** NOTE: Modal相关**************************************************** */
+  //NOTE: 根据表单内容控制窗体按钮可用状态
+  updateModalOKButtonsAvailablity = (value) => {
+    this.setState({
+      okBtnAvailable: value
+    })
+  }
+
+  //NOTE: 关闭窗体时更新父级页面的在编辑项
+  updateEditingRecordState = (record) => {
+    this.setState({
+      editingRecord: record
+    })
+  }
+  /**************************************************************************** */
 
   render() {
     const { selectedRowKeys } = this.state;
@@ -331,6 +427,7 @@ class EmployeeBPMaintain extends React.Component {
                     (record, index) => {
                       return {
                         onDoubleClick: (event) => {
+                          this.prevEditingRecord = { ...record };
                           this.setState({
                             modalShow: true,
                             editingRecord: record,
@@ -340,7 +437,7 @@ class EmployeeBPMaintain extends React.Component {
                       }
                     }
                   }
-                  footer={()=>("")}
+                  footer={() => ("")}
                   {...this.tableOptions}>
 
                 </Table>
@@ -355,7 +452,7 @@ class EmployeeBPMaintain extends React.Component {
         maskClosable={false}
         width="48%"
         style={{
-            minWidth: '920px'
+          minWidth: '920px'
         }}
         forceRender={true}
         destroyOnClose={true}
@@ -371,19 +468,20 @@ class EmployeeBPMaintain extends React.Component {
             })
           }
         }>
-        <EmployeeBPMaintainItemModalFormComp
-          // ref={this.myRef}
+        <EmployeeBPMaintainItemModal
           editingRecord={this.state.editingRecord}
-          operation={this.state.operation}>
+          operation={this.state.operation}
+          updateParentState={(record) => this.updateEditingRecordState(record)}
+          updateOkButtonAvailable={value => this.updateModalOKButtonsAvailablity(value)}>
 
-        </EmployeeBPMaintainItemModalFormComp>
+        </EmployeeBPMaintainItemModal>
       </Modal>
     </Spin>
   }
 }
 
-export default connect(({ UserBPMaintainModel, loading }) => {
-  console.log('UserBPMaintainModel:', UserBPMaintainModel)
+export default connect(({ UserBPMaintainModel }) => {
+  // console.log('UserBPMaintainModel:', UserBPMaintainModel)
   return {
     UserBPMaintainModel,
     dataSource: UserBPMaintainModel.data,
