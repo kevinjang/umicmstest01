@@ -1,6 +1,6 @@
-// import { getByPage } from '../utils/toserver/BasePeopleUtil'
-import { queryLeaveAuthData, insertNewLeaveAuthData, updateLeaveAuthDataItem, deleteLeaveAuthDataItems } from '../services/leaveauth'
+import { queryLeaveAuthData, insertNewLeaveAuthData, updateLeaveAuthDataItem, deleteLeaveAuthDataItems } from '../services/LeaveAuthService'
 import { message as messageComp } from 'antd'
+
 const LeaveAuth = {
     namespace: 'LeaveAuthModel',
     state: {
