@@ -7,7 +7,8 @@ export default {
         hmr: true
     },
     alias:{
-        'ksnlSearchSquare': '@/CommonUtility/BPM_RM/SearchSquare'
+        'ksnlSearchSquare': '@/CommonUtility/BPM_RM/SearchSquare',
+        'ksnlUserService': '@/services/UserService'
     },
     // dynamicImport: {
     //     loading: '@/components/PageLoading/index'
