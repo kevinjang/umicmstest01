@@ -25,7 +25,8 @@ export async function insert(record) {
 }
 
 export async function update({ updates, where }) {
-    return request(baseUrl+"/updateEmployeeBP",{        
+    console.log('updates:', updates)
+    return request(baseUrl + "/updateEmployeeBP", {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
