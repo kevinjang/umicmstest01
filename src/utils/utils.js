@@ -1,13 +1,16 @@
 import { notification } from 'antd'
 import AESEncryption, { AESTYPE } from 'aes-crypto'
+
+const Utils = {};
+
 const encryptKey = 'FB32D61111CBE2D012E7A12209322CF5FB32D671D6CBE2D012E7A12209322CF5'
-const getNumberForInput = (value) => {
+Utils.getNumberForInput = (value) => {
     return parseFloat(value) || 0
 }
 
 let timer = null;
 
-const debounce = (fn, editing) => {
+Utils.debounce = (fn, editing) => {
     if (typeof fn === 'function') {
         if (editing) {
             if (timer) {
@@ -32,7 +35,7 @@ const debounce = (fn, editing) => {
     }
 }
 
-const setCookie = (key, value) => {
+Utils.setCookie = (key, value) => {
     const timestamp = Date.now();
     const expiresDatetime = timestamp + 1000 * 60 * 60; // 一小时后过期
     const cookieItem = encrypt({
@@ -42,11 +45,11 @@ const setCookie = (key, value) => {
     console.log("encrypted cookieItem:", cookieItem)
     localStorage.setItem(key, cookieItem);
 }
-const getCookie = (key) => {
+Utils.getCookie = (key) => {
     return localStorage.getItem(key)
 }
 
-const clearCookie = (key) => {
+Utils.clearCookie = (key) => {
     localStorage.removeItem(key);
 }
 
@@ -60,7 +63,7 @@ const cookieValid = (key) => {
     const expiresDatetime = timestamp + 1000 * 60 * 60; // 一小时后过期
 }
 
-const encrypt = (value) => {
+Utils.encrypt = (value) => {
     try {
         const _encryption = new AESEncryption();
         return _encryption.encryption(value, encryptKey)
@@ -72,7 +75,8 @@ const encrypt = (value) => {
         return null;
     }
 }
-const decrypt = (value) => {
+
+Utils.decrypt = (value) => {
     try {
         const _encryption = new AESEncryption();
         return _encryption.encryption(value, encryptKey)
@@ -84,4 +88,37 @@ const decrypt = (value) => {
     }
 }
 
-export { getNumberForInput, debounce, getCookie, setCookie, clearCookie, encrypt, decrypt }
+Utils.getUpdateColumns = ({ prevEditingRecord, record }) => {
+    if(!prevEditingRecord){
+        notification.error({
+            message: 'prevEditingRecord为空',
+            description: '请正确传参'
+        })
+        return null;
+    }
+
+    if(!record){
+        notification.error({
+            message: 'record为空',
+            description: '请正确传参'
+        })
+        return null;
+    }
+
+    const keys = Object.keys(record);
+    const result = [];
+
+    keys.forEach(key=>{
+      if(prevEditingRecord[key] !== record[key])
+       result.push({
+         name: key,
+         value: record[key]
+       })
+    })
+
+    return result;
+}
+
+// export { debounce, getCookie, setCookie, clearCookie, encrypt, decrypt, getUpdateColumns }
+
+export default Utils;
