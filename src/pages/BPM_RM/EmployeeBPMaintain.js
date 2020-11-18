@@ -4,6 +4,9 @@ import EmployeeBPMaintainItemModal from './EmployeeBPMaintainItemModal'
 import SearchSquare from 'ksnlSearchSquare';
 import { FileOutlined, DeleteOutlined, FileAddOutlined } from '@ant-design/icons'
 import styles from './EmployeeBPMaintain.css'
+// import { getUpdateColumns } from '../../utils/utils'
+import Utils from 'ksnlUtils'
+const { getUpdateColumns } = Utils
 import { connect } from 'umi';
 
 class EmployeeBPMaintain extends React.Component {
@@ -333,9 +336,13 @@ class EmployeeBPMaintain extends React.Component {
           const { ID } = record;
           const item = this.state.dataSource.filter(it => it.key === ID)[0] || null;
           if (!!item) {
-              record["ID"] = item.ID;
+            record["ID"] = item.ID;
           }
           const ulcs = this.getUpdateColumns(record);
+          if (!ulcs) {
+            return;
+          }
+          // console.log('ulcs:', ulcs)
           payload = {
             record,
             updates: ulcs,
@@ -355,16 +362,8 @@ class EmployeeBPMaintain extends React.Component {
   // 新旧数据记录对比，获取需要更新的内容
   getUpdateColumns = (record) => {
     // 获取需要更新的列信息
-    const keys =Object.keys(record);   
-    const result = keys.filter(key=>{
-      if(this.prevEditingRecord[key] !== record[key]){
-        return {
-          name: key,
-          value: record[key]
-        };
-      }
-    })
-
+    // console.log('utils:', utils)
+    const result = getUpdateColumns({ prevEditingRecord: this.prevEditingRecord, record });
     this.prevEditingRecord = null;
     return result;
   }

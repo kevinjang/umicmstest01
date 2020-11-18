@@ -1,13 +1,12 @@
 import React from 'react'
-import {
-    Form, Button, Select, Layout, Modal, Table, Popconfirm, Spin, message
-} from 'antd'
+import { Form, Button, Layout, Modal, Table, Popconfirm, Spin, message } from 'antd'
 import LeaveAuthorizationModal from './LeaveAuthorizationModal'
 import { FileOutlined, DeleteOutlined, FileAddOutlined } from '@ant-design/icons'
-
-const { Option } = Select;
-
 import styles from './LeaveAuthorization.css';
+// import { getUpdateColumns } from '../../utils/utils'
+
+import Utils from 'ksnlUtils'
+const { getUpdateColumns } = Utils
 import { connect } from 'umi';
 
 import SearchSquare from 'ksnlSearchSquare'
@@ -278,56 +277,11 @@ class LeaveAuthorization extends React.Component {
 
     getUpdateColumns = (record) => {
         // 获取需要更新的列信息
-        // const { remoteCurrentEditingRecord: editingRecord } = this.props
-        // const updateColumns = [];
-        // if (editingRecord["PersonalID"] !== record["PersonalID"]) {
-        //     updateColumns.push({
-        //         name: "PersonalID",
-        //         value: record["PersonalID"]
-        //     })
-        // }
-        // if (editingRecord["userAD"] !== record["userAD"]) {
-        //     updateColumns.push({
-        //         name: "userAD",
-        //         value: record["userAD"]
-        //     })
-        // }
-        // if (editingRecord["UserCname"] !== record["UserCname"]) {
-        //     updateColumns.push({
-        //         name: "UserCname",
-        //         value: record["UserCname"]
-        //     })
-        // }
-        // if (editingRecord["quanxianPersonalID"] !== record["quanxianPersonalID"]) {
-        //     updateColumns.push({
-        //         name: "quanxianPersonalID",
-        //         value: record["quanxianPersonalID"]
-        //     })
-        // }
-        // if (editingRecord["quanxianAD"] !== record["quanxianAD"]) {
-        //     updateColumns.push({
-        //         name: "quanxianAD",
-        //         value: record["quanxianAD"]
-        //     })
-        // }
-        // if (editingRecord["quanxianCname"] !== record["quanxianCname"]) {
-        //     updateColumns.push({
-        //         name: "quanxianCname",
-        //         value: record["quanxianCname"]
-        //     })
-        // }
-        // return updateColumns
-
-        const keys = Object.keys(record);
-        const result = keys.filter(key=>{
-            if(this.prevEditingRecord[key]!==record[key]){
-                return {
-                    name: key,
-                    value: record[key]
-                }
-            }
-        })
-
+        // console.log('utils:', utils)
+        const result = getUpdateColumns({
+            prevEditingRecord: this.prevEditingRecord,
+            record
+        });
         this.prevEditingRecord = null;
         return result;
     }
@@ -399,6 +353,7 @@ class LeaveAuthorization extends React.Component {
     }
 
     handleEditRecord = (record) => {
+        this.prevEditingRecord = { ...record }
         this.setState({
             operation: 'update',
             editingRecord: record,
