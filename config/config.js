@@ -28,7 +28,10 @@ export default {
                 { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
                 { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' },
                 { path: '/mainframe/LeaveAuthorization', component: '@/pages/BPM_RM/LeaveAuthorization' },
-                { path: '/mainframe/OUUsersMaintenance', component: '@/pages/OUUsersMaintenance/index' }
+                { path: '/mainframe/OUUsersMaintenance', component: '@/pages/OUUsersMaintenance/index' },
+                { path: '/mainframe/BasicTableDemo', component: '@/pages/TableDemos/BasicTableDemo' },
+                { path: '/mainframe/JSXAPI', component: '@/pages/TableDemos/JSXAPI' },
+                { path: '/mainframe/RowClickSelect', component: '@/pages/TableDemos/RowClickSelect' }
 
             ]
         },

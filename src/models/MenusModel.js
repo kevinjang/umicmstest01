@@ -1,6 +1,6 @@
 const MenusModel = {
     namespace: "menus",
-    /* 32了*/
+    /* 38了*/
     state: {
         menus: [
             {
@@ -163,45 +163,69 @@ const MenusModel = {
                 title: "官方模块测试",
                 icon: "Windows",
                 children: [
+                    // {
+                    //     id: "19",
+                    //     level: 2,
+                    //     title: "Spin测试",
+                    //     icon: "Windows",
+                    //     urlPath: "/mainframe/spnningTest",
+                    //     nodeInfo: "./compoTests/spnningTest"
+                    // },
+                    // {
+                    //     id: "20",
+                    //     level: 2,
+                    //     title: "TreeSelect",
+                    //     icon: "Windows",
+                    //     urlPath: "treeSelectTest",
+                    //     nodeInfo: "./compoTests/treeSelectTest"
+                    // },
+                    // {
+                    //     id: "21",
+                    //     level: 2,
+                    //     title: "异步加载树形",
+                    //     icon: "Windows",
+                    //     urlPath: "treeAsyncTest",
+                    //     nodeInfo: "./compoTests/treeAsyncTest"
+                    // },
+                    // {
+                    //     id: "28",
+                    //     level: 2,
+                    //     title: "照片墙",
+                    //     icon: "Windows",
+                    //     urlPath: "UploadMain",
+                    //     nodeInfo: "./UploadTest/UploadMain"
+                    // },
+                    // {
+                    //     id: "29",
+                    //     level: 2,
+                    //     title: "拖拽上传",
+                    //     icon: "Windows",
+                    //     urlPath: "DragDropUpload",
+                    //     nodeInfo: "./UploadTest/DragDropUpload"
+                    // },
                     {
-                        id: "19",
+                        id: "38",
                         level: 2,
-                        title: "Spin测试",
+                        title: "Table基本用法",
                         icon: "Windows",
-                        urlPath: "/mainframe/spnningTest",
-                        nodeInfo: "./compoTests/spnningTest"
+                        urlPath: "/mainframe/BasicTableDemo",
+                        nodeInfo: "./TableDemos/BasicTableDemo"
                     },
                     {
-                        id: "20",
+                        id: "39",
                         level: 2,
-                        title: "TreeSelect",
+                        title: "JSX Stylish Api",
                         icon: "Windows",
-                        urlPath: "treeSelectTest",
-                        nodeInfo: "./compoTests/treeSelectTest"
+                        urlPath: "/mainframe/JSXAPI",
+                        nodeInfo: "./TableDemos/JSXAPI"
                     },
                     {
-                        id: "21",
+                        id: "40",
                         level: 2,
-                        title: "异步加载树形",
+                        title: "行点击选中",
                         icon: "Windows",
-                        urlPath: "treeAsyncTest",
-                        nodeInfo: "./compoTests/treeAsyncTest"
-                    },
-                    {
-                        id: "28",
-                        level: 2,
-                        title: "照片墙",
-                        icon: "Windows",
-                        urlPath: "UploadMain",
-                        nodeInfo: "./UploadTest/UploadMain"
-                    },
-                    {
-                        id: "29",
-                        level: 2,
-                        title: "拖拽上传",
-                        icon: "Windows",
-                        urlPath: "DragDropUpload",
-                        nodeInfo: "./UploadTest/DragDropUpload"
+                        urlPath: "/mainframe/RowClickSelect",
+                        nodeInfo: "./TableDemos/RowClickSelect"
                     },
                 ]
             },
