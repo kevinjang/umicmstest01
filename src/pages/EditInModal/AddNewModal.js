@@ -16,7 +16,11 @@ import {
 import moment from 'moment'
 import 'antd/dist/antd.css'
 import { connect } from 'umi';
-import { debounce } from '../../utils/utils'
+// import { debounce } from '../../utils/utils'
+
+import Utils from 'ksnlUtils'
+
+const { debounce } = Utils;
 
 const dateFormat = 'YYYY/MM/DD';
 

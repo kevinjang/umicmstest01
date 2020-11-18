@@ -6,16 +6,17 @@
 import { connect } from 'umi'
 import { Table, Button, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
-import { getNumberForInput } from '../../utils/utils'
+import Utils from 'ksnlUtils'
+
 import moment from 'moment'
 import ModalWithPrevNext from '../../CommonUtility/ModalUtils/ModalPrevNextSwitch'
 // NOTE: original with all sorts of problems, 
 import AddNewModal from './AddNewModal'
-// import AddNewModal from './AddNewModal'
 import { orderBy, find } from 'lodash'
 
 var first = true
 const dateFormat = 'YYYY/MM/DD';
+const { getNumberForInput } = Utils;
 const Aladin = (props) => {
     var originalRecord = null;
     var originalDataSource = null;

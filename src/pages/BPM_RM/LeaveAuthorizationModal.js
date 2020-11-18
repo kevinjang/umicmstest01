@@ -15,7 +15,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid = "valid",
+            // valid = "valid",
             RowNum,
             key,
             ID
@@ -34,7 +34,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid,
+            // valid,
             okAvailable: true,
             RowNum,
             key,
@@ -44,16 +44,17 @@ class LeaveAuthorizationModal extends React.Component {
 
     componentDidMount() {
         this.form = this.formRef.current;
-        this.setState({
-            radioChecked: (this.state.valid === "valid")
-        }, () => {
-            this.form.setFieldsValue({
-                radioValid: this.state.radioChecked,
-                radioInvalid: !this.state.radioChecked
-            })
-            // if (this.operation === "update")
-            this.setoffValidation();
-        })
+        // this.setState({
+        //     radioChecked: (this.state.valid === "valid")
+        // }, () => {
+        //     this.form.setFieldsValue({
+        //         radioValid: this.state.radioChecked,
+        //         radioInvalid: !this.state.radioChecked
+        //     })
+        //     // if (this.operation === "update")
+        //     this.setoffValidation();
+        // })
+        this.setoffValidation();
     }
 
     radioClick = e => {
@@ -235,7 +236,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid,
+            // valid,
             RowNum,
             key,
             ID
@@ -248,7 +249,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid,
+            // valid,
             RowNum,
             key,
             ID
@@ -264,7 +265,7 @@ class LeaveAuthorizationModal extends React.Component {
             quanxianPersonalID,
             quanxianAD,
             quanxianCname,
-            valid
+            // valid
         } = this.state;
 
         return (<div>
@@ -348,7 +349,7 @@ class LeaveAuthorizationModal extends React.Component {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row gutter={24}>
+                {/* <Row gutter={24}>
                     <Col span={24}>
                         <Form.Item>
                             <Radio.Group value={this.state.valid} onChange={this.radioClick}>
@@ -357,7 +358,7 @@ class LeaveAuthorizationModal extends React.Component {
                             </Radio.Group>
                         </Form.Item>
                     </Col>
-                </Row>
+                </Row> */}
             </Form>
         </div>)
     }
