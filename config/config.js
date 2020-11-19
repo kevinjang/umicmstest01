@@ -31,7 +31,10 @@ export default {
                 { path: '/mainframe/OUUsersMaintenance', component: '@/pages/OUUsersMaintenance/index' },
                 { path: '/mainframe/BasicTableDemo', component: '@/pages/TableDemos/BasicTableDemo' },
                 { path: '/mainframe/JSXAPI', component: '@/pages/TableDemos/JSXAPI' },
-                { path: '/mainframe/RowClickSelect', component: '@/pages/TableDemos/RowClickSelect' }
+                { path: '/mainframe/RowClickSelect', component: '@/pages/TableDemos/RowClickSelect' },
+                { path: '/mainframe/CustomSelect', component: '@/pages/TableDemos/CustomSelect' },
+                { path: '/mainframe/FilterAndSort', component: '@/pages/TableDemos/FilterAndSort' },
+                { path: '/mainframe/MultipleSort', component: '@/pages/TableDemos/MultipleSort' }
 
             ]
         },

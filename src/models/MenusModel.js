@@ -1,6 +1,6 @@
 const MenusModel = {
     namespace: "menus",
-    /* 38了*/
+    /* 43了*/
     state: {
         menus: [
             {
@@ -226,6 +226,30 @@ const MenusModel = {
                         icon: "Windows",
                         urlPath: "/mainframe/RowClickSelect",
                         nodeInfo: "./TableDemos/RowClickSelect"
+                    },
+                    {
+                        id: "41",
+                        level: 2,
+                        title: "自定义选择项",
+                        icon: "Html5",
+                        urlPath: "/mainframe/CustomSelect",
+                        nodeInfo: "./TableDemos/CustomSelect"
+                    },
+                    {
+                        id: "42",
+                        level: 2,
+                        title: "筛选与排序",
+                        icon: "Fund",
+                        urlPath: "/mainframe/FilterAndSort",
+                        nodeInfo: "./TableDemos/FilterAndSort"
+                    },
+                    {
+                        id: "43",
+                        level: 2,
+                        title: "多列排序",
+                        icon: "Fund",
+                        urlPath: "/mainframe/MultipleSort",
+                        nodeInfo: "./TableDemos/MultipleSort"
                     },
                 ]
             },
