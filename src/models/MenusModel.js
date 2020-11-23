@@ -251,6 +251,22 @@ const MenusModel = {
                         urlPath: "/mainframe/MultipleSort",
                         nodeInfo: "./TableDemos/MultipleSort"
                     },
+                    {
+                        id: "44",
+                        level: 2,
+                        title: "远程加载数据",
+                        icon: "Fund",
+                        urlPath: "/mainframe/RemateFetch",
+                        nodeInfo: "./TableDemos/RemateFetch"
+                    },
+                    {
+                        id: "45",
+                        level: 2,
+                        title: "可展开",
+                        icon: "Fund",
+                        urlPath: "/mainframe/Expandable",
+                        nodeInfo: "./TableDemos/Expandable"
+                    },
                 ]
             },
             {

@@ -34,7 +34,9 @@ export default {
                 { path: '/mainframe/RowClickSelect', component: '@/pages/TableDemos/RowClickSelect' },
                 { path: '/mainframe/CustomSelect', component: '@/pages/TableDemos/CustomSelect' },
                 { path: '/mainframe/FilterAndSort', component: '@/pages/TableDemos/FilterAndSort' },
-                { path: '/mainframe/MultipleSort', component: '@/pages/TableDemos/MultipleSort' }
+                { path: '/mainframe/MultipleSort', component: '@/pages/TableDemos/MultipleSort' },
+                { path: '/mainframe/RemateFetch', component: '@/pages/TableDemos/RemateFetch' },
+                { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' }
 
             ]
         },
