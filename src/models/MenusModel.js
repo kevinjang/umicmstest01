@@ -254,11 +254,27 @@ const MenusModel = {
                     {
                         id: "44",
                         level: 2,
-                        title: "受控的筛选和排序",
+                        title: "远程加载数据",
                         icon: "Fund",
-                        urlPath: "/mainframe/ControlledFilterAndSort",
-                        nodeInfo: "./TableDemos/ControlledFilterAndSort"
+                        urlPath: "/mainframe/RemateFetch",
+                        nodeInfo: "./TableDemos/RemateFetch"
                     },
+                    {
+                        id: "45",
+                        level: 2,
+                        title: "可展开",
+                        icon: "Fund",
+                        urlPath: "/mainframe/Expandable",
+                        nodeInfo: "./TableDemos/Expandable"
+                    },
+                    {
+                      id: "46",
+                      level: 2,
+                      title: "受控的筛选和排序",
+                      icon: "Fund",
+                      urlPath: "/mainframe/ControlledFilterAndSort",
+                      nodeInfo: "./TableDemos/ControlledFilterAndSort"
+                    }
                 ]
             },
             {
