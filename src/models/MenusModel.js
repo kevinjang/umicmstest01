@@ -251,6 +251,14 @@ const MenusModel = {
                         urlPath: "/mainframe/MultipleSort",
                         nodeInfo: "./TableDemos/MultipleSort"
                     },
+                    {
+                        id: "44",
+                        level: 2,
+                        title: "受控的筛选和排序",
+                        icon: "Fund",
+                        urlPath: "/mainframe/ControlledFilterAndSort",
+                        nodeInfo: "./TableDemos/ControlledFilterAndSort"
+                    },
                 ]
             },
             {
