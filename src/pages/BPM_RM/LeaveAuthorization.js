@@ -10,6 +10,7 @@ const { getUpdateColumns } = Utils
 import { connect } from 'umi';
 
 import SearchSquare from 'ksnlSearchSquare'
+import FilterDropdown from 'ksnlFilterDropdown'
 
 class LeaveAuthorization extends React.Component {
     constructor(props) {
@@ -28,8 +29,12 @@ class LeaveAuthorization extends React.Component {
             filterCol: '-',
             // notificationModalShow: false,
             okButtonAvailable: false,
-            spinning: false
+            spinning: false,
+            personalIdFilterVisible: false
+
         };
+
+        // this.personalIdFilterVisible = false;
 
         this.dispatch = props.dispatch;
 
@@ -70,7 +75,27 @@ class LeaveAuthorization extends React.Component {
                 visible: true,
                 editable: false,
                 align: 'center',
-                asQuery: true
+                asQuery: true,
+                // filterDropdown: FilterDropdown,
+                filterDropdownVisible: this.state.personalIdFilterVisible,
+                onFilterDropdownVisibleChange: (visible) => {
+                    console.log('onFilterDropdownVisibleChange visible:', visible)
+                    this.setState({
+                        personalIdFilterVisible: visible
+                    })
+                },
+                filters: [
+                    {
+                        text: '黄陆', value: 'cofco\\huang-lu'
+                    }
+                ],
+                onFilter: (value, record) => {
+
+                    return record.PersonalID.includes(value)
+                },
+                onHeaderCell: (column) => {
+
+                }
             },
             {
                 title: '离职人员AD',
@@ -428,6 +453,7 @@ class LeaveAuthorization extends React.Component {
                                     <Table
                                         size="small"
                                         dataSource={this.state.dataSource}
+                                        // columns={this.columns}
                                         rowSelection={rowSelection}
                                         onRow={
                                             (record, index) => {
