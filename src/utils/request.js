@@ -1,7 +1,8 @@
 import axios from 'axios'
 const qs = require('qs')
-const baseUrl = 'http://localhost:3000'
-// const baseUrl = 'http://localhost/TMPCC';
+import config from '../../config/custom_config'
+const { serverUrl } = config;
+const baseUrl = serverUrl.home;
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
@@ -49,7 +50,7 @@ let getUserName = async () => {
 }
 
 let checkBackEndRunning = async () => {
-    return await axios.get(baseUrl + '/checkRunning',{});
+    return await axios.get(baseUrl + '/checkRunning', {});
 }
 
 export { validateUserInfo, getOUBaseInfoAll, getUserName, checkBackEndRunning }

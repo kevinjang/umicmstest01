@@ -1,6 +1,8 @@
 import request from '../utils/realRequest'
 import qs from 'qs'
-const baseUrl = "http://localhost:3000";
+import config from '../../config/custom_config'
+const {serverUrl} = config
+const baseUrl = serverUrl.home;
 export async function queryLeaveAuthData({ pageSize, startPage, condition }) {
     return request(baseUrl + "/getBasePeople", {
         method: 'GET',

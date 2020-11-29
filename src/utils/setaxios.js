@@ -1,11 +1,14 @@
 import axios from 'axios'
+import config from '../../config/custom_config'
+const { serverUrl } = config;
+const baseUrl = serverUrl.home;
 const setAxios = () => {
 
-    axios.defaults.baseURL = "http://localhost:3000";
+    axios.defaults.baseURL = baseUrl;
 
     axios.interceptors.request.use(request => {
         // console.log('request.headers',request.headers)
-        request.headers["Access-Control-Allow-Origin"] = "http://localhost:3000";
+        request.headers["Access-Control-Allow-Origin"] = "http://localhost:3000, http://192.168.3.2:3000";
         // request.setHeader
         console.log('axios-request-set', request.headers);
         // // request.headers
@@ -48,24 +51,3 @@ const setAxios = () => {
 }
 
 export { setAxios }
-
-// axios.defaults.baseURL = "http://localhost:3000/";
-// const instance = axios.create({
-//     xsrfCookieName: 'xsrf-token'
-// });
-
-// instance.interceptors.request.use(function(config){
-//     config.headers["Access-Control-Allow-Origin"] = "*";
-//     return config;
-// },function(error){
-//     return Promise.reject(error);
-// });
-
-// instance.interceptors.response.use(function(response){
-
-//     return response.data;
-// },function(error){
-//     return Promise.reject(error);
-// });
-
-// export default instance;

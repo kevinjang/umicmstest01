@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { message } from 'antd'
-var baseURL = axios.defaults.baseURL = "http://localhost:3000";
+import config from '../../../config/custom_config'
+const { serverUrl } = config;
+var baseURL = axios.defaults.baseURL = serverUrl.home;
 
 async function getUserBaseInfoByAD(userAD, callback) {
     axios.get(baseURL + '/getUserBaseInfoByAD', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/json'
         },
         params: { userAD },
@@ -39,7 +41,7 @@ async function getUserBaseInfoByAD(userAD, callback) {
 async function getOULongNameUserBaseInfoByAD(userAD, callback){
     axios.get(baseURL + '/getOULongNameUserBaseInfoByAD', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/json'
         },
         params: { userAD },

@@ -1,11 +1,13 @@
 import axios from 'axios';
 
-var baseURL = axios.defaults.baseURL = "http://localhost:3000";
+import config from '../../config/custom_config'
+const { serverUrl } = config;
+var baseURL = axios.defaults.baseURL = serverUrl.home;
 
 async function getFilesByDocID(docID, callback) {
     return await axios.get('/getFilesByDocID', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'multipart/form-data'
         },
         params: {

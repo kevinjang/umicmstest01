@@ -1,11 +1,13 @@
 import axios from 'axios'
 import request from '../realRequest'
 import { message } from 'antd'
-var baseURL = axios.defaults.baseURL = "http://localhost:3000";
+import config from '../../config/custom_config'
+const { serverUrl } = config;
+var baseURL = axios.defaults.baseURL = serverUrl.home;
 function getByPage(pageSize, startPage, condition, callback) {
     axios.get(baseURL + '/getEmployeeBP', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/json'
         },
         params: { pageSize, startPage, condition },
@@ -51,7 +53,7 @@ function getByPage(pageSize, startPage, condition, callback) {
 function insert(record, callback) {
     axios.post('/insertEmployeeBP', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         params: {
@@ -82,7 +84,7 @@ function insert(record, callback) {
 function update(record, callback) {
     axios.post('/updateEmployeeBP', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         params: { record },
@@ -108,7 +110,7 @@ function update(record, callback) {
 function deleteItem(ID, callback) {
     axios.post('/employeeBPDeleteSingle', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/json'
         },
         params: { ID },
@@ -136,7 +138,7 @@ function deleteItem(ID, callback) {
 async function deleteItems(IDs, callback) {
     return axios.post('/employeeBPDeleteMultiple', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         params: {

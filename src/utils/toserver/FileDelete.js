@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { message } from 'antd'
-var baseURL = axios.defaults.baseURL = "http://localhost:3000";
+import config from '../../config/custom_config'
+const { serverUrl } = config;
+var baseURL = axios.defaults.baseURL = serverUrl.home;
 
 async function deleteFileItem(fileID, cb) {
     await axios.post('/deleteFileByID', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'multipart/form-data'
         },
         params: {
@@ -32,7 +34,7 @@ async function deleteFileItem(fileID, cb) {
 async function deleteFileItems(fileIDs, cb) {
     axios.post('/deleteFilesByID', {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'multipart/form-data'
         },
         params: {

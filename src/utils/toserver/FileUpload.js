@@ -8,7 +8,7 @@ async function upload(file, userAD, callback) {
     // console.log('qs:', qs)
     return await axios.post('/fileupload', formData, {
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "http://localhost:3000, http://192.168.3.2:3000",
             'Content-Type': 'multipart/form-data'
         },
         params:{

@@ -36,7 +36,8 @@ export default {
                 { path: '/mainframe/FilterAndSort', component: '@/pages/TableDemos/FilterAndSort' },
                 { path: '/mainframe/MultipleSort', component: '@/pages/TableDemos/MultipleSort' },
                 { path: '/mainframe/RemateFetch', component: '@/pages/TableDemos/RemateFetch' },
-                { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' }
+                { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' },
+                { path: '/mainframe/RowColMerge', component: '@/pages/TableDemos/RowColMerge' }
 
             ]
         },
@@ -45,5 +46,5 @@ export default {
         }, {
             path: '/*'
         }
-    ]
+    ],
 }

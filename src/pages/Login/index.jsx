@@ -1,5 +1,5 @@
 
-import { Tabs, Form, Input, Button, notification } from 'antd'
+import { Tabs, Form, Input, Button, notification, message } from 'antd'
 import LoginForm from './components'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { checkBackEndRunning } from '../../utils/request'
@@ -67,8 +67,11 @@ const Login1 = (props) => {
                             }).catch(err => {
                                 notification.error({
                                     message: '服务器端异常，请稍后重试！',
-                                    description: '服务器端异常'
+                                    description: err.message
                                 })
+
+                                // console.log(err)
+                                // message.info(err.description)
                             });
                         }}
                     >登录</Button>

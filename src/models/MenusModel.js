@@ -267,6 +267,14 @@ const MenusModel = {
                         urlPath: "/mainframe/Expandable",
                         nodeInfo: "./TableDemos/Expandable"
                     },
+                    {
+                        id: "46",
+                        level: 2,
+                        title: "行列合并",
+                        icon: "Fund",
+                        urlPath: "/mainframe/RowColMerge",
+                        nodeInfo: "./TableDemos/RowColMerge"
+                    },
                 ]
             },
             {
