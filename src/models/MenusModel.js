@@ -268,7 +268,15 @@ const MenusModel = {
                         nodeInfo: "./TableDemos/Expandable"
                     },
                     {
-                        id: "46",
+                      id: "46",
+                      level: 2,
+                      title: "受控的筛选和排序",
+                      icon: "Fund",
+                      urlPath: "/mainframe/ControlledFilterAndSort",
+                      nodeInfo: "./TableDemos/ControlledFilterAndSort"
+                    },
+                    {
+                        id: "47",
                         level: 2,
                         title: "行列合并",
                         icon: "Fund",

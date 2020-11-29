@@ -9,7 +9,8 @@ export default {
     alias:{
         'ksnlSearchSquare': '@/CommonUtility/BPM_RM/SearchSquare',
         'ksnlUserService': '@/services/UserService',
-        'ksnlUtils': '@/utils/utils'
+        'ksnlUtils': '@/utils/utils',
+        'ksnlFilterDropdown': '@/CommonUtility/FilterDropdown/FilterDropdown'
     },
     // dynamicImport: {
     //     loading: '@/components/PageLoading/index'
@@ -35,6 +36,7 @@ export default {
                 { path: '/mainframe/CustomSelect', component: '@/pages/TableDemos/CustomSelect' },
                 { path: '/mainframe/FilterAndSort', component: '@/pages/TableDemos/FilterAndSort' },
                 { path: '/mainframe/MultipleSort', component: '@/pages/TableDemos/MultipleSort' },
+                { path: '/mainframe/ControlledFilterAndSort', component: '@/pages/TableDemos/ControlledFilterAndSort' },
                 { path: '/mainframe/RemateFetch', component: '@/pages/TableDemos/RemateFetch' },
                 { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' },
                 { path: '/mainframe/RowColMerge', component: '@/pages/TableDemos/RowColMerge' }
