@@ -54,7 +54,7 @@ class KLayout extends React.Component {
     }
 
     render() {
-        document.title = 'KSNL';
+        // document.title = 'KSNL';
 
         return <div style={{
             width: '100%', height: 'calc(100vh - 0px)'
