@@ -40,7 +40,8 @@ export default {
                 { path: '/mainframe/ControlledFilterAndSort', component: '@/pages/TableDemos/ControlledFilterAndSort' },
                 { path: '/mainframe/RemateFetch', component: '@/pages/TableDemos/RemateFetch' },
                 { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' },
-                { path: '/mainframe/RowColMerge', component: '@/pages/TableDemos/RowColMerge' }
+                { path: '/mainframe/Link01', component: '@/pages/Umi_API/Link/Link01' },
+                { path: '/mainframe/NavLink', component: '@/pages/Umi_API/Link/NavLink' }
 
             ]
         },

@@ -268,12 +268,12 @@ const MenusModel = {
                         nodeInfo: "./TableDemos/Expandable"
                     },
                     {
-                      id: "46",
-                      level: 2,
-                      title: "受控的筛选和排序",
-                      icon: "Fund",
-                      urlPath: "/mainframe/ControlledFilterAndSort",
-                      nodeInfo: "./TableDemos/ControlledFilterAndSort"
+                        id: "46",
+                        level: 2,
+                        title: "受控的筛选和排序",
+                        icon: "Fund",
+                        urlPath: "/mainframe/ControlledFilterAndSort",
+                        nodeInfo: "./TableDemos/ControlledFilterAndSort"
                     },
                     {
                         id: "47",
@@ -377,6 +377,30 @@ const MenusModel = {
                         title: "黄页结构",
                         icon: "Windows",
                         urlPath: "/mainframe/OUUsersMaintenance",
+                        // nodeInfo: "./OUUsersMaintenance/index"
+                    },
+                ]
+            }, 
+            {
+                id: '48',
+                level: 1,
+                title: 'Umi API Link',
+                icon: 'Setting',
+                children: [
+                    {
+                        id: "49",
+                        level: 2,
+                        title: "Link 01",
+                        icon: "Windows",
+                        urlPath: "/mainframe/Link01",
+                        // nodeInfo: "./OUUsersMaintenance/index"
+                    },
+                    {
+                        id: "50",
+                        level: 2,
+                        title: "NavLink",
+                        icon: "Windows",
+                        urlPath: "/mainframe/NavLink",
                         // nodeInfo: "./OUUsersMaintenance/index"
                     },
                 ]
