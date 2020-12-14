@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'antd'
 import config from '../../config/custom_config'
 const { serverUrl } = config;
-var baseURL = axios.defaults.baseURL = serverUrl.home;
+var baseURL = axios.defaults.baseURL = serverUrl//.home;
 
 async function deleteFileItem(fileID, cb) {
     await axios.post('/deleteFileByID', {

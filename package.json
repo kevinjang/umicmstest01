@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "umi dev",
+    "devhome": "cross-env NODE_ENV=devhome umi dev",
+    "devcomp": "cross-env NODE_ENV=devcomp umi dev",
     "build": "umi build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kevinjang",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "react-custom-scrollbars": "^4.2.1",
     "react-loadable": "^5.5.0",
     "umi": "^3.2.19",

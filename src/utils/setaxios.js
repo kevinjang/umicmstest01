@@ -1,7 +1,7 @@
 import axios from 'axios'
 import config from '../../config/custom_config'
 const { serverUrl } = config;
-const baseUrl = serverUrl.home;
+const baseUrl = serverUrl//.home;
 const setAxios = () => {
 
     axios.defaults.baseURL = baseUrl;

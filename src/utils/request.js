@@ -2,7 +2,7 @@ import axios from 'axios'
 const qs = require('qs')
 import config from '../../config/custom_config'
 const { serverUrl } = config;
-const baseUrl = serverUrl.home;
+const baseUrl = serverUrl//.home;
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;

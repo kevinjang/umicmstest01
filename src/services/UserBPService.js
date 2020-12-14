@@ -2,7 +2,7 @@ import request from '../utils/realRequest'
 import qs from 'qs'
 import config from '../../config/custom_config'
 const {serverUrl} = config
-const baseUrl = serverUrl.home;//
+const baseUrl = serverUrl//.home;//
 
 export async function queryUserBP({ pageSize, startPage, condition }) {
     return request(baseUrl + "/getEmployeeBP", {

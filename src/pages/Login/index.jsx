@@ -48,6 +48,7 @@ const Login1 = (props) => {
                         onClick={() => {
                             const promiseRet = checkBackEndRunning();
                             const { dispatch } = props;
+                            console.log('process:', process.env)
                             if (dispatch) {
                                 dispatch({
                                     type: 'login/login'

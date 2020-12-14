@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import config from '../../config/custom_config'
 const { serverUrl } = config;
-var baseURL = axios.defaults.baseURL = serverUrl.home;
+var baseURL = axios.defaults.baseURL = serverUrl//.home;
 
 async function getFilesByDocID(docID, callback) {
     return await axios.get('/getFilesByDocID', {

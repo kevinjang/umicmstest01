@@ -2,7 +2,8 @@ import request from '../utils/realRequest'
 import qs from 'qs'
 import config from '../../config/custom_config'
 const {serverUrl} = config
-const baseUrl = serverUrl.home;
+// console.log('NODE_ENV:', process.env);
+const baseUrl = serverUrl;
 export async function queryLeaveAuthData({ pageSize, startPage, condition }) {
     return request(baseUrl + "/getBasePeople", {
         method: 'GET',
