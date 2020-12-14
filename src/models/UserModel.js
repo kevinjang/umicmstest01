@@ -9,6 +9,11 @@ export default {
             return {
                 loginState: true
             }
+        },
+        'logout':()=>{
+            return {
+                loginState: false
+            }
         }
     }
 }
