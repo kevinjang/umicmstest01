@@ -17,14 +17,15 @@ export default {
     // },
     routes: [
         {
-            path: '/', component: '@/pages/Login'
+            path: '/', component: '@/pages/Login', title: '登陆'
         },
         {
             path: '/mainframe', component: '@/pages/MainFrame',
+            title: 'KSNL',
             wrappers: ['@/pages/user/UrlPathGuard'],
             routes: [
                 { path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard' },
-                { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain' },
+                { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain', title: '员工BP号维护' },
                 { path: '/mainframe/newaladin', component: '@/pages/EditInModal/index' },
                 { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
                 { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' },
