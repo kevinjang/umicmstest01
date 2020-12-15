@@ -38,13 +38,13 @@ const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
 
                 return <Breadcrumb.Item key={itemY.id}>
                     {
-                        React.createElement(
+                        itemY.icon? React.createElement(
                             Icon[`${itemY.icon}Outlined`],
                             {
                                 size: 'small',
                                 key: itemY.id
                             }
-                        )
+                        ):null
                     }{itemY.title}
                 </Breadcrumb.Item>
             })}

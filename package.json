@@ -20,6 +20,7 @@
     "webpack": "^4.44.1"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.0.11",
     "@ant-design/icons": "^4.2.2",
     "@ant-design/pro-layout": "^6.4.14",
     "@umijs/preset-react": "^1.6.4",

@@ -41,7 +41,15 @@ export default {
                 { path: '/mainframe/RemateFetch', component: '@/pages/TableDemos/RemateFetch' },
                 { path: '/mainframe/Expandable', component: '@/pages/TableDemos/Expandable' },
                 { path: '/mainframe/Link01', component: '@/pages/Umi_API/Link/Link01' },
-                { path: '/mainframe/NavLink', component: '@/pages/Umi_API/Link/NavLink' }
+                { path: '/mainframe/NavLink', component: '@/pages/Umi_API/Link/NavLink' },
+                { path: '/mainframe/Prompt', component: '@/pages/Umi_API/Prompt/Prompt' },
+                { path: '/mainframe/withRouter', component: '@/pages/Umi_API/withRouter/withRouter' },
+                { path: '/mainframe/lineChartWithComment', component: '@/pages/AntVSamples/Line/withComment' },
+                { path: '/mainframe/withStyling', component: '@/pages/AntVSamples/Line/withStyling' },
+                { path: '/mainframe/withSlider', component: '@/pages/AntVSamples/Line/withXAxis' },
+                { path: '/mainframe/ColoredLines', component: '@/pages/AntVSamples/Line/ColoredLines' },
+                { path: '/mainframe/MultipleLinesAnimation', component: '@/pages/AntVSamples/Line/MultipleLinesAnimation' },
+                { path: '/mainframe/ColumnLineMixed', component: '@/pages/AntVSamples/DualAxes/ColumnLineMixed' }
 
             ]
         },

@@ -1,6 +1,6 @@
 const MenusModel = {
     namespace: "menus",
-    /* 43了*/
+    /* 54了*/
     state: {
         menus: [
             {
@@ -403,6 +403,72 @@ const MenusModel = {
                         urlPath: "/mainframe/NavLink",
                         // nodeInfo: "./OUUsersMaintenance/index"
                     },
+                    {
+                        id: "51",
+                        level: 2,
+                        title: "Prompt",
+                        icon: "Windows",
+                        urlPath: "/mainframe/Prompt",
+                        // nodeInfo: "./OUUsersMaintenance/index"
+                    },
+                    {
+                        id: "52",
+                        level: 2,
+                        title: "withRouter",
+                        icon: "Windows",
+                        urlPath: "/mainframe/withRouter",
+                        // nodeInfo: "./OUUsersMaintenance/index"
+                    },
+                ]
+            },
+            {
+                id: '53',
+                level: 1,
+                title: 'AntV图表',
+                icon: 'Setting',
+                children: [
+                    {
+                        id: '54',
+                        level: 2,
+                        title: '折线图带图表标注',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/lineChartWithComment'
+                    },
+                    {
+                        id: '55',
+                        level: 2,
+                        title: '配置折线数据点样式',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/withStyling'
+                    },
+                    {
+                        id: '56',
+                        level: 2,
+                        title: '带缩略轴的折线',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/withSlider'
+                    },
+                    {
+                        id: '57',
+                        level: 2,
+                        title: '指定折线颜色',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/ColoredLines'
+                    },
+                    {
+                        id: '58',
+                        level: 2,
+                        title: '多折线动画',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/MultipleLinesAnimation'
+                    },
+                    {
+                        id: '59',
+                        level: 2,
+                        title: '柱线混合图表',
+                        icon: 'PieChart',
+                        urlPath: '/mainframe/ColumnLineMixed'
+                    }
                 ]
             }
         ],
