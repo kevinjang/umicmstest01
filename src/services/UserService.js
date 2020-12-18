@@ -7,3 +7,7 @@ export async function queryNotices(){
 export async function queryERRemoData(){
     return request('/api/erdata');
 }
+
+export async function login(username, pwd){
+    
+}

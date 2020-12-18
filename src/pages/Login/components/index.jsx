@@ -1,25 +1,26 @@
 import LoginContext from './LoginContext'
 import LoginTab from './LoginTab'
 import { Form, Tabs } from 'antd'
-import {useEffect} from 'react'
+import React, { useEffect } from 'react'
 const { TabPane } = Tabs
 const Login = props => {
-    console.log('Login props:', props)
     const { children } = props;
+    const {formRef} = props;
     const TabChildren = [];
+    var form = null;
     React.Children.forEach(children, child => {
-        // const props = child.props;
         if (child.type.typeName === 'LoginTab') {
             console.log('child:', child)
             TabChildren.push(<TabPane key={"tp_m"} {...child.props}>{child.props.children}</TabPane>)
         }
     })
-    useEffect(()=>{
-        console.log("ref:", {...props})
+    useEffect(() => {
+        form = formRef.current;
+        console.log("props:", {...props})
     })
 
     return (
-        <Form {...props}>
+        <Form {...props} ref={formRef} >
             <Tabs centered>
                 {TabChildren}
             </Tabs>

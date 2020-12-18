@@ -1,3 +1,4 @@
+import {login} from '@/services/UserService'
 export default {
     namespace: 'login',
     state:{
@@ -5,7 +6,7 @@ export default {
     },
     reducers:{
         'login':()=>{
-            console.log('UserModel.js reducers-login node_env:', {...process}, process.env);
+            // console.log('UserModel.js reducers-login node_env:', {...process}, process.env);
             return {
                 loginState: true
             }
@@ -14,6 +15,18 @@ export default {
             return {
                 loginState: false
             }
+        }
+    },
+    effects:{
+        *loginAsync({username, pwd}, {call, put, select}){
+            console.log('loginAsync payload:',...payload);
+            yield call(login,{
+                username, 
+                pwd
+            })
+            yield put({
+                type: 'login'
+            })
         }
     }
 }

@@ -14,13 +14,14 @@ import { withRouter, connect } from 'umi'
 const Login1 = (props) => {
     const formRef = React.createRef();
     var form = null;
-    const { history, loginState } = props;
-    useEffect(()=>{
+    const { history, loginState, loginEffect } = props;
+    useEffect(() => {
         form = formRef.current;
         console.log('login form:', form)
-    })
+        // console.log('formRef:', formRef);
+    });
     return (
-        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot" ref={formRef}>
+        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot" ref={formRef} formRef={formRef}>
             <Tab tab="账号密码登录" key="passwordLogin">
                 <Form.Item name="username" rules={[
                     {
@@ -48,11 +49,23 @@ const Login1 = (props) => {
                         onClick={() => {
                             const promiseRet = checkBackEndRunning();
                             const { dispatch } = props;
-                            console.log('process:', process.env)
+                            console.log('submit form:', form)
                             if (dispatch) {
                                 dispatch({
-                                    type: 'login/login'
+                                    type: 'login/loginAsync',
+                                    payload: {
+                                        username: form.getFieldValue("userName"),
+                                        pwd: form.getFieldValue("pwd")
+                                    }
                                 })
+
+                                // dispatch({
+                                //     type: 'login/login',
+                                //     payload: {
+                                //         username: form.getFieldValue("userName"),
+                                //         pwd: form.getFieldValue("pwd")
+                                //     }
+                                // })
                             }
                             promiseRet.then(data => {
                                 const running = data.data.running;
@@ -70,9 +83,6 @@ const Login1 = (props) => {
                                     message: '服务器端异常，请稍后重试！',
                                     description: err.message
                                 })
-
-                                // console.log(err)
-                                // message.info(err.description)
                             });
                         }}
                     >登录</Button>
@@ -82,6 +92,10 @@ const Login1 = (props) => {
     )
 }
 
-export default connect(({ login }) => ({
-    loginState: login.loginState
-}))(withRouter(Login1));
+export default connect(({ login, loading }) => {
+    console.log('loading:', loading)
+    return {
+        loginState: login.loginState,
+        loginEffect: loading.effects["login/loginAsync"]
+    }
+})(withRouter(Login1));
