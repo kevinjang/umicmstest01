@@ -3,9 +3,9 @@ import LoginTab from './LoginTab'
 import { Form, Tabs } from 'antd'
 import React, { useEffect } from 'react'
 const { TabPane } = Tabs
-const Login = props => {
+const Login = React.forwardRef((props,ref) => {
     const { children } = props;
-    const {formRef} = props;
+    // const {formRef} = props;
     const TabChildren = [];
     var form = null;
     React.Children.forEach(children, child => {
@@ -15,18 +15,18 @@ const Login = props => {
         }
     })
     useEffect(() => {
-        form = formRef.current;
+        form = ref.current;
         console.log("props:", {...props})
     })
 
     return (
-        <Form {...props} ref={formRef} >
+        <Form {...props} ref={ref} >
             <Tabs centered>
                 {TabChildren}
             </Tabs>
         </Form>
     )
-}
+})
 
 Login.Tab = LoginTab;
 Login.LoginContext = LoginContext;

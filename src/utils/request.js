@@ -3,6 +3,7 @@ const qs = require('qs')
 import config from '../../config/custom_config'
 const { serverUrl } = config;
 const baseUrl = serverUrl//.home;
+import request from './realRequest'
 
 let validateUserInfo = async (info) => {
     const tabType = info.tabType;
@@ -50,7 +51,14 @@ let getUserName = async () => {
 }
 
 let checkBackEndRunning = async () => {
-    return await axios.get(baseUrl + '/checkRunning', {});
+    // return await axios.get(baseUrl + '/checkRunning', {});
+    return request(baseUrl+'/checkRunning', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'json'
+    })
 }
 
 export { validateUserInfo, getOUBaseInfoAll, getUserName, checkBackEndRunning }

@@ -21,7 +21,7 @@ const Login1 = (props) => {
         // console.log('formRef:', formRef);
     });
     return (
-        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot" ref={formRef} formRef={formRef}>
+        <LoginForm style={{ margin: '0 40%', padding: '10% 0' }} key="loginFormRoot" ref={formRef}>
             <Tab tab="账号密码登录" key="passwordLogin">
                 <Form.Item name="username" rules={[
                     {
@@ -47,43 +47,35 @@ const Login1 = (props) => {
                         htmlType="submit"
                         type="primary"
                         onClick={() => {
-                            const promiseRet = checkBackEndRunning();
+                            // const promiseRet = checkBackEndRunning();
                             const { dispatch } = props;
                             console.log('submit form:', form)
                             if (dispatch) {
                                 dispatch({
                                     type: 'login/loginAsync',
                                     payload: {
-                                        username: form.getFieldValue("userName"),
-                                        pwd: form.getFieldValue("pwd")
+                                        username: form.getFieldValue("username"),
+                                        pwd: form.getFieldValue("password")
                                     }
                                 })
-
-                                // dispatch({
-                                //     type: 'login/login',
-                                //     payload: {
-                                //         username: form.getFieldValue("userName"),
-                                //         pwd: form.getFieldValue("pwd")
-                                //     }
-                                // })
                             }
-                            promiseRet.then(data => {
-                                const running = data.data.running;
-                                if (!!running) {
-                                    history.push('/mainframe')
-                                }
-                                else {
-                                    notification.error({
-                                        message: '服务器端异常，请稍后重试！',
-                                        description: '服务器端异常'
-                                    })
-                                }
-                            }).catch(err => {
-                                notification.error({
-                                    message: '服务器端异常，请稍后重试！',
-                                    description: err.message
-                                })
-                            });
+                            // promiseRet.then(data => {
+                            //     const running = data.data.running;
+                            //     if (!!running) {
+                            //         history.push('/mainframe')
+                            //     }
+                            //     else {
+                            //         notification.error({
+                            //             message: '服务器端异常，请稍后重试！',
+                            //             description: '服务器端异常'
+                            //         })
+                            //     }
+                            // }).catch(err => {
+                            //     notification.error({
+                            //         message: '服务器端异常，请稍后重试！',
+                            //         description: err.message
+                            //     })
+                            // });
                         }}
                     >登录</Button>
                 </Form.Item>
