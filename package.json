@@ -17,7 +17,7 @@
   "dependencies": {
     "ant-design-pro": "^2.2.1",
     "antd": "^3.15.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "moment": "^2.24.0",
     "react-app-rewired": "^2.0.2-next.0",
     "react-router-breadcrumbs-hoc": "^3.3.0",
