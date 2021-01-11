@@ -47,35 +47,35 @@ const Login1 = (props) => {
                         htmlType="submit"
                         type="primary"
                         onClick={() => {
-                            // const promiseRet = checkBackEndRunning();
+                            const promiseRet = checkBackEndRunning();
                             const { dispatch } = props;
                             console.log('submit form:', form)
                             if (dispatch) {
                                 dispatch({
-                                    type: 'login/loginAsync',
+                                    type: 'login/login',
                                     payload: {
                                         username: form.getFieldValue("username"),
                                         pwd: form.getFieldValue("password")
                                     }
                                 })
                             }
-                            // promiseRet.then(data => {
-                            //     const running = data.data.running;
-                            //     if (!!running) {
-                            //         history.push('/mainframe')
-                            //     }
-                            //     else {
-                            //         notification.error({
-                            //             message: '服务器端异常，请稍后重试！',
-                            //             description: '服务器端异常'
-                            //         })
-                            //     }
-                            // }).catch(err => {
-                            //     notification.error({
-                            //         message: '服务器端异常，请稍后重试！',
-                            //         description: err.message
-                            //     })
-                            // });
+                            promiseRet.then(data => {
+                                const running = data.running;
+                                if (!!running) {
+                                    history.push('/mainframe')
+                                }
+                                else {
+                                    notification.error({
+                                        message: '服务器端异常，请稍后重试！',
+                                        description: '服务器端异常'
+                                    })
+                                }
+                            }).catch(err => {
+                                notification.error({
+                                    message: '服务器端异常，请稍后重试！',
+                                    description: err.message
+                                })
+                            });
                         }}
                     >登录</Button>
                 </Form.Item>

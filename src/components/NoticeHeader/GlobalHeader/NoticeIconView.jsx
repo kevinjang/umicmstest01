@@ -1,9 +1,9 @@
-import NoticeIcon from '../NoticeIcon/'
+import GlobalHeader from '@ant-design/pro-layout/lib/GlobalHeader';
 import {connect} from 'umi'
 
-class GlobalHeaderDropdown extends React.Component{
+class GlobalHeaderDropdown extends React.Component {
     constructor(props){
-        super(props)
+        super(props);
     }
 
     componentDidMount(){
@@ -15,11 +15,7 @@ class GlobalHeaderDropdown extends React.Component{
         }
     }
 
-    render(){
-        return (<NoticeIcon >
-            <NoticeIcon.Tab title="通知" tabKey="notification"  />
-        </NoticeIcon>);
-    }
+
 }
 
 export default connect(({global, loading})=>({

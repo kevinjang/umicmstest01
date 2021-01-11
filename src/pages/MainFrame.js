@@ -6,7 +6,7 @@ import UserInfo from './user/UserInfo'
 const { Header, Footer, Content } = Layout
 import { UserContext, GetData, MyUserData } from './UserContextMock';
 import { Scrollbars } from 'react-custom-scrollbars'
-import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
+// import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
 import { CopyrightCircleOutlined, ChromeFilled } from '@ant-design/icons'
 import moment from 'moment'
 import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
@@ -75,7 +75,7 @@ class KLayout extends React.Component {
                                         <div style={{ width: '70%' }}>
                                             <Row gutter={8} justify="center">
                                                 <Col span={8} className={styles.bannerDock}>
-                                                    <GlobalHeaderDropdown />
+                                                    {/* <GlobalHeaderDropdown /> */}
                                                 </Col>
                                                 <Col span={16} className={styles.bannerDock}>
                                                     <UserInfo />
