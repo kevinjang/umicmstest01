@@ -16,11 +16,10 @@ export default {
             }
         }
     },
-    effects: {
-        *loginAsync({ payload }, { call, put, select }) {
-            const { username, pwd } = payload;
-            // console.log('username, pwd', username, pwd)
-            const response = yield call(login, {
+    effects:{
+        *loginAsync({username, pwd}, {call, put, select}){
+            // console.log('loginAsync payload:',...payload);
+            yield call(login,{
                 username,
                 pwd
             })
