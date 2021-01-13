@@ -13,6 +13,7 @@ import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
 import KBreadcrumbs from '@/components/Breadcrumbs/'
 import config from '../../config/config'
 import zhCN from 'antd/lib/locale/zh_CN'
+import GlobalHeaderDropdown from '../components/NoticeHeader/GlobalHeader/NoticeIconView'
 
 class KLayout extends React.Component {
     constructor(props) {
@@ -75,7 +76,7 @@ class KLayout extends React.Component {
                                         <div style={{ width: '70%' }}>
                                             <Row gutter={8} justify="center">
                                                 <Col span={8} className={styles.bannerDock}>
-                                                    {/* <GlobalHeaderDropdown /> */}
+                                                    <GlobalHeaderDropdown />
                                                 </Col>
                                                 <Col span={16} className={styles.bannerDock}>
                                                     <UserInfo />

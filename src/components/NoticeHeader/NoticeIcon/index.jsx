@@ -13,8 +13,9 @@ const NoticeIcon = (props)=>{
         const {children, onClear, viewMoreText, onViewMore } = props;
         const panes = [];
 
-        React.Children.forEach(children, child=>{
-            const 
-        })
     }
+
+    return <div>test</div>
 }
+
+export default NoticeIcon;
