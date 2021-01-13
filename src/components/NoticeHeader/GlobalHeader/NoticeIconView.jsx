@@ -1,5 +1,6 @@
-import GlobalHeader from '@ant-design/pro-layout/lib/GlobalHeader';
+
 import {connect} from 'umi'
+import NoticeIcon from '../NoticeIcon/index'
 
 class GlobalHeaderDropdown extends React.Component {
     constructor(props){
@@ -15,7 +16,13 @@ class GlobalHeaderDropdown extends React.Component {
         }
     }
 
-
+    render(){
+        return <NoticeIcon overlay={
+            <div>test</div>
+        } trigger={[
+            'click'
+        ]}></NoticeIcon>
+    }
 }
 
 export default connect(({global, loading})=>({
