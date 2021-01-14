@@ -18,7 +18,7 @@ class GlobalHeaderDropdown extends React.Component {
 
     render(){
         return <NoticeIcon overlay={
-            <div>test</div>
+            "test"
         } trigger={[
             'click'
         ]}></NoticeIcon>
