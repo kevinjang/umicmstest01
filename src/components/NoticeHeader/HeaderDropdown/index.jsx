@@ -1,6 +1,6 @@
-import {Dropdown} from 'antd'
+import { Dropdown } from 'antd'
 
-const HeaderDropdown = (props)=>{
+const HeaderDropdown = (props) => {
     return <Dropdown {...props}></Dropdown>
 }
 
