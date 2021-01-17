@@ -17,11 +17,10 @@ class GlobalHeaderDropdown extends React.Component {
     }
 
     render(){
-        return <NoticeIcon overlay={
-            <div>test1</div>
-        } trigger={[
-            'click'
-        ]}></NoticeIcon>
+        return <NoticeIcon style={{height: '500px', width: '300px'}} >
+            <NoticeIcon.Tab>
+            </NoticeIcon.Tab>
+        </NoticeIcon>
     }
 }
 
