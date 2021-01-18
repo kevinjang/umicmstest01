@@ -17,7 +17,7 @@ const NoticeIcon = (props) => {
         const panes = [];
         React.Children.forEach(children, child => {
             if (child) {
-                panes.push(<TabPane tab={"tab 1"} key={"1"} style={{width: '300px'}}>
+                panes.push(<TabPane tab={"通知"} key={"1"} style={{width: '300px'}}>
                     <NoticeList style={{height: '500px', width: '500px'}} {...child.props}>
 
                     </NoticeList>
@@ -26,7 +26,7 @@ const NoticeIcon = (props) => {
         })
 
         return <Spin delay={300} spinning={false}>
-            <Tabs>
+            <Tabs style={{backgroundColor: 'white', marginTop: '15px'}} centered>
                 {panes}
             </Tabs>
         </Spin>
