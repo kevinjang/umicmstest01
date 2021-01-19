@@ -18,7 +18,7 @@ class GlobalHeaderDropdown extends React.Component {
 
     render(){
         return <NoticeIcon style={{height: '500px', width: '300px'}} >
-            <NoticeIcon.Tab>
+            <NoticeIcon.Tab title="通知" >
             </NoticeIcon.Tab>
         </NoticeIcon>
     }
