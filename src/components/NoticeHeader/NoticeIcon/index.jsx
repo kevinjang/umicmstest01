@@ -33,9 +33,14 @@ const NoticeIcon = (props) => {
         </Spin>
     }
 
+    const [visible, setVisible] = useMergeValue(false,{
+        value: undefined,
+        onChange: null
+    })
+
     const overlay = getNotificationBox();
 
-    return <HeaderDropdown overlay={overlay} {...props}>
+    return <HeaderDropdown overlay={overlay} visible={visible} onVisibleChange={setVisible} trigger={['click']} {...props}>
         <span>
             <Badge count={11} size={"small"}>
                 <BellOutlined size={"middle"} />

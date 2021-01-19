@@ -3,7 +3,7 @@ import { Dropdown } from 'antd'
 const HeaderDropdown = (props) => {
     const { overlay } = props
     console.log('overlay:', overlay)
-    return <Dropdown {...props} trigger={['click']}></Dropdown>
+    return <Dropdown {...props} ></Dropdown>
 }
 
 export default HeaderDropdown
