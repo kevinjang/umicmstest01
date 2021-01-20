@@ -1,14 +1,98 @@
+@import "~antd/es/style/themes/default.less";
 .list {
-    .item {
-        // margin-left: 10px;
-        padding-left: 10px;
-        border-bottom: 1px solid lightgray;
-        &.read{
-            opacity: 0.4;
-        }
+  font-size: 10px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .item {
+    // margin-left: 10px;
+    padding-left: 24px;
+    padding-right: 24px;
+    overflow: hidden;
+    transition: all 0.3s;
+
+    .meta {
+      width: 100%;
     }
 
-    .item:hover{
-        background-color: #e6f7ff;
+    .avatar {
+      margin-top: 4px;
+      background: @component-background;
     }
+
+    border-bottom: 1px solid lightgray;
+    cursor: pointer;
+    .title {
+      // float:left;
+      // display: flex;
+      width: 100%;
+      .extra {
+        float: right;
+      }
+    }
+    &.read {
+      opacity: 0.4;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      background: @primary-1;
+    }
+
+    .title {
+      margin-bottom: 8px;
+      font-weight: normal;
+    }
+    .description {
+      font-size: 12px;
+      line-height: @line-height-base;
+    }
+    .datetime {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: @line-height-base;
+    }
+
+    .extra {
+      float: right;
+      margin-top: -1.5px;
+      margin-right: 0;
+      color: @text-color-secondary;
+      font-weight: normal;
+    }
+  }
+
+  //   .item:hover {
+  //     background-color: #e6f7ff;
+  //   }
+}
+
+.bottomBar {
+  //   float: left;
+  //   display: flex;
+
+  height: 46px;
+  color: @text-color;
+  line-height: 46px;
+  text-align: center;
+  border-top: 1px solid @border-color-split;
+  border-radius: 0 0 @border-radius-base @border-radius-base;
+  transition: all 0.3s;
+  div {
+    display: inline-block;
+    width: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+    &:only-child {
+      width: 100%;
+    }
+    &:not(:only-child):last-child {
+      border-left: 1px solid @border-color-split;
+    }
+  }
 }

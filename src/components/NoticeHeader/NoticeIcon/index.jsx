@@ -14,12 +14,20 @@ const NoticeIcon = (props) => {
     const { loading, className, onItemClick, bell, clearText } = props;
     const getNotificationBox = () => {
         const { children, onClear, viewMoreText, onViewMore } = props;
+        console.log('index NoticeIcon onClear:', onClear)
         const panes = [];
         React.Children.forEach(children, child => {
             if (child) {
-                const { unread = 4,title } = child.props;
-                panes.push(<TabPane tab={`${title}(${unread})`} key={"1"} style={{ width: '300px' }}>
-                    <NoticeList style={{ height: '500px', width: '500px' }} {...child.props}>
+                const { count, title, tabKey, list, showClear } = child.props;
+                panes.push(<TabPane tab={title + (count? `(${count})`:'')} key={tabKey} style={{ width: '350px' }}>
+                    <NoticeList
+                        style={{ height: '500px' }}
+                        list={list}
+                        title={title}
+                        showClear={showClear}
+                        onClear={() => onClear && onClear(title, tabKey)}
+                        onClick={item => onItemClick && onItemClick(item)}
+                        {...child.props}>
 
                     </NoticeList>
                 </TabPane>)
@@ -33,7 +41,7 @@ const NoticeIcon = (props) => {
         </Spin>
     }
 
-    const [visible, setVisible] = useMergeValue(false,{
+    const [visible, setVisible] = useMergeValue(false, {
         value: undefined,
         onChange: null
     })

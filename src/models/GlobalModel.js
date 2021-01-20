@@ -12,6 +12,27 @@ const GlobalModel = {
                 type: 'saveNotices',
                 payload: data
             })
+        },
+        *changeNoticeReadState({payload}, {put, select}){
+            const notices = yield select(state=>state.global.notices.map(item=>{
+                const notice = {...item};
+                if(notice.id === payload){
+                    notice.read = true;
+                }
+
+                return notice;
+            }));
+
+            yield put({
+                type: 'saveNotices',
+                payload: notices
+            })
+        },
+        *clearNotices({payload}, {put}){
+            yield put({
+                type: 'saveClearedNotices',
+                payload
+            })
         }
     },
     reducers:{
@@ -20,6 +41,13 @@ const GlobalModel = {
                 collapsed:false,
                 ...state,
                 notices: payload
+            }
+        },
+        'saveClearedNotices':(state = {notices:[], collapsed: true},{payload})=>{
+            return {
+                ...state,
+                collapsed: false,
+                notices: state.notices.filter(item=>item.type !== payload)
             }
         }
     }
