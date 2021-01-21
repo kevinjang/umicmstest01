@@ -4,9 +4,10 @@ const MenuItem = Menu.Item;
 const { SubMenu } = Menu;
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useState } from 'react'
-import { Link, connect } from 'umi'
+import { Link, connect, history } from 'umi'
 import * as Icon from '@ant-design/icons'
-import {routes} from '../../../config/config'
+import config from '../../../config/config'
+import { flatMap, find } from 'lodash'
 
 const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
     menuMode, menuCollapsed, collapsible,
@@ -19,6 +20,12 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
             //如果没有活跃的值，根据当前路径找到活跃的值，并更新再获取
         }
     }
+
+    const { routes } = config
+
+    const flatRoutes = routes[1].routes  //flatten(routes);
+
+    // console.log('flatRoutes:', flatRoutes);
 
     return (
         <Sider collapsed={collapsed} theme={theme} collapsible={collapsible} onCollapse={
@@ -56,11 +63,21 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                                         style={{ color: 'white' }}
                                                         to={cItem.urlPath}
                                                         key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
-                                                        onClick={(ev, rest)=>{
+                                                        onClick={(ev, rest) => {
                                                             // console.log('menu item clicked:',ev)
                                                             // 应该可以打断跳转
-                                                            ev.preventDefault();
-                                                            console.log('已打断')
+                                                            const item = find(flatRoutes, (xItem) => {
+
+                                                                return xItem.path === cItem.urlPath;
+                                                            });
+                                                            if (!item) {
+                                                                // 没有该路径
+                                                                // 跳转到404
+
+                                                                ev.preventDefault();
+                                                                history.push('/mainframe/404')
+                                                            }
+                                                            // console.log('已打断:', cItem)
                                                         }}
                                                     >
                                                         {cItem.title}

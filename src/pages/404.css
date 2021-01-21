@@ -1,0 +1,18 @@
+.root{
+    background: url('../../public/images/404bg002.jpg') no-repeat;
+    background-size: 100% auto;
+    width: 100%;
+    height: calc(100vh - 160px);
+}
+
+.text{
+    font-size: 64px;
+    font-weight: 1000;
+    color: white;
+    padding: 150px 100px;
+}
+
+.text > .lost{
+    font-size: 24px;
+    font-weight: 800;
+}

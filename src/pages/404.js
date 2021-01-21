@@ -1,10 +1,14 @@
-import {Button} from 'antd'
-export default ({history})=>{
+import styles from './404.css'
+export default ({ history }) => {
     console.log("history:", history);
     return <div>
-        404 Page
-        <div>
-            <Button type="link" href="/">回到登录页面</Button>
+        <div className={styles.root}>
+            <div className={styles.text}>
+                404 Page
+                <div className={styles.lost}> 
+                    Looks like you are lost!
+                </div>
+            </div>
         </div>
     </div>
 }

@@ -52,7 +52,10 @@ export default {
                 { path: '/mainframe/ColumnLineMixed', component: '@/pages/AntVSamples/DualAxes/ColumnLineMixed' },
                 { path: '/mainframe/RowColMerge', component: '@/pages/TableDemos/RowColMerge' } ,
                 { path: '/mainframe/TreeData', component: '@/pages/TableDemos/TreeData' } ,
-                { path: '/mainframe/FixedTableHead', component: '@/pages/TableDemos/FixedTableHead' } 
+                { path: '/mainframe/FixedTableHead', component: '@/pages/TableDemos/FixedTableHead' } ,
+                {
+                    path: '/mainframe/404', component: '@/pages/404'
+                }
 
             ]
         },
