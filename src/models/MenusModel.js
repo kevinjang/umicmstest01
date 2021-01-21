@@ -283,6 +283,22 @@ const MenusModel = {
                         urlPath: "/mainframe/RowColMerge",
                         nodeInfo: "./TableDemos/RowColMerge"
                     },
+                    {
+                        id: "60",
+                        level: 2,
+                        title: "树形展示",
+                        icon: "Fund",
+                        urlPath: "/mainframe/TreeData",
+                        nodeInfo: "./TableDemos/TreeData"
+                    },
+                    {
+                        id: "61",
+                        level: 2,
+                        title: "固定表头",
+                        icon: "Fund",
+                        urlPath: "/mainframe/FixedTableHead",
+                        nodeInfo: "./TableDemos/FixedTableHead"
+                    },
                 ]
             },
             {

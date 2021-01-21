@@ -6,7 +6,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import { useState } from 'react'
 import { Link, connect } from 'umi'
 import * as Icon from '@ant-design/icons'
-
+import {routes} from '../../../config/config'
 
 const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
     menuMode, menuCollapsed, collapsible,
@@ -40,6 +40,7 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                 }>
                                 {
                                     item.children.map(cItem => {
+
                                         return (
                                             <MenuItem
                                                 key={cItem.id + "_" + cItem.nodeInfo}>
@@ -55,6 +56,12 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                                         style={{ color: 'white' }}
                                                         to={cItem.urlPath}
                                                         key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
+                                                        onClick={(ev, rest)=>{
+                                                            // console.log('menu item clicked:',ev)
+                                                            // 应该可以打断跳转
+                                                            ev.preventDefault();
+                                                            console.log('已打断')
+                                                        }}
                                                     >
                                                         {cItem.title}
                                                     </Link>

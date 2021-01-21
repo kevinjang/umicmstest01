@@ -1,8 +1,13 @@
 import React from 'react'
 
-import { getUserBaseInfoByAD, getOULongNameUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
+import { getUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
+import { getOULongNameUserBaseInfoByAD } from '../services/System/UserBaseInfoService'
+import { message } from 'antd';
 
-let UserContext = null;
+let UserContext = React.createContext({
+    userRow: null,
+    spinning: true
+});
 let MyUserData = null;
 
 async function GetData(userAD, cb) {
@@ -10,16 +15,28 @@ async function GetData(userAD, cb) {
         userAD = "cofco\\" + userAD;
     }
 
-    //getUserBaseInfoByAD getOULongNameUserBaseInfoByAD
-    await getOULongNameUserBaseInfoByAD(userAD, (data) => {
-        UserContext = React.createContext(data);
-        // console.log('getUserBaseInfoByAD-data:', data);
-        MyUserData = data;
-        if (cb) {
-            cb();
-            // console.log('cb:', cb);
-        }
-    })
+    const result = await getOULongNameUserBaseInfoByAD(userAD);
+
+    const { data, message: msg } = result;
+
+    if (msg === "succeeded") {
+        const row = data && data.recordsets[0] && data.recordsets[0][0];
+        const value = {
+            userRow: row,
+            spinning: false
+        };
+        UserContext = React.createContext(value);
+        MyUserData = value;
+        // console.log(UserContext)
+        // if (cb) {
+        //     cb();
+        // }
+        message.success("人员登陆成功");
+    } else {
+        message.error(msg);
+    }
+
+    return {UserContext, MyUserData};
 }
 
 // export const UserOUInfo = {

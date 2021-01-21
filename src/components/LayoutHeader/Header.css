@@ -1,0 +1,21 @@
+.header{
+    color: white;
+    font-size: 32px;
+}
+
+.header > span {
+    color: white;
+}
+
+.userInfoNode {
+  float: right;
+  display: flex;
+  /* margin-top: 15px; */
+  /* border: 1px solid white; */
+  width: 250px;
+}
+
+
+.userInfoNode > .innerContainer{
+    width: 70%;
+}

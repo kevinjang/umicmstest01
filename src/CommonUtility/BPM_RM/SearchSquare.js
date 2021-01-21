@@ -6,7 +6,7 @@ const SearchSquare = (props) => {
 
     const selectOptions = !!columns && Array.isArray(columns) ?
         columns.filter(col => !!col.asQuery).map((item, index) => {
-            console.log('select key:', item.key);
+            // console.log('select key:', item.key);
             return <Select.Option value={item.dataIndex} key={item.key}>{item.title}</Select.Option>
         }) : null;
     if (selectOptions) {
@@ -35,7 +35,7 @@ const SearchSquare = (props) => {
 
     const setCondition = () => {
         const condition = composeConditions();
-        console.log('condition:', condition)
+        // console.log('condition:', condition)
         if (condition && dispatch) {
             dispatch({
                 type: modelType + '/setCondition',

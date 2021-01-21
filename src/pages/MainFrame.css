@@ -1,3 +1,10 @@
+.root {
+  width: 100%;
+  height: calc(100vh - 0px);
+  text-align: initial;
+  padding-top: 0px;
+}
+
 .card-container > .ant-tabs-card > .ant-tabs-content {
   height: 120px;
   /* margin-top: -16px; */
@@ -39,13 +46,6 @@
   padding: 10px 50px;
 }
 
-.userInfoNode {
-  float: right;
-  display: flex;
-  /* margin-top: 15px; */
-  /* border: 1px solid white; */
-  width: 250px;
-}
 .bannerHeader {
   color: white;
   font-size: 32px;
@@ -68,31 +68,3 @@
   color: white;
 }
 
-.sidebarLayout {
-  max-height: calc(100vh - 64px);
-}
-
-.siderbar {
-  min-height: 91.5vh;
-  color: white;
-  padding-top: 16px;
-}
-
-.contentLayout {
-  background-color: #f0f2f5;
-}
-
-.content {
-  /* margin-top: 16px; */
-  margin-left: 16px;
-  margin-right: 16px;
-  max-height: calc(90vh - 10px);
-  overflow: overlay;
-  min-height: calc(100vh - 153px);
-}
-
-.footer {
-  background-color: white;
-  height: 48px;
-  padding: 10px 50px;
-}

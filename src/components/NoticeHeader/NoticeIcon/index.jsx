@@ -3,6 +3,7 @@ import { Spin, Tabs, Badge } from 'antd';
 const { TabPane } = Tabs;
 
 import { BellOutlined } from '@ant-design/icons';
+import styles from './index.less'
 import classnames from 'classnames'
 
 import useMergeValue from 'use-merge-value';
@@ -14,7 +15,7 @@ const NoticeIcon = (props) => {
     const { loading, className, onItemClick, bell, clearText } = props;
     const getNotificationBox = () => {
         const { children, onClear, viewMoreText, onViewMore } = props;
-        console.log('index NoticeIcon onClear:', onClear)
+        // console.log('index NoticeIcon onClear:', onClear)
         const panes = [];
         React.Children.forEach(children, child => {
             if (child) {
@@ -49,9 +50,9 @@ const NoticeIcon = (props) => {
     const overlay = getNotificationBox();
 
     return <HeaderDropdown overlay={overlay} visible={visible} onVisibleChange={setVisible} trigger={['click']} {...props}>
-        <span>
+        <span style={{color:'white'}}>
             <Badge count={11} size={"small"}>
-                <BellOutlined size={"middle"} />
+                <BellOutlined className={styles.icon}/>
             </Badge>
         </span>
     </HeaderDropdown>

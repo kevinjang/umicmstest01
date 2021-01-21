@@ -122,5 +122,5 @@ const data = [
 ];
 
 export default () => {
-    return <Table columns={columns} dataSource={data} bordered></Table>
+    return (<Table columns={columns} dataSource={data} bordered></Table>);
 }

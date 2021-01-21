@@ -1,0 +1,28 @@
+.sidebarLayout {
+  max-height: calc(100vh - 64px);
+}
+
+.siderbar {
+  min-height: 91.5vh;
+  color: white;
+  padding-top: 16px;
+}
+
+.contentLayout {
+  background-color: #f0f2f5;
+}
+
+.content {
+  /* margin-top: 16px; */
+  margin-left: 16px;
+  margin-right: 16px;
+  max-height: calc(90vh - 10px);
+  overflow: overlay;
+  min-height: calc(100vh - 153px);
+}
+
+.footer {
+  background-color: white;
+  height: 48px;
+  padding: 10px 50px;
+}

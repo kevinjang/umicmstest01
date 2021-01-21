@@ -179,6 +179,9 @@ class LeaveAuthorization extends React.Component {
         this.form = null;
         this.prevEditingRecord = null;
     }
+    componentWillMount(){
+        console.log('module will load');
+    }
 
     componentDidMount() {
         this.form = this.formRef.current;

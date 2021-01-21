@@ -5,7 +5,7 @@ import { SettingFilled, LockFilled } from '@ant-design/icons'
 import 'antd/lib/avatar/style/index.css'
 import 'antd/lib/badge/style/index.css'
 
-import { UserContext, MyUserData } from '../UserContextMock'
+import { UserContext } from '../UserContextMock'
 
 class UserInfo extends React.Component {
 
@@ -33,13 +33,13 @@ class UserInfo extends React.Component {
             {value => {
                 return (
                     <Dropdown overlay={this.menus}>
-                        <div style={{ height: 'fit-content', display: 'flex', textAlign: 'center' }}>
+                        <div style={{ height: 'fit-content', display: 'flex', textAlign: 'center', color: 'whitesmoke' }}>
                             <div style={{ fontSize: '16px', marginLeft: '5px' }}>
                                 <Avatar
                                     // style={{ float: 'right' }}
                                     size='normal'
                                     src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>
-                                {value.userRow.Username}
+                                {value && value.userRow &&value.userRow.Username}
                             </div>
 
                         </div>

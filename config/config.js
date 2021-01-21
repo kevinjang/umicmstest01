@@ -20,7 +20,7 @@ export default {
             path: '/', component: '@/pages/Login', title: '登陆'
         },
         {
-            path: '/mainframe', component: '@/pages/MainFrame',
+            path: '/mainframe', component: '@/pages/MainFrameNew',
             title: 'KSNL',
             wrappers: ['@/pages/user/UrlPathGuard'],
             routes: [
@@ -49,7 +49,10 @@ export default {
                 { path: '/mainframe/withSlider', component: '@/pages/AntVSamples/Line/withXAxis' },
                 { path: '/mainframe/ColoredLines', component: '@/pages/AntVSamples/Line/ColoredLines' },
                 { path: '/mainframe/MultipleLinesAnimation', component: '@/pages/AntVSamples/Line/MultipleLinesAnimation' },
-                { path: '/mainframe/ColumnLineMixed', component: '@/pages/AntVSamples/DualAxes/ColumnLineMixed' }
+                { path: '/mainframe/ColumnLineMixed', component: '@/pages/AntVSamples/DualAxes/ColumnLineMixed' },
+                { path: '/mainframe/RowColMerge', component: '@/pages/TableDemos/RowColMerge' } ,
+                { path: '/mainframe/TreeData', component: '@/pages/TableDemos/TreeData' } ,
+                { path: '/mainframe/FixedTableHead', component: '@/pages/TableDemos/FixedTableHead' } 
 
             ]
         },

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { message } from 'antd'
 import config from '../../../config/custom_config'
 const { serverUrl } = config;
+import request from 'reqwest'
 var baseURL = axios.defaults.baseURL = serverUrl//.home;
 
 async function getUserBaseInfoByAD(userAD, callback) {
