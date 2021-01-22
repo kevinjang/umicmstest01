@@ -3,52 +3,76 @@ import withBreadcrumbs from 'react-router-breadcrumbs-hoc'
 import { connect } from 'umi'
 import { ChromeOutlined, MailOutlined } from '@ant-design/icons'
 import { find, flatMapDeep } from 'lodash'
-// import IconX from '@/components/DynamicComponent/Icon'
 import * as Icon from '@ant-design/icons'
+import { UserContext } from '../../pages/UserContextMock'
+import useSizeRef from 'use-size-ref'
 
 const KsnlBreadCrumbs = ({ breadcrumbs, menus }) => {
+    const [bcRef, { width, height }] = useSizeRef();
     // console.log('Icon:', Icon)
     return (
-        <Breadcrumb style={{ padding: '10px' }} key={"bc_root"}>
-            {breadcrumbs.map((breadcrumb, index) => {
-                let path = breadcrumb.match.path;
-                if (path === '/') {
-                    return <Breadcrumb.Item key="ksnl_root_bc">
-                        {/* <Icon type='chrome' /> */}
-                        <ChromeOutlined size="small" />
-                        KSNL
-                    </Breadcrumb.Item>
+        <UserContext.Consumer>
+            {value => {
+                if(value && value.sizeInfo){
+                    value.sizeInfo = {
+                        ...value.sizeInfo,
+                        bc:{
+                            width,
+                            height
+                        }
+                    }
+                } else if (value && !value.sizeInfo){
+                    value.sizeInfo = {
+                        bc:{
+                            width,
+                            height
+                        }
+                    }
                 }
 
-                if (path === '/mainframe') {
-                    return <Breadcrumb.Item key="mainframe_bc">
-                        {/* <Icon type="mail" /> */}
-                        <MailOutlined size="small" />
-                        主页
-                    </Breadcrumb.Item>
-                }
+                return (
+                    <div ref={bcRef}>
 
-                const itemY = find(flatMapDeep(menus, 'children'), (xItem) => {
-                    return xItem.urlPath === path;
-                })
-                
-                if(!itemY){
-                    return null
-                }
+                        <Breadcrumb style={{ padding: '10px' }} key={"bc_root"}>
+                            {breadcrumbs.map((breadcrumb, index) => {
+                                let path = breadcrumb.match.path;
+                                if (path === '/') {
+                                    return <Breadcrumb.Item key="ksnl_root_bc">
+                                        <ChromeOutlined size="small" />KSNL
+                                    </Breadcrumb.Item>
+                                }
 
-                return <Breadcrumb.Item key={itemY.id}>
-                    {
-                        itemY.icon? React.createElement(
-                            Icon[`${itemY.icon}Outlined`],
-                            {
-                                size: 'small',
-                                key: itemY.id
-                            }
-                        ):null
-                    }{itemY.title}
-                </Breadcrumb.Item>
-            })}
-        </Breadcrumb>
+                                if (path === '/mainframe') {
+                                    return <Breadcrumb.Item key="mainframe_bc">
+                                        <MailOutlined size="small" />主页
+                                    </Breadcrumb.Item>
+                                }
+
+                                const itemY = find(flatMapDeep(menus, 'children'), (xItem) => {
+                                    return xItem.urlPath === path;
+                                })
+
+                                if (!itemY) {
+                                    return null
+                                }
+
+                                return <Breadcrumb.Item key={itemY.id}>
+                                    {
+                                        itemY.icon ? React.createElement(
+                                            Icon[`${itemY.icon}Outlined`],
+                                            {
+                                                size: 'small',
+                                                key: itemY.id
+                                            }
+                                        ) : null
+                                    }{itemY.title}
+                                </Breadcrumb.Item>
+                            })}
+                        </Breadcrumb>
+                    </div>
+                )
+            }}
+        </UserContext.Consumer>
     )
 }
 

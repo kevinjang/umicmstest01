@@ -18,7 +18,7 @@ class UserInfo extends React.Component {
                     {/* <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                         设置
                     </a> */}
-                    <Link ><Space><SettingFilled></SettingFilled><span>设置</span></Space></Link>
+                    <Link to={"http://www.alipay.com"}><Space><SettingFilled></SettingFilled><span>设置</span></Space></Link>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item>

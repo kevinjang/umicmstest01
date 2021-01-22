@@ -1,30 +1,19 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, Row, Space, Spin, Col, ConfigProvider } from 'antd'
 import { connect } from 'umi'
 import styles from './MainFrame.css'
-import UserInfo from './user/UserInfo'
-const { Header, Footer, Content } = Layout
-import { UserContext, GetData, MyUserData } from './UserContextMock';
-import { Scrollbars } from 'react-custom-scrollbars'
-// import GlobalHeaderDropdown from '../components/GlobalHeader/NoticeIconView'
-import { CopyrightCircleOutlined, ChromeFilled } from '@ant-design/icons'
-import moment from 'moment'
-import SidebarMenu from '@/components/SidebarMenus/SidebarMenu'
-import KBreadcrumbs from '@/components/Breadcrumbs/'
-import config from '../../config/config'
+import { UserContext, GetData } from './UserContextMock';
 import zhCN from 'antd/lib/locale/zh_CN'
-import {useSize} from 'use-size-react'
-import GlobalHeaderDropdown from '../components/NoticeHeader/GlobalHeader/NoticeIconView'
-
 import GlobalHeader from '../components/LayoutHeader/Header'
 import GlobalContainer from '../components/LayoutContianer/Container'
+import useSizeRef from 'use-size-ref'
 
 import classNames from 'classnames'
 
-const KLayoutY = (props)=>{
-    const [collapsed, setCollapsed] = useState(false);
+const KLayoutY = (props) => {
+    // const [collapsed, setCollapsed] = useState(false);
     const [selectedKeys, setSelectedKeys] = useState('1');
-    const [theme, setTheme] = useState('dark');
+    // const [theme, setTheme] = useState('dark');
     const [spinning, setSinning] = useState(false);
     const [textAlign, setTextAlign] = useState('center');
     const [paddingTop, setPaddingTop] = useState('25%');
@@ -32,12 +21,14 @@ const KLayoutY = (props)=>{
     const [MyUserData, setMyUserData] = useState({});
     const [breadcrumbs, setBreadcrumbs] = useState({});
 
-    useEffect(()=>{
+    const [fullRef, { width, height }] = useSizeRef();
+
+    useEffect(() => {
         if (window.location.pathname === '/') {
             history.go('/login')
         }
         setSinning(true);
-        GetData("zhanghaoming").then(({UserContext, MyUserData}) => {
+        GetData("zhanghaoming").then(({ UserContext, MyUserData }) => {
             setSinning(false);
             setTextAlign('initial');
             setPaddingTop('0');
@@ -45,8 +36,8 @@ const KLayoutY = (props)=>{
         });
 
         // const {routes} = config;
-        const {breadcrumbs} = props;
-        setBreadcrumbs(breadcrumbs ||  [{ title: 'KSNL', level: 0, icon: 'Chrome' }]);
+        const { breadcrumbs } = props;
+        setBreadcrumbs(breadcrumbs || [{ title: 'KSNL', level: 0, icon: 'Chrome' }]);
     }, []);
 
     const root = classNames(styles.root, {
@@ -54,15 +45,43 @@ const KLayoutY = (props)=>{
         'padding-top': paddingTop
     })
 
+    // console.log('full size:', { width, height });
+
+    // var newMyUserData = {
+    //     ...MyUserData
+    // }
+
+    // if(newMyUserData && newMyUserData.sizeInfo){
+    //     newMyUserData.sizeInfo = {
+    //         ...newMyUserData.sizeInfo,
+    //         full: {
+    //             width, 
+    //             height
+    //         }
+    //     }
+    // }else{
+    //     newMyUserData = {
+    //         ...newMyUserData,
+    //         sizeInfo: {
+    //             full: {
+    //                 width, 
+    //                 height
+    //             }                
+    //         }
+    //     }
+    // }
+
+    // setMyUserData(newMyUserData);
+
     return (
-        <div className={root}>
+        <div className={root} ref={fullRef}>
             <ConfigProvider locale={zhCN}>
-                <Spin spinning={spinning && !UserContext } size="large">
-                    {UserContext && 
+                <Spin spinning={spinning && !UserContext} size="large">
+                    {UserContext &&
                         <UserContext.Provider value={MyUserData}>
-                            <Layout style={{height:'100vh'}}>
+                            <Layout style={{ height: '100vh' }}>
                                 <GlobalHeader MyUserData={MyUserData} />
-                                <GlobalContainer {...props}/>
+                                <GlobalContainer {...props} />
                             </Layout>
                         </UserContext.Provider>}
                 </Spin>

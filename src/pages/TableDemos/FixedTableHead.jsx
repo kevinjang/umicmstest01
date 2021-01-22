@@ -1,4 +1,5 @@
 import { Table } from 'antd'
+import { UserContext } from '../UserContextMock'
 
 const columns = [
     {
@@ -27,6 +28,21 @@ for (let i = 0; i < 100; i++) {
     });
 }
 
-export default ()=>{
-    return <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }}  scroll={{ y: '90%' }} />;
+export default () => {
+    return (
+        <UserContext.Consumer>
+            {value => {
+                const { sizeInfo } = value;
+                if (sizeInfo) {
+                    const { header, content, footer, full } = sizeInfo;
+                    console.log('sizeInfo:', sizeInfo)
+
+                }
+                const y = (value && value.sizeInfo && value.sizeInfo.content && value.sizeInfo.content['height']) || 240;
+                return (
+                    <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: `${y}px` }} />
+                )
+            }}
+        </UserContext.Consumer>
+    );
 }

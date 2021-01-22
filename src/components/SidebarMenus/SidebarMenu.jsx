@@ -64,20 +64,14 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
                                                         to={cItem.urlPath}
                                                         key={cItem.id + '_' + cItem.nodeInfo + '_' + cItem.urlPath}
                                                         onClick={(ev, rest) => {
-                                                            // console.log('menu item clicked:',ev)
                                                             // 应该可以打断跳转
                                                             const item = find(flatRoutes, (xItem) => {
-
                                                                 return xItem.path === cItem.urlPath;
                                                             });
                                                             if (!item) {
-                                                                // 没有该路径
-                                                                // 跳转到404
-
                                                                 ev.preventDefault();
                                                                 history.push('/mainframe/404')
                                                             }
-                                                            // console.log('已打断:', cItem)
                                                         }}
                                                     >
                                                         {cItem.title}
