@@ -1,21 +1,44 @@
-.header{
+.headerRoot {
+    width: 100%;
     color: white;
+}
+
+.header {
     font-size: 32px;
-}
-
-.header > span {
+    width: 100%;
+    display: flex;
     color: white;
 }
 
-.userInfoNode {
-  float: right;
-  display: flex;
-  /* margin-top: 15px; */
-  /* border: 1px solid white; */
-  width: 250px;
+.header>span {
+    color: white;
+    width: 10%;
 }
 
+.header>.userInfoNode {
+    float: right;
+    /* display: flex; 
+    border: 1px solid red;*/
+    width: 90%;
+    background-color: darkcyan;
+}
 
-.userInfoNode > .innerContainer{
-    width: 70%;
+.bannerContent{
+    float:right;
+}
+
+.bannerDock {
+    /* height: center; */
+    text-align: center;
+    color: lightgray;
+    width: 100px;
+    max-width: 100px;
+    border: 1px dashed black;
+    background-color: steelblue;
+}
+
+.bannerDock:hover {
+    /* background: rgba(0,21,41, .025); */
+    background: rgba(0, 0, 0, 0.025);
+    color: white;
 }
