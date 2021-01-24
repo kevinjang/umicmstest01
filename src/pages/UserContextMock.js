@@ -3,10 +3,15 @@ import React from 'react'
 import { getUserBaseInfoByAD } from '../utils/toserver/UserBaseInfoUtil'
 import { getOULongNameUserBaseInfoByAD } from '../services/System/UserBaseInfoService'
 import { message } from 'antd';
+import useMergeValue from 'use-merge-value'
 
-let UserContext = React.createContext({
+const defaultValue = {
     userRow: null,
-    spinning: true
+    spinning: true,
+    theme: 'dark'
+}
+let UserContext = React.createContext({
+    ...defaultValue
 });
 let MyUserData = null;
 
@@ -25,8 +30,12 @@ async function GetData(userAD, cb) {
             userRow: row,
             spinning: false
         };
-        UserContext = React.createContext(value);
-        MyUserData = value;
+        const v = {
+            ...defaultValue,
+            ...value
+        }
+        UserContext = React.createContext(v);
+        MyUserData = v;
         // console.log(UserContext)
         // if (cb) {
         //     cb();
