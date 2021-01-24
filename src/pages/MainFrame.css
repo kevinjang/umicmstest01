@@ -45,26 +45,3 @@
   height: 48px;
   padding: 10px 50px;
 }
-
-.bannerHeader {
-  color: white;
-  font-size: 32px;
-}
-
-.bannerHeaderUserInfo {
-  /* margin-top: 30px;
-  left: 1000px; */
-}
-
-.bannerDock {
-  height: center;
-  text-align: center;
-  color: lightgray;
-}
-
-.bannerDock:hover {
-  /* background: rgba(0,21,41, .025); */
-  background: rgba(0, 0, 0, 0.025);
-  color: white;
-}
-
