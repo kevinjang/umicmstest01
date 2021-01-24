@@ -1,0 +1,9 @@
+.root{
+    padding: 0 15px;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.root:hover{
+    background-color: #1890ff;
+}
