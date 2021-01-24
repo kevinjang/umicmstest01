@@ -75,7 +75,7 @@ const KLayoutY = (props) => {
 
     return (
         <div className={root} ref={fullRef}>
-            <ConfigProvider locale={zhCN}>
+            <ConfigProvider locale={zhCN} >
                 <Spin spinning={spinning && !UserContext} size="large">
                     {UserContext &&
                         <UserContext.Provider value={MyUserData}>
