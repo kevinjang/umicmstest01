@@ -111,3 +111,4 @@ src/.umi/core/devScripts.ts
 public/images/404bg.jpg
 public/images/404bg002.jpg
 public/images/404bg001.jpg
+.vscode/settings.json
