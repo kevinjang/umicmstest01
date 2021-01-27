@@ -1,6 +1,6 @@
 import { Layout, Row, Col, Button, Menu } from 'antd'
 import styles from './Header.css'
-import { ChromeFilled } from '@ant-design/icons'
+import { ChromeFilled, SettingFilled } from '@ant-design/icons'
 const { Header } = Layout;
 
 import GlobalHeaderDropdown from '../NoticeHeader/GlobalHeader/NoticeIconView'
@@ -43,6 +43,11 @@ const GlobalHeader = (props) => {
                                 <Menu.Item style={{ padding: '0 15px', float: 'right' }}><GlobalHeaderDropdown /></Menu.Item>
                             </Menu> */}
                             <div style={{ width: '90%' }}>
+                                <BannerDocker style={{ float: 'right' }}>
+                                    <span style={{fontSize: '14px', color:'white'}}>
+                                    <SettingFilled /> 个人设置
+                                    </span>    
+                                </BannerDocker>
                                 <BannerDocker style={{ float: 'right' }}>
                                     <UserInfo />
                                 </BannerDocker>
