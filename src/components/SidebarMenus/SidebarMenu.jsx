@@ -3,15 +3,15 @@ const { Sider } = Layout;
 const MenuItem = Menu.Item;
 const { SubMenu } = Menu;
 import { Scrollbars } from 'react-custom-scrollbars'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, connect, history } from 'umi'
 import * as Icon from '@ant-design/icons'
 import config from '../../../config/config'
 import { flatMap, find } from 'lodash'
 
-const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
+const SidebarMenus = ({ getMenus, menus, activeSubMenu, selectedMenuItem, theme,
     menuMode, menuCollapsed, collapsible,
-    className, ...restProps }) => {
+    className, dispatch, ...restProps }) => {
     const [activeSubMenuId, setActiveSubMenuId] = useState()
     const [collapsed, setCollapsed] = useState(false)
 
@@ -20,12 +20,19 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
             //如果没有活跃的值，根据当前路径找到活跃的值，并更新再获取
         }
     }
+    
+    useEffect(() => {
+        if (dispatch) {
+            dispatch({
+                type: 'menus/getMenus'
+            })
+        }
+    }, [])
+
 
     const { routes } = config
 
     const flatRoutes = routes[1].routes  //flatten(routes);
-
-    // console.log('flatRoutes:', flatRoutes);
 
     return (
         <Sider collapsed={collapsed} theme={theme} collapsible={collapsible} onCollapse={
@@ -107,6 +114,7 @@ const SidebarMenus = ({ menus, activeSubMenu, selectedMenuItem, theme,
     )
 }
 
-export default connect(({ menus }) => ({
+export default connect(({ menus, loading }) => ({
+    getMenus: loading.effects['menus/getMenus'],
     menus: menus.menus
 }))(SidebarMenus);
