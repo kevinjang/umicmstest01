@@ -76,14 +76,14 @@ class EmployeeBPMaintain extends React.Component {
         key: 'PriDept',
         dataIndex: 'PriDept',
         title: '一级部门',
-        width: '200px',
+        width: '100px',
         asQuery: true
       },
       {
         key: 'SecDept',
         dataIndex: 'SecDept',
         title: '二级部门',
-        width: '200px',
+        width: '100px',
         ellipsis: true,
         asQuery: true
       },
@@ -92,24 +92,28 @@ class EmployeeBPMaintain extends React.Component {
         dataIndex: 'BankAccount',
         title: '银行账号',
         width: '200px',
+        ellipsis: true,
         asQuery: true
       },
       {
         key: 'BankName',
         dataIndex: 'BankName',
         title: '开户行',
+        ellipsis: true,
         asQuery: true
       },
       {
         key: 'Email',
         dataIndex: 'Email',
         title: 'Email',
+        ellipsis: true,
         asQuery: true
       },
       {
         key: 'Remark',
         dataIndex: 'Remark',
         title: '备注',
+        ellipsis: true,
         asQuery: true
       },
       {
