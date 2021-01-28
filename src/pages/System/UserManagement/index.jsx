@@ -1,4 +1,5 @@
-import { Table, Layout, Card } from 'antd'
+import { Table, Layout, Card, PageHeader, Avatar } from 'antd'
+import {UserOutlined} from '@ant-design/icons'
 
 const { Content } = Layout
 
@@ -11,6 +12,10 @@ const UserManagement = () => {
             <Card title={"用户列表"} bordered={false} size={"small"}>
                 <Table columns={columns} size={"small"}></Table>
             </Card>
+
+            <PageHeader title={"用户列表"} avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>}>
+                <Table columns={columns} size={"small"}></Table>
+            </PageHeader>
         </div>
     )
 }
