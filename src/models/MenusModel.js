@@ -15,7 +15,7 @@ const MenusModel = {
         }
     },
     effects:{
-        *getMenus({payload}, {select, put, call}){
+        *getMenus(_, {select, put, call}){
             const result = yield call(getMenusService);
             // console.log('menus result:', result);
             yield put({
