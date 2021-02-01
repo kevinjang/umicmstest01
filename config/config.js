@@ -54,6 +54,12 @@ export default {
                 { path: '/mainframe/TreeData', component: '@/pages/TableDemos/TreeData' } ,
                 { path: '/mainframe/FixedTableHead', component: '@/pages/TableDemos/FixedTableHead' } ,
                 { path: '/mainframe/UserManagement', component: '@/pages/System/UserManagement/index'},
+                { path: '/mainframe/FixedColumns', component: '@/pages/TableDemos/FixedColumns'},
+                { path: '/mainframe/FixedHeaderColumns', component: '@/pages/TableDemos/FixedHeaderColumns'},
+                { path: '/mainframe/TableHeaderGrouped', component: '@/pages/TableDemos/TableHeaderGrouped'},
+                { path: '/mainframe/EditableTable', component: '@/pages/TableDemos/EditableTable'},
+                { path: '/mainframe/EditableTableRow', component: '@/pages/TableDemos/EditableTableRow'},
+                { path: '/mainframe/EmbeddedTable', component: '@/pages/TableDemos/EmbeddedTable'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }

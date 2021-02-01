@@ -10,13 +10,13 @@ const Login = React.forwardRef((props,ref) => {
     var form = null;
     React.Children.forEach(children, child => {
         if (child.type.typeName === 'LoginTab') {
-            console.log('child:', child)
+            // console.log('child:', child)
             TabChildren.push(<TabPane key={"tp_m"} {...child.props}>{child.props.children}</TabPane>)
         }
     })
     useEffect(() => {
         form = ref.current;
-        console.log("props:", {...props})
+        // console.log("props:", {...props})
     })
 
     return (

@@ -299,6 +299,54 @@ const getMenus =(req,res)=>{
                         urlPath: "/mainframe/FixedTableHead",
                         nodeInfo: "./TableDemos/FixedTableHead"
                     },
+                    {
+                        id:"64",
+                        level: 2,
+                        title: '固定列',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/FixedColumns',
+                        nodeInfo: './TableDemos/FixedColumns'
+                    },
+                    {
+                        id:"65",
+                        level: 2,
+                        title: '固定头和列',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/FixedHeaderColumns',
+                        nodeInfo: './TableDemos/FixedHeaderColumns'
+                    },
+                    {
+                        id:"65",
+                        level: 2,
+                        title: '表头分组',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/TableHeaderGrouped',
+                        nodeInfo: './TableDemos/TableHeaderGrouped'
+                    },
+                    {
+                        id:"66",
+                        level: 2,
+                        title: '可编辑单元格',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/EditableTable',
+                        nodeInfo: './TableDemos/EditableTable'
+                    },
+                    {
+                        id:"67",
+                        level: 2,
+                        title: '可编辑行',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/EditableTableRow',
+                        nodeInfo: './TableDemos/EditableTableRow'
+                    },
+                    {
+                        id:"68",
+                        level: 2,
+                        title: '嵌套子表格',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/EmbeddedTable',
+                        nodeInfo: './TableDemos/EmbeddedTable'
+                    }
                 ]
             },
             {

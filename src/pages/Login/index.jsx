@@ -17,7 +17,7 @@ const Login1 = (props) => {
     const { history, loginState, loginEffect } = props;
     useEffect(() => {
         form = formRef.current;
-        console.log('login form:', form)
+        // console.log('login form:', form)
         // console.log('formRef:', formRef);
     });
     return (
@@ -85,7 +85,7 @@ const Login1 = (props) => {
 }
 
 export default connect(({ login, loading }) => {
-    console.log('loading:', loading)
+    // console.log('loading:', loading)
     return {
         loginState: login.loginState,
         loginEffect: loading.effects["login/loginAsync"]
