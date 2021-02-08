@@ -60,6 +60,7 @@ export default {
                 { path: '/mainframe/EditableTable', component: '@/pages/TableDemos/EditableTable'},
                 { path: '/mainframe/EditableTableRow', component: '@/pages/TableDemos/EditableTableRow'},
                 { path: '/mainframe/EmbeddedTable', component: '@/pages/TableDemos/EmbeddedTable'},
+                { path: '/mainframe/TypographyDemos', component: '@/pages/OfficialDemos/TypographyDemos'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }
