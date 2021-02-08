@@ -346,6 +346,38 @@ const getMenus =(req,res)=>{
                         icon: 'OrderedList',
                         urlPath: '/mainframe/EmbeddedTable',
                         nodeInfo: './TableDemos/EmbeddedTable'
+                    },
+                    {
+                        id:"69",
+                        level: 2,
+                        title: '拖拽排序',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/DNDTable',
+                        nodeInfo: './TableDemos/DNDTable'
+                    },
+                    {
+                        id:"70",
+                        level: 2,
+                        title: '拖拽手柄列',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/SortableTable',
+                        nodeInfo: './TableDemos/SortableTableX'
+                    },
+                    {
+                        id:"71",
+                        level: 2,
+                        title: '总结栏',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/SummaryRowTable',
+                        nodeInfo: './TableDemos/SummaryRowTable'
+                    },
+                    {
+                        id:"72",
+                        level: 2,
+                        title: '树选择',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/TreeSelect',
+                        nodeInfo: './TreeSelectDemos/index'
                     }
                 ]
             },

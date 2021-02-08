@@ -60,6 +60,10 @@ export default {
                 { path: '/mainframe/EditableTable', component: '@/pages/TableDemos/EditableTable'},
                 { path: '/mainframe/EditableTableRow', component: '@/pages/TableDemos/EditableTableRow'},
                 { path: '/mainframe/EmbeddedTable', component: '@/pages/TableDemos/EmbeddedTable'},
+                { path: '/mainframe/DNDTable', component: '@/pages/TableDemos/DNDTable1'},
+                { path: '/mainframe/SortableTable', component: '@/pages/TableDemos/SortableTableX'},
+                { path: '/mainframe/SummaryRowTable', component: '@/pages/TableDemos/SummaryRowTable'},
+                { path: '/mainframe/TreeSelect', component: '@/pages/TreeSelectDemos/index'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }
