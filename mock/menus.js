@@ -382,6 +382,22 @@ const getMenus =(req,res)=>{
                 ]
             },
             {
+                id: "80",
+                level:1,
+                title: '官方模块测试2',
+                icon: "Slack",
+                children: [
+                    {
+                        id:"81",
+                        level: 2,
+                        title: '排版',
+                        icon: 'OrderedList',
+                        urlPath: '/mainframe/TypographyDemos',
+                        nodeInfo: './OfficialDemos/TypographyDemos'
+                    }
+                ]
+            },
+            {
                 id: "23",
                 level: 1,
                 title: "嵌套路由测试",

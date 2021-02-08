@@ -64,6 +64,7 @@ export default {
                 { path: '/mainframe/SortableTable', component: '@/pages/TableDemos/SortableTableX'},
                 { path: '/mainframe/SummaryRowTable', component: '@/pages/TableDemos/SummaryRowTable'},
                 { path: '/mainframe/TreeSelect', component: '@/pages/TreeSelectDemos/index'},
+                { path: '/mainframe/TypographyDemos', component: '@/pages/OfficialDemos/TypographyDemos'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }
