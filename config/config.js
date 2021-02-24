@@ -65,6 +65,14 @@ export default {
                 { path: '/mainframe/SummaryRowTable', component: '@/pages/TableDemos/SummaryRowTable'},
                 { path: '/mainframe/TreeSelect', component: '@/pages/TreeSelectDemos/index'},
                 { path: '/mainframe/TypographyDemos', component: '@/pages/OfficialDemos/TypographyDemos'},
+
+
+
+
+
+                
+                { path: '/mainframe/CardTest', component: '@/pages/OfficialDemos/CardTest'},
+                { path: '/mainframe/MRTest', component: '@/pages/MeetingRoom/index'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }

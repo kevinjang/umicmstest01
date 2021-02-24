@@ -394,6 +394,22 @@ const getMenus =(req,res)=>{
                         icon: 'OrderedList',
                         urlPath: '/mainframe/TypographyDemos',
                         nodeInfo: './OfficialDemos/TypographyDemos'
+                    },
+                    {
+                        id: '85',
+                        level: 2,
+                        title: 'card测试',
+                        icon: 'User',                        
+                        urlPath: '/mainframe/CardTest',
+                        nodeInfo: './OfficialDemos/CardTest'
+                    },
+                    {
+                        id: '86',
+                        level: 2,
+                        title: '会议室',
+                        icon: 'User',                        
+                        urlPath: '/mainframe/MRTest',
+                        nodeInfo: './MeetingRoom/index'
                     }
                 ]
             },
@@ -597,7 +613,7 @@ const getMenus =(req,res)=>{
                         urlPath: '/mainframe/UserManagement'
                     }
                 ]
-            }
+            },
         ]
     });
 }
