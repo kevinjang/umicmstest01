@@ -72,6 +72,8 @@ export default {
                 { path: '/mainframe/CarouselUsingSlick', component: '@/pages/CustomComponents/CarouselUsingSlick'},
                 { path: '/mainframe/MeetingRoomBooking', component: '@/pages/MeetingRoomManagement/index'},
                 { path: '/mainframe/MeetingRoomManagement', component: '@/pages/MeetingRoomManagement/Management'},
+                { path: '/mainframe/CardTest', component: '@/pages/OfficialDemos/CardTest'},
+                { path: '/mainframe/MRTest', component: '@/pages/MeetingRoom/index'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }

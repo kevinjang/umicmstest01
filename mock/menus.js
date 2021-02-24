@@ -418,7 +418,23 @@ const getMenus =(req,res)=>{
                         icon: 'StepForward',
                         urlPath: '/mainframe/CarouselDemos',
                         nodeInfo: './OfficialDemos/CarouselDemos'
-                    }
+                    },
+                    {
+                      id: '85',
+                    level: 2,
+                    title: 'card测试',
+                    icon: 'User',
+                    urlPath: '/mainframe/CardTest',
+                    nodeInfo: './OfficialDemos/CardTest'
+                },
+                {
+                    id: '86',
+                    level: 2,
+                    title: '会议室',
+                    icon: 'User',
+                    urlPath: '/mainframe/MRTest',
+                    nodeInfo: './MeetingRoom/index'
+                  }
                 ]
             },
             {
@@ -465,8 +481,7 @@ const getMenus =(req,res)=>{
                         title: '会议室管理',
                         icon: 'User',
                         urlPath: '/mainframe/MeetingRoomManagement',
-                        nodeInfo: './MeetingRoomManagement/Management'                        
-                    }
+                        nodeInfo: './MeetingRoomManagement/Management'                     }
                 ]
             },
             {
@@ -669,7 +684,7 @@ const getMenus =(req,res)=>{
                         urlPath: '/mainframe/UserManagement'
                     }
                 ]
-            }
+            },
         ]
     });
 }
