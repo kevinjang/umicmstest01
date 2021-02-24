@@ -1,7 +1,8 @@
-import { Typography, Space, Card, Switch, Slider } from 'antd'
-const { Text, Link, Paragraph } = Typography
+import { Typography, Space, Card, Switch, Slider, Divider, } from 'antd'
+const { Text, Link, Paragraph, Title } = Typography
 import { useState } from 'react'
-import { HighlightOutlined, SmileOutlined, SmileFilled } from '@ant-design/icons'
+import { HighlightOutlined, SmileOutlined, SmileFilled, UpCircleFilled } from '@ant-design/icons'
+import { Link as RealLink } from 'umi'
 
 export default () => {
 
@@ -17,15 +18,54 @@ export default () => {
 
     const [rows, setRows] = useState(1);
 
-    const onChange = (rows)=>{
+    const onChange = (rows) => {
         setRows(rows)
     }
     const article =
-    "To be, or not to be, that is a question: Whether it is nobler in the mind to suffer. The slings and arrows of outrageous fortune Or to take arms against a sea of troubles, And by opposing end them? To die: to sleep; No more; and by a sleep to say we end The heart-ache and the thousand natural shocks That flesh is heir to, 'tis a consummation Devoutly to be wish'd. To die, to sleep To sleep- perchance to dream: ay, there's the rub! For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause. There 's the respect That makes calamity of so long life";
-  
+        "To be, or not to be, that is a question: Whether it is nobler in the mind to suffer. The slings and arrows of outrageous fortune Or to take arms against a sea of troubles, And by opposing end them? To die: to sleep; No more; and by a sleep to say we end The heart-ache and the thousand natural shocks That flesh is heir to, 'tis a consummation Devoutly to be wish'd. To die, to sleep To sleep- perchance to dream: ay, there's the rub! For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause. There 's the respect That makes calamity of so long life";
+
     return (
         <>
-            <Card title="Basic">
+            <Card title={false} >
+                <Title>介绍</Title>
+                <Paragraph>
+                    In the process of internal desktop applications development, many different design specs and
+                    implementations would be involved, which might cause designers and developers difficulties and
+                    duplication and reduce the efficiency of development.
+                </Paragraph>
+                <Paragraph>
+                    After massive project practice and summaries, Ant Design, a design language for background
+                    applications, is refined by Ant UED Team, which aims to
+                    <Text strong>
+                        uniform the user interface specs for internal background projects, lower the unnecessary
+                        cost of design differences and implementation and liberate the resources of design and
+                        front-end development
+                    </Text>.
+                </Paragraph>
+                <Title level={2}>指导和资源</Title>
+                <Paragraph>
+                    We supply a series of design principles, practical patterns and high quality design resources
+                    (<Text code>Sketch</Text> and <Text code>Axure</Text>), to help people create their product
+                    prototypes beautifully and efficiently.
+                </Paragraph>
+                <Paragraph>
+                    <ul>
+                        <li>
+                            <RealLink href="/docs/spec/proximity">Principles</RealLink></li>
+                        <li>
+                            <RealLink href="/docs/pattern/navigation">Patterns</RealLink>
+                        </li>
+                        <li>
+                            <RealLink href="/docs/resource/download">Resource Download</RealLink>
+                        </li>
+                    </ul>
+                </Paragraph>
+                <Paragraph>
+                    Press <Text keyboard >Esc</Text> to exit...
+                </Paragraph>
+            </Card>
+            <Divider orientation="right"> <UpCircleFilled /> 介绍</Divider>
+            <Card title={false}>
                 <Space>
                     <div><Text>Ant Design(default)</Text></div>
                     <div><Link type="secondary">Ant Design(secondary)</Link></div>
@@ -47,7 +87,8 @@ export default () => {
                     </Link>
                 </Space>
             </Card>
-            <Card title="可交互的">
+            <Divider orientation="left"> <UpCircleFilled /> 基础</Divider>
+            <Card title={false}>
                 <Paragraph editable={{ onChange: setEditableStr }}>{editableStr}</Paragraph>
                 <Paragraph editable={{
                     icon: <HighlightOutlined />,
@@ -77,7 +118,8 @@ export default () => {
                 }}>Custom Copy icon and replace tooltips text.</Paragraph>
                 <Paragraph copyable={{ tooltips: false }}>Hide Copy tooltips.</Paragraph>
             </Card>
-            <Card title="省略号">
+            <Divider orientation="right"> <UpCircleFilled /> 可交互的</Divider>
+            <Card title={false}>
                 <Switch checked={ellipsis} onChange={() => {
                     setEllipsis(!ellipsis);
                 }}>
@@ -97,13 +139,13 @@ export default () => {
                                 rows: 2,
                                 expandable: true,
                                 symbol: 'more',
-                                onEllipsis:()=>{
+                                onEllipsis: () => {
                                     setEllipsis(!ellipsis)
                                 }
                             }
                             : false
-                    } 
-                    
+                    }
+
                 >
                     Ant Design, a design language for background applications, is refined by Ant UED Team. Ant
                     Design, a design language for background applications, is refined by Ant UED Team. Ant
@@ -130,19 +172,21 @@ export default () => {
                     Ant Design, a design language for background applications, is refined by Ant UED Team.
       </Text>
             </Card>
-            <Card title="后缀">
+            <Divider orientation="left"> <UpCircleFilled /> 省略号</Divider>
+            <Card title={false}>
                 <Slider value={rows} min={1} max={10} onChange={onChange}></Slider>
                 <Paragraph
                     ellipsis={{
                         rows,
                         expandable: true,
                         suffix: '--William Shakespeare',
-                        onEllipsis: ellipsis=>{
+                        onEllipsis: ellipsis => {
                             console.log('Ellipsis changed:', ellipsis);
                         }
                     }}
                     title={`${article}--William Shakespeare`}>{article}</Paragraph>
             </Card>
+            <Divider orientation="right"> <UpCircleFilled /> 后缀</Divider>
         </>
     )
 }

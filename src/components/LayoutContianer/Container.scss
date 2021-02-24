@@ -1,0 +1,32 @@
+// @import '@/antd/dist/antd.css';
+$footerHeight: 48px;
+$headerHeight: 64px;
+
+.sidebarLayout {
+    max-height: calc(100vh - 64px);
+}
+
+.siderbar {
+    min-height: 91.5vh;
+    color: white;
+    padding-top: 16px;
+}
+
+.contentLayout {
+    background-color: #f0f2f5;
+    max-height: calc(100vh - $headerHeight - $footerHeight);
+}
+
+.content {
+    margin-left: 16px;
+    margin-right: 16px;
+    // max-height: calc(90vh - 10px);
+    overflow: overlay;
+    min-height: calc(100vh - 153px);
+}
+
+.footer {
+    background-color: white;
+    height: $footerHeight;
+    padding: 10px 50px;
+}

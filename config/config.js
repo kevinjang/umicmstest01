@@ -65,6 +65,13 @@ export default {
                 { path: '/mainframe/SummaryRowTable', component: '@/pages/TableDemos/SummaryRowTable'},
                 { path: '/mainframe/TreeSelect', component: '@/pages/TreeSelectDemos/index'},
                 { path: '/mainframe/TypographyDemos', component: '@/pages/OfficialDemos/TypographyDemos'},
+                { path: '/mainframe/StepsDemos', component: '@/pages/OfficialDemos/StepsDemos'},
+                { path: '/mainframe/TransferDemos', component: '@/pages/OfficialDemos/TransferDemos'},
+                { path: '/mainframe/CarouselDemos', component: '@/pages/OfficialDemos/CarouselDemos'},
+                { path: '/mainframe/ImgCarousel', component: '@/pages/CustomComponents/ImgCarousel'},
+                { path: '/mainframe/CarouselUsingSlick', component: '@/pages/CustomComponents/CarouselUsingSlick'},
+                { path: '/mainframe/MeetingRoomBooking', component: '@/pages/MeetingRoomManagement/index'},
+                { path: '/mainframe/MeetingRoomManagement', component: '@/pages/MeetingRoomManagement/Management'},
                 {
                     path: '/mainframe/404', component: '@/pages/404'
                 }
@@ -77,4 +84,5 @@ export default {
             path: '/*'
         }
     ],
+    sass: {}
 }

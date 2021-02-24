@@ -45,41 +45,13 @@ const KLayoutY = (props) => {
         'padding-top': paddingTop
     })
 
-    // console.log('full size:', { width, height });
-
-    // var newMyUserData = {
-    //     ...MyUserData
-    // }
-
-    // if(newMyUserData && newMyUserData.sizeInfo){
-    //     newMyUserData.sizeInfo = {
-    //         ...newMyUserData.sizeInfo,
-    //         full: {
-    //             width, 
-    //             height
-    //         }
-    //     }
-    // }else{
-    //     newMyUserData = {
-    //         ...newMyUserData,
-    //         sizeInfo: {
-    //             full: {
-    //                 width, 
-    //                 height
-    //             }                
-    //         }
-    //     }
-    // }
-
-    // setMyUserData(newMyUserData);
-
     return (
         <div className={root} ref={fullRef}>
             <ConfigProvider locale={zhCN} >
                 <Spin spinning={spinning && !UserContext} size="large">
                     {UserContext &&
                         <UserContext.Provider value={MyUserData}>
-                            <Layout style={{ height: '100vh' }}>
+                            <Layout id={"right-part"} style={{ height: '100vh', backgroundColor: 'lightgreen' }}>
                                 <GlobalHeader MyUserData={MyUserData} />
                                 <GlobalContainer {...props} />
                             </Layout>

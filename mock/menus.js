@@ -394,6 +394,78 @@ const getMenus =(req,res)=>{
                         icon: 'OrderedList',
                         urlPath: '/mainframe/TypographyDemos',
                         nodeInfo: './OfficialDemos/TypographyDemos'
+                    },
+                    {
+                        id:"82",
+                        level: 2,
+                        title: '步骤条',
+                        icon: 'StepForward',
+                        urlPath: '/mainframe/StepsDemos',
+                        nodeInfo: './OfficialDemos/StepsDemos'
+                    },
+                    {
+                        id:"83",
+                        level: 2,
+                        title: '穿梭框',
+                        icon: 'StepForward',
+                        urlPath: '/mainframe/TransferDemos',
+                        nodeInfo: './OfficialDemos/TransferDemos'
+                    },
+                    {
+                        id:"84",
+                        level: 2,
+                        title: '走马灯',
+                        icon: 'StepForward',
+                        urlPath: '/mainframe/CarouselDemos',
+                        nodeInfo: './OfficialDemos/CarouselDemos'
+                    }
+                ]
+            },
+            {
+                id: '90',
+                level: 1,
+                title: '第三方组件',
+                icon: 'OrderedList',
+                children: [
+                    {
+                        id:"91",
+                        level: 2,
+                        title: '走马灯图片展示',
+                        icon: 'StepForward',
+                        urlPath: '/mainframe/ImgCarousel',
+                        nodeInfo: './CustomComponents/ImgCarousel'
+                    },
+                    {
+                        id:"92",
+                        level: 2,
+                        title: '走马灯using react-slick',
+                        icon: 'StepForward',
+                        urlPath: '/mainframe/CarouselUsingSlick',
+                        nodeInfo: './CustomComponents/CarouselUsingSlick'
+                    },
+                ]
+            },
+            {
+                id: '100',
+                level: 1,
+                title: '会议室预约管理',
+                icon: 'User',
+                children: [
+                    {
+                        id:"101",
+                        level: 2,
+                        title: '会议室预约',
+                        icon: 'User',
+                        urlPath: '/mainframe/MeetingRoomBooking',
+                        nodeInfo: './MeetingRoomManagement/index'
+                    },
+                    {
+                        id: "102",
+                        level: 2,
+                        title: '会议室管理',
+                        icon: 'User',
+                        urlPath: '/mainframe/MeetingRoomManagement',
+                        nodeInfo: './MeetingRoomManagement/Management'                        
                     }
                 ]
             },

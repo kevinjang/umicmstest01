@@ -6,7 +6,8 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import { CopyrightCircleOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import useSizeRef from 'use-size-ref'
-import styles from './Container.css'
+// import styles from './Container.css'
+import styles from './Container.scss'
 import { UserContext } from '../../pages/UserContextMock'
 
 const { Content, Footer } = Layout
@@ -51,8 +52,9 @@ export default (props) => {
                                     </Content>
                                 </div>
                             </Scrollbars>
+
                             <div ref={footerRef}>
-                                <Footer className={styles.footer}>
+                                <Footer style={{padding: '15px 50px 20px'}} className={styles.footer}>
                                     <CopyrightCircleOutlined />KSNL {moment().year()}
                                 </Footer>
                             </div>
