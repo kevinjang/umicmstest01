@@ -1,12 +1,14 @@
 import { DatePicker, Layout } from 'antd'
 import moment from 'moment'
 import { UserContext, MyUserData } from '../UserContextMock'
+import {useState} from 'react'
 
 const { Sider, Content, Header } = Layout
 
 export default () => {
 
-    const year = moment().year();
+    const [year, setYear] = useState(moment().year());
+    const [month, setMonth] = useState(moment().month() + 1)
     const months = []
 
     const weeks = [
@@ -14,7 +16,7 @@ export default () => {
             key: 7,
             text: 'Sunday',
             abbr: 'Sun',
-            style:{
+            style: {
                 backgroundColor: 'lightcoral',
                 padding: '5px 15px 2px'
             }
@@ -23,7 +25,8 @@ export default () => {
             key: 1,
             text: 'Monday',
             abbr: 'Mon',
-            style:{
+            style: {
+                backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
             }
         },
@@ -31,7 +34,8 @@ export default () => {
             key: 2,
             text: 'Tuesday',
             abbr: 'Tues',
-            style:{
+            style: {
+                backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
             }
         },
@@ -39,7 +43,8 @@ export default () => {
             key: 3,
             text: 'Wednesday',
             abbr: 'Wed',
-            style:{
+            style: {
+                backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
             }
         },
@@ -47,7 +52,8 @@ export default () => {
             key: 4,
             text: 'Thursday',
             abbr: 'Thurs',
-            style:{
+            style: {
+                backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
             }
         },
@@ -55,7 +61,8 @@ export default () => {
             key: 5,
             text: 'Friday',
             abbr: 'Fri',
-            style:{
+            style: {
+                backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
             }
         },
@@ -63,47 +70,60 @@ export default () => {
             key: 6,
             text: 'Saturday',
             abbr: 'Sat',
-            style:{
+            style: {
                 backgroundColor: 'lightcoral',
                 padding: '5px 15px 2px'
             }
         }
     ]
 
-    let currentMonth = moment().month()+1;
-    const dates = moment().daysInMonth(currentMonth);
+    // let currentMonth = moment().month() + 1;
+    const daysInMonth = moment().daysInMonth();
+    let dateInWeek = [];
 
-    for(let i = 0;i< 12;i++){
-        months.push(i+1);
+    for(let i=0;i<daysInMonth;i++){
+        let date = moment(`${year}-${month}-${i}`).format("YYYY-MM-DD");
+        let dIW = moment().weekday(25);
+        // console.log('dIW:', dIW);
     }
 
-    console.log("dates in month:", dates)
+    // let date = moment().format("YYYY-MM-DD");
+
+    // const newMome = moment(date);
+    // console.log(moment().weekday()); // 数字，当天是当周哪天
+    // console.log(moment.weekdays()); // 当月天数
+
+    // console.log(moment().weeks());console.log(moment().week());  // 数字，当前是全年第几周
+    // console.log(moment().day()); // 数字，当前是周几
+    // console.log(moment.weekdaysMin()); // 字符串数组，2字母缩写各周天
+    // console.log(moment.weekdaysShort());  // 字符串数组，3字母缩写各周天
+    console.log(moment().format("dddd"))
+    
+
+    for (let i = 0; i < 12; i++) {
+        months.push(i + 1);
+    }
+
+    // console.log("daysInMonth:", daysInMonth);
     return (
         <UserContext.Consumer>
             {value => {
                 const { sizeInfo } = value
                 const { content } = sizeInfo
-                console.log('sizeInfo:', sizeInfo)
+                // console.log('sizeInfo:', sizeInfo)
                 return (<div style={{ width: '100%', backgroundColor: 'lightcyan' }}>
                     <Layout >
-                        {/* <Sider id="sider1" theme={"light"}
-                            style={{
-                                width: 300, maxWidth: 300, height: `calc(100vh - ${sizeInfo.header.height}px - ${sizeInfo.bc.height}px - ${sizeInfo.footer.height}px)`
-                            }}>
-                            <DatePicker defaultValue={moment()} open={true} ></DatePicker>
-                        </Sider> */}
                         <Content theme={"light"} style={{
                             width: 389, height: `calc(100vh - ${sizeInfo.header.height}px - ${sizeInfo.bc.height}px - ${sizeInfo.footer.height}px)`
                         }}>
-                            {/* <DatePicker defaultValue={moment()} open={true} ></DatePicker> */}
-                            <div style={{border: '1px solid lightgray'}}>
-                                <div id="yearNmonth" style={{textAlign: 'center'}}>
-                                    {year} - {currentMonth}
+                            <div style={{ border: '1px solid lightgray' }}>
+                                <div id="yearNmonth" style={{ textAlign: 'center' }}>
+                                    {year} - {month}
                                 </div>
                                 <div id="weekly">
-                                    {weeks.map((weekday, index)=>{
+                                    {weeks.map((weekday, index) => {
                                         return (
-                                            <span key={weekday.key} style={{...weekday.style}}>
+                                            <span key={weekday.key} style={{ ...weekday.style }}>
                                                 {weekday.abbr}
                                             </span>
                                         )
