@@ -33,7 +33,7 @@ export default () => {
         {
             key: 2,
             text: 'Tuesday',
-            abbr: 'Tues',
+            abbr: 'Tue',
             style: {
                 backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
@@ -51,7 +51,7 @@ export default () => {
         {
             key: 4,
             text: 'Thursday',
-            abbr: 'Thurs',
+            abbr: 'Thu',
             style: {
                 backgroundColor: 'lightsteelblue',
                 padding: '5px 15px 2px'
@@ -97,7 +97,7 @@ export default () => {
     // console.log(moment().day()); // 数字，当前是周几
     // console.log(moment.weekdaysMin()); // 字符串数组，2字母缩写各周天
     // console.log(moment.weekdaysShort());  // 字符串数组，3字母缩写各周天
-    console.log(moment().format("dddd"))
+    console.log(moment("2021-02-27").format("ddd")); // dd-Th, ddd-Thu,dddd-Thursday
     
 
     for (let i = 0; i < 12; i++) {
