@@ -1,7 +1,11 @@
-import { DatePicker, Layout } from 'antd'
+import { DatePicker, Layout, Row, Col, Card, Timeline, Divider, Slider } from 'antd'
 import moment from 'moment'
 import { UserContext, MyUserData } from '../UserContextMock'
-import {useState} from 'react'
+import React, { useState, useEffect } from 'react'
+import { LeftCircleTwoTone, RightCircleTwoTone, ClockCircleOutlined, UpCircleTwoTone } from '@ant-design/icons'
+import { Scrollbars } from 'react-custom-scrollbars'
+import classnames from 'classnames'
+import styles from './index.css'
 
 const { Sider, Content, Header } = Layout
 
@@ -9,6 +13,7 @@ export default () => {
 
     const [year, setYear] = useState(moment().year());
     const [month, setMonth] = useState(moment().month() + 1)
+    const [date, setDate] = useState(moment().date())
     const months = []
 
     const weeks = [
@@ -17,8 +22,9 @@ export default () => {
             text: 'Sunday',
             abbr: 'Sun',
             style: {
-                backgroundColor: 'lightcoral',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -26,8 +32,9 @@ export default () => {
             text: 'Monday',
             abbr: 'Mon',
             style: {
-                backgroundColor: 'lightsteelblue',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -35,8 +42,9 @@ export default () => {
             text: 'Tuesday',
             abbr: 'Tue',
             style: {
-                backgroundColor: 'lightsteelblue',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -44,8 +52,9 @@ export default () => {
             text: 'Wednesday',
             abbr: 'Wed',
             style: {
-                backgroundColor: 'lightsteelblue',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -53,8 +62,9 @@ export default () => {
             text: 'Thursday',
             abbr: 'Thu',
             style: {
-                backgroundColor: 'lightsteelblue',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -62,8 +72,9 @@ export default () => {
             text: 'Friday',
             abbr: 'Fri',
             style: {
-                backgroundColor: 'lightsteelblue',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         },
         {
@@ -71,20 +82,159 @@ export default () => {
             text: 'Saturday',
             abbr: 'Sat',
             style: {
-                backgroundColor: 'lightcoral',
-                padding: '5px 15px 2px'
+                backgroundColor: '#6996D3',
+                padding: '10px 0',
+                textAlign: 'center'
             }
         }
     ]
 
+    const timeSpan = [
+        {
+            key: 0,
+            text: '8:00',
+            value: 800
+        },
+        {
+            key: 5,
+            text: '8:30',
+            value: 830
+        },
+        {
+            key: 10,
+            text: '9:00',
+            value: 900
+        },
+        {
+            key: 15,
+            text: '9:30',
+            value: 930,
+        },
+        {
+            key: 20,
+            text: '10:00',
+            value: 1000
+        },
+        {
+            key: 25,
+            text: '10:30',
+            value: 1030
+        },
+        {
+            key: 30,
+            text: '11:00',
+            value: 1100
+        },
+        {
+            key: 35,
+            text: '11:30',
+            value: 1130
+        },
+        {
+            key: 40,
+            text: '12:00',
+            value: 1200
+        },
+        {
+            key: 45,
+            text: '13:00',
+            value: 1300
+        },
+        {
+            key: 50,
+            text: '13:30',
+            value: 1330
+        },
+        {
+            key: 55,
+            text: '14:00',
+            value: 1400
+        },
+        {
+            key: 60,
+            text: '14:30',
+            value: 1430
+        },
+        {
+            key: 65,
+            text: '15:00',
+            value: 1500
+        },
+        {
+            key: 70,
+            text: '15:30',
+            value: 1530
+        },
+        {
+            key: 75,
+            text: '16:00',
+            value: 1600
+        },
+        {
+            key: 80,
+            text: '16:30',
+            value: 1630
+        },
+        {
+            key: 85,
+            text: '17:00',
+            value: '1700'
+        },
+        {
+            key: 90,
+            text: '17:30',
+            value: 1730
+        },
+        {
+            key: 95,
+            text: '18:00',
+            value: 1800
+        }
+    ];
+
+    const [selected,setSelected] = useState([])
+
+    let timeSpans = {}
+
+    for (let i = 0; i < timeSpan.length; i++) {
+        timeSpans = {
+            [`${timeSpan[i].key}`]: timeSpan[i].text,
+            ...timeSpans
+        }
+    }
+
     // let currentMonth = moment().month() + 1;
-    const daysInMonth = moment().daysInMonth();
+    let daysInMonth = moment(`${year - month - date}`).daysInMonth();
+
+    // useEffect(()=>{
+
+    // }, [month])
+
     let dateInWeek = [];
 
-    for(let i=0;i<daysInMonth;i++){
-        let date = moment(`${year}-${month}-${i}`).format("YYYY-MM-DD");
-        let dIW = moment().weekday(25);
+    for (let i = 0; i < daysInMonth; i++) {
+        let date = moment(`${year}-${month}-${i + 1}`).format("YYYY-MM-DD");
+        let dIW = moment(date).format('ddd');
         // console.log('dIW:', dIW);
+        dateInWeek.push({
+            key: i + 1,
+            date,
+            weekday: dIW
+        })
+    }
+    const dinWeekIndex = weeks.findIndex(item => item.abbr === dateInWeek[0].weekday);
+
+    // const spanNodeClass = classnames(styles.spanNode, {
+    //     backgroundColor: `${moment(dateInWeek[i].date).date() === date ? 'lightgray' : 'white'}`
+    // })
+    // console.log('dinWeekIndex:', dinWeekIndex);
+
+    for (let i = 0; i < dinWeekIndex; i++) {
+        dateInWeek.unshift({
+            key: i - 1,
+            date: '',
+            weekday: ''
+        })
     }
 
     // let date = moment().format("YYYY-MM-DD");
@@ -97,14 +247,61 @@ export default () => {
     // console.log(moment().day()); // 数字，当前是周几
     // console.log(moment.weekdaysMin()); // 字符串数组，2字母缩写各周天
     // console.log(moment.weekdaysShort());  // 字符串数组，3字母缩写各周天
-    console.log(moment("2021-02-27").format("ddd")); // dd-Th, ddd-Thu,dddd-Thursday
-    
+    // console.log(moment("2021-02-27").format("ddd")); // dd-Th, ddd-Thu,dddd-Thursday
+
 
     for (let i = 0; i < 12; i++) {
         months.push(i + 1);
     }
 
-    // console.log("daysInMonth:", daysInMonth);
+    const rootDivNode = [];
+    let divNode = null;
+    for (let i = 0; i < dateInWeek.length; i++) {
+        if (i % 7 === 0) {
+            divNode = React.createElement("div", {
+                children: [],
+                key: i % 7,
+                style: {
+                    display: 'flex'
+                }
+            });
+
+            rootDivNode.push(divNode)
+        }
+        // console.log('divNode:', divNode)
+        const spanNode = React.createElement(Card.Grid, {
+            children: [`${dateInWeek[i].date === '' ? '' : moment(dateInWeek[i].date).date()}`],
+            style: {
+                textAlign: 'center',
+                width: '14.3%',
+                padding: '10px 0',
+                //     borderLeft: '1px solid lightgray',
+                //     borderBottom: '1px solid lightgray',
+                backgroundColor: `${moment(dateInWeek[i].date).month() + 1 === month && moment(dateInWeek[i].date).date() === date ? '#4380D3' : 'white'}`,
+                opacity: '0.5',
+                //     // color: `${moment(dateInWeek[i].date).date() === date ? 'white' : 'auto'}`,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+
+            },
+            // className: styles.spanNode,
+            key: i,
+            onClick: (x, item = { ...dateInWeek[i] }) => {
+                console.log('dateInWeek item:', item);
+                const { date } = item;
+                const d = moment(date).date();
+                setDate(d);
+            }
+        });
+        // spanNode.appendChild(React.createElement("",));
+        if (divNode)
+            divNode.props.children.push(spanNode);
+    }
+
+    const timeSpanStyle = classnames(styles.timeSpan,(item)=> ({
+        backgroundColor: `${selected.indexOf(item.value)>-1?'darkblue':'transparent'}`
+    }));
+
     return (
         <UserContext.Consumer>
             {value => {
@@ -114,26 +311,159 @@ export default () => {
                 return (<div style={{ width: '100%', backgroundColor: 'lightcyan' }}>
                     <Layout >
                         <Content theme={"light"} style={{
-                            width: 389, height: `calc(100vh - ${sizeInfo.header.height}px - ${sizeInfo.bc.height}px - ${sizeInfo.footer.height}px)`
+                            width: '100%',
+                            height: `calc(100vh - ${sizeInfo.header.height}px - ${sizeInfo.bc.height}px - ${sizeInfo.footer.height}px)`,
+                            display: 'flex'
                         }}>
-                            <div style={{ border: '1px solid lightgray' }}>
-                                <div id="yearNmonth" style={{ textAlign: 'center' }}>
-                                    {year} - {month}
+                            <Scrollbars >
+                                <div style={{ display: 'flex' }}>
+                                    <div style={{ border: '1px solid lightgray', width: '300px' }}>
+                                        <div id="yearNmonth" style={{ textAlign: 'center', padding: '10px 0' }}>
+                                            <Row gutter={4}>
+                                                <Col span={4}>
+                                                    <LeftCircleTwoTone onClick={() => {
+                                                        setMonth(month - 1)
+                                                    }} />
+                                                </Col>
+                                                <Col span={16}>
+                                                    {year} - {moment(`${year}-${month}-${date}`).format("MM")} - {moment(`${year}-${month}-${date}`).format("DD")}
+                                                </Col>
+                                                <Col span={4}>
+                                                    <RightCircleTwoTone onClick={() => {
+                                                        setMonth(month + 1);
+                                                    }} />
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                        <div id="weekly" style={{ display: 'flex' }}>
+                                            {weeks.map((weekday, index) => {
+                                                return (
+                                                    <div key={weekday.key} style={{ width: '14.3%', ...weekday.style }}>
+                                                        {weekday.abbr}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                        <Card title={false}>
+                                            {
+                                                rootDivNode.map((div, index) => {
+                                                    return (
+                                                        <span key={index}>
+                                                            {div}
+                                                        </span>
+                                                    )
+                                                })
+                                            }
+                                        </Card>
+                                    </div>
+                                    <div style={{ width: '100%' }}>
+                                        <Card title={1504} extra={<a>预定</a>}>
+                                            <Row style={{ backgroundColor: '#91d5ff' }}>
+                                                {timeSpan.map((item, index) => {
+                                                    return (
+                                                        <Col key={item.value} className={timeSpanStyle}//{styles.timeSpan} 
+                                                            onClick={(ev, ite = {...item})=>{
+                                                            console.log(ite);
+                                                            let selectedNew = [...selected]
+                                                            if(selectedNew.indexOf(ite.value)>-1){
+                                                                selectedNew.splice(selectedNew.indexOf(ite.value),1)
+                                                            }
+                                                            else{
+                                                                selectedNew.push(ite.value);
+                                                                selectedNew = selectedNew.sort();
+                                                            }
+                                                            // else if(selectedNew.length === 0){
+                                                            //     selectedNew.push(ite.value);
+                                                            // }
+                                                            // else{
+                                                            //     let ind = 0;
+                                                            //     for(let j=0;j<selectedNew.length;j++){
+                                                            //             ind = j;
+                                                            //         if(ite.value<= selectedNew[j]){
+                                                            //             selectedNew.splice(j,0, ite.value);
+                                                            //             break;
+                                                            //         }
+                                                            //     }
+                                                            //     if(ind === selectedNew.length){
+                                                            //         selectedNew.push(ite.value);
+                                                            //     }
+                                                            // }
+                                                            setSelected(selectedNew);
+                                                            console.log('selectedNew:', selectedNew);
+                                                        }}>
+                                                            {item.text}
+                                                        </Col>
+                                                    )
+                                                })}
+                                            </Row>
+                                        </Card>
+                                        <Divider orientation="center"><UpCircleTwoTone /> 自定义</Divider>
+                                        <Card title={1503} extra={<a>预定</a>}>
+                                            <Slider range marks={timeSpans} defaultValue={[[20, 30], [45, 60]]} step={10} tipFormatter={null}></Slider>
+                                        </Card>
+                                        <Divider orientation="center">Slider</Divider>
+                                        <Card title={1501} hoverable extra={
+                                            <a>预定</a>
+                                        }>
+                                            {timeSpan.map((time, index) => {
+                                                return (
+                                                    <Card.Grid key={time.key} style={{
+                                                        textAlign: 'center',
+                                                        padding: '10px 0'
+                                                    }}>
+                                                        {time.text}
+                                                    </Card.Grid>
+                                                )
+                                            })}
+                                        </Card>
+                                        <Card title={1502} extra={<a>预定</a>}>
+                                            <Timeline>
+                                                <Timeline.Item>
+                                                    Create a services site 2015-09-01
+                                        </Timeline.Item>
+                                                <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
+                                                <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
+                                                <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
+                                            </Timeline>
+                                            <Divider orientation="left">基础</Divider>
+                                            <Timeline>
+                                                <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                                                <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                                                <Timeline.Item color="red">
+                                                    <p>Solve initial network problems 1</p>
+                                                    <p>Solve initial network problems 2</p>
+                                                    <p>Solve initial network problems 3 2015-09-01</p>
+                                                </Timeline.Item>
+                                                <Timeline.Item>
+                                                    <p>Technical testing 1</p>
+                                                    <p>Technical testing 2</p>
+                                                    <p>Technical testing 3 2015-09-01</p>
+                                                </Timeline.Item>
+                                                <Timeline.Item color="gray">
+                                                    <p>Technical testing 1</p>
+                                                    <p>Technical testing 2</p>
+                                                    <p>Technical testing 3 2015-09-01</p>
+                                                </Timeline.Item>
+                                                <Timeline.Item color="gray">
+                                                    <p>Technical testing 1</p>
+                                                    <p>Technical testing 2</p>
+                                                    <p>Technical testing 3 2015-09-01</p>
+                                                </Timeline.Item>
+                                            </Timeline>
+                                            <Divider orientation="right">圆圈颜色</Divider>
+                                            <Timeline>
+                                                <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
+                                                <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
+                                                <Timeline.Item dot={<ClockCircleOutlined className={styles["timeline-clock-icon"]} />} color="red">
+                                                    Technical testing 2015-09-01
+                                                </Timeline.Item>
+                                                <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
+                                            </Timeline>
+                                            <Divider orientation="left">自定义时间节点</Divider>
+                                        </Card>
+                                    </div>
                                 </div>
-                                <div id="weekly">
-                                    {weeks.map((weekday, index) => {
-                                        return (
-                                            <span key={weekday.key} style={{ ...weekday.style }}>
-                                                {weekday.abbr}
-                                            </span>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-
-                        </Content>
-                        <Content >
-
+                            </Scrollbars>
                         </Content>
                     </Layout>
                 </div>)
