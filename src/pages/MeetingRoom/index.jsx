@@ -1,8 +1,8 @@
-import { DatePicker, Layout, Row, Col, Card, Timeline, Divider, Slider } from 'antd'
+import { DatePicker, Layout, Row, Col, Card, Timeline, Divider, Slider, message } from 'antd'
 import moment from 'moment'
 import { UserContext, MyUserData } from '../UserContextMock'
 import React, { useState, useEffect } from 'react'
-import { LeftCircleTwoTone, RightCircleTwoTone, ClockCircleOutlined, UpCircleTwoTone } from '@ant-design/icons'
+import { LeftCircleTwoTone, RightCircleTwoTone, ClockCircleOutlined, UpCircleTwoTone, SettingTwoTone, ThunderboltTwoTone } from '@ant-design/icons'
 import { Scrollbars } from 'react-custom-scrollbars'
 import classnames from 'classnames'
 import styles from './index.css'
@@ -22,9 +22,11 @@ export default () => {
             text: 'Sunday',
             abbr: 'Sun',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -32,9 +34,11 @@ export default () => {
             text: 'Monday',
             abbr: 'Mon',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -42,9 +46,11 @@ export default () => {
             text: 'Tuesday',
             abbr: 'Tue',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -52,9 +58,11 @@ export default () => {
             text: 'Wednesday',
             abbr: 'Wed',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -62,9 +70,11 @@ export default () => {
             text: 'Thursday',
             abbr: 'Thu',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -72,9 +82,11 @@ export default () => {
             text: 'Friday',
             abbr: 'Fri',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         },
         {
@@ -82,9 +94,11 @@ export default () => {
             text: 'Saturday',
             abbr: 'Sat',
             style: {
-                backgroundColor: '#6996D3',
+                backgroundColor: '#91d5ff',
                 padding: '10px 0',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: 'white'
             }
         }
     ]
@@ -93,7 +107,8 @@ export default () => {
         {
             key: 0,
             text: '8:00',
-            value: 800
+            value: 800,
+            type: 'worktime'
         },
         {
             key: 5,
@@ -192,7 +207,7 @@ export default () => {
         }
     ];
 
-    const [selected,setSelected] = useState([])
+    const [selected, setSelected] = useState([])
 
     let timeSpans = {}
 
@@ -224,11 +239,6 @@ export default () => {
     }
     const dinWeekIndex = weeks.findIndex(item => item.abbr === dateInWeek[0].weekday);
 
-    // const spanNodeClass = classnames(styles.spanNode, {
-    //     backgroundColor: `${moment(dateInWeek[i].date).date() === date ? 'lightgray' : 'white'}`
-    // })
-    // console.log('dinWeekIndex:', dinWeekIndex);
-
     for (let i = 0; i < dinWeekIndex; i++) {
         dateInWeek.unshift({
             key: i - 1,
@@ -236,6 +246,8 @@ export default () => {
             weekday: ''
         })
     }
+
+    const gutterSpan = 24;
 
     // let date = moment().format("YYYY-MM-DD");
 
@@ -268,23 +280,18 @@ export default () => {
 
             rootDivNode.push(divNode)
         }
-        // console.log('divNode:', divNode)
         const spanNode = React.createElement(Card.Grid, {
             children: [`${dateInWeek[i].date === '' ? '' : moment(dateInWeek[i].date).date()}`],
             style: {
                 textAlign: 'center',
                 width: '14.3%',
                 padding: '10px 0',
-                //     borderLeft: '1px solid lightgray',
-                //     borderBottom: '1px solid lightgray',
                 backgroundColor: `${moment(dateInWeek[i].date).month() + 1 === month && moment(dateInWeek[i].date).date() === date ? '#4380D3' : 'white'}`,
                 opacity: '0.5',
-                //     // color: `${moment(dateInWeek[i].date).date() === date ? 'white' : 'auto'}`,
                 fontWeight: 'bold',
                 cursor: 'pointer',
 
             },
-            // className: styles.spanNode,
             key: i,
             onClick: (x, item = { ...dateInWeek[i] }) => {
                 console.log('dateInWeek item:', item);
@@ -298,9 +305,35 @@ export default () => {
             divNode.props.children.push(spanNode);
     }
 
-    const timeSpanStyle = classnames(styles.timeSpan,(item)=> ({
-        backgroundColor: `${selected.indexOf(item.value)>-1?'darkblue':'transparent'}`
+    const timeSpanStyle = classnames(styles.timeSpan, (item) => ({
+        backgroundColor: `${selected.indexOf(item.value) > -1 ? 'darkblue' : 'transparent'}`
     }));
+
+    const calendarActions = [
+        {
+            key: '1',
+            icon: <SettingTwoTone />,
+            text: '设置',
+            onClick: () => {
+                message.info('嘿哈~')
+            }
+        },
+        {
+            key: '2',
+            icon: <ThunderboltTwoTone />,
+            text: '今天',
+            onClick: () => {
+                const date = moment();
+                setYear(date.year())
+                setMonth(date.month() + 1);
+                setDate(date.date());
+            }
+        }
+    ].map((action, index) => {
+        return (<div onClick={action.onClick} key={action.key}>
+            {action.icon} {action.text}
+        </div>)
+    })
 
     return (
         <UserContext.Consumer>
@@ -317,8 +350,8 @@ export default () => {
                         }}>
                             <Scrollbars >
                                 <div style={{ display: 'flex' }}>
-                                    <div style={{ border: '1px solid lightgray', width: '300px' }}>
-                                        <div id="yearNmonth" style={{ textAlign: 'center', padding: '10px 0' }}>
+                                    <div style={{ border: '1px solid lightgray', width: '390px' }} id="calendar">
+                                        <div id="yearNmonth" style={{ textAlign: 'center', padding: '10px 0', backgroundColor: 'white' }}>
                                             <Row gutter={4}>
                                                 <Col span={4}>
                                                     <LeftCircleTwoTone onClick={() => {
@@ -344,7 +377,7 @@ export default () => {
                                                 )
                                             })}
                                         </div>
-                                        <Card title={false}>
+                                        <Card title={false} bodyStyle={{ padding: '0' }} actions={calendarActions}>
                                             {
                                                 rootDivNode.map((div, index) => {
                                                     return (
@@ -356,41 +389,31 @@ export default () => {
                                             }
                                         </Card>
                                     </div>
-                                    <div style={{ width: '100%' }}>
-                                        <Card title={1504} extra={<a>预定</a>}>
+                                    <div style={{ width: '100%', marginLeft: '10px' }} id="booking">
+                                        <Card title={1504} extra={
+                                            <>
+                                                <a>预定</a>
+                                                <Divider type="vertical"/>
+                                                <a> <UpCircleTwoTone />  收起 </a>
+                                            </>
+                                        }>
                                             <Row style={{ backgroundColor: '#91d5ff' }}>
                                                 {timeSpan.map((item, index) => {
                                                     return (
                                                         <Col key={item.value} className={timeSpanStyle}//{styles.timeSpan} 
-                                                            onClick={(ev, ite = {...item})=>{
-                                                            console.log(ite);
-                                                            let selectedNew = [...selected]
-                                                            if(selectedNew.indexOf(ite.value)>-1){
-                                                                selectedNew.splice(selectedNew.indexOf(ite.value),1)
-                                                            }
-                                                            else{
-                                                                selectedNew.push(ite.value);
-                                                                selectedNew = selectedNew.sort();
-                                                            }
-                                                            // else if(selectedNew.length === 0){
-                                                            //     selectedNew.push(ite.value);
-                                                            // }
-                                                            // else{
-                                                            //     let ind = 0;
-                                                            //     for(let j=0;j<selectedNew.length;j++){
-                                                            //             ind = j;
-                                                            //         if(ite.value<= selectedNew[j]){
-                                                            //             selectedNew.splice(j,0, ite.value);
-                                                            //             break;
-                                                            //         }
-                                                            //     }
-                                                            //     if(ind === selectedNew.length){
-                                                            //         selectedNew.push(ite.value);
-                                                            //     }
-                                                            // }
-                                                            setSelected(selectedNew);
-                                                            console.log('selectedNew:', selectedNew);
-                                                        }}>
+                                                            onClick={(ev, ite = { ...item }) => {
+                                                                console.log(ite);
+                                                                let selectedNew = [...selected]
+                                                                if (selectedNew.indexOf(ite.value) > -1) {
+                                                                    selectedNew.splice(selectedNew.indexOf(ite.value), 1)
+                                                                }
+                                                                else {
+                                                                    selectedNew.push(ite.value);
+                                                                    selectedNew = selectedNew.sort();
+                                                                }
+                                                                setSelected(selectedNew);
+                                                                console.log('selectedNew:', selectedNew);
+                                                            }}>
                                                             {item.text}
                                                         </Col>
                                                     )
@@ -398,70 +421,70 @@ export default () => {
                                             </Row>
                                         </Card>
                                         <Divider orientation="center"><UpCircleTwoTone /> 自定义</Divider>
-                                        <Card title={1503} extra={<a>预定</a>}>
-                                            <Slider range marks={timeSpans} defaultValue={[[20, 30], [45, 60]]} step={10} tipFormatter={null}></Slider>
-                                        </Card>
-                                        <Divider orientation="center">Slider</Divider>
-                                        <Card title={1501} hoverable extra={
-                                            <a>预定</a>
-                                        }>
-                                            {timeSpan.map((time, index) => {
-                                                return (
-                                                    <Card.Grid key={time.key} style={{
-                                                        textAlign: 'center',
-                                                        padding: '10px 0'
-                                                    }}>
-                                                        {time.text}
-                                                    </Card.Grid>
-                                                )
-                                            })}
-                                        </Card>
-                                        <Card title={1502} extra={<a>预定</a>}>
-                                            <Timeline>
-                                                <Timeline.Item>
-                                                    Create a services site 2015-09-01
+                                                <Card title={1503} extra={<a>预定</a>}>
+                                                    <Slider range marks={timeSpans} defaultValue={[[20, 30], [45, 60]]} step={10} tipFormatter={null}></Slider>
+                                                </Card>
+                                                <Divider orientation="center">Slider</Divider>
+                                                <Card title={1501} hoverable extra={
+                                                    <a>预定</a>
+                                                }>
+                                                    {timeSpan.map((time, index) => {
+                                                        return (
+                                                            <Card.Grid key={time.key} style={{
+                                                                textAlign: 'center',
+                                                                padding: '10px 0'
+                                                            }}>
+                                                                {time.text}
+                                                            </Card.Grid>
+                                                        )
+                                                    })}
+                                                </Card>
+                                                <Card title={1502} extra={<a>预定</a>}>
+                                                    <Timeline>
+                                                        <Timeline.Item>
+                                                            Create a services site 2015-09-01
                                         </Timeline.Item>
-                                                <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-                                                <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
-                                                <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                                            </Timeline>
-                                            <Divider orientation="left">基础</Divider>
-                                            <Timeline>
-                                                <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                                                <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                                                <Timeline.Item color="red">
-                                                    <p>Solve initial network problems 1</p>
-                                                    <p>Solve initial network problems 2</p>
-                                                    <p>Solve initial network problems 3 2015-09-01</p>
+                                                        <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
+                                                    </Timeline>
+                                                    <Divider orientation="left">基础</Divider>
+                                                    <Timeline>
+                                                        <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item color="red">
+                                                            <p>Solve initial network problems 1</p>
+                                                            <p>Solve initial network problems 2</p>
+                                                            <p>Solve initial network problems 3 2015-09-01</p>
+                                                        </Timeline.Item>
+                                                        <Timeline.Item>
+                                                            <p>Technical testing 1</p>
+                                                            <p>Technical testing 2</p>
+                                                            <p>Technical testing 3 2015-09-01</p>
+                                                        </Timeline.Item>
+                                                        <Timeline.Item color="gray">
+                                                            <p>Technical testing 1</p>
+                                                            <p>Technical testing 2</p>
+                                                            <p>Technical testing 3 2015-09-01</p>
+                                                        </Timeline.Item>
+                                                        <Timeline.Item color="gray">
+                                                            <p>Technical testing 1</p>
+                                                            <p>Technical testing 2</p>
+                                                            <p>Technical testing 3 2015-09-01</p>
+                                                        </Timeline.Item>
+                                                    </Timeline>
+                                                    <Divider orientation="right">圆圈颜色</Divider>
+                                                    <Timeline>
+                                                        <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
+                                                        <Timeline.Item dot={<ClockCircleOutlined className={styles["timeline-clock-icon"]} />} color="red">
+                                                            Technical testing 2015-09-01
                                                 </Timeline.Item>
-                                                <Timeline.Item>
-                                                    <p>Technical testing 1</p>
-                                                    <p>Technical testing 2</p>
-                                                    <p>Technical testing 3 2015-09-01</p>
-                                                </Timeline.Item>
-                                                <Timeline.Item color="gray">
-                                                    <p>Technical testing 1</p>
-                                                    <p>Technical testing 2</p>
-                                                    <p>Technical testing 3 2015-09-01</p>
-                                                </Timeline.Item>
-                                                <Timeline.Item color="gray">
-                                                    <p>Technical testing 1</p>
-                                                    <p>Technical testing 2</p>
-                                                    <p>Technical testing 3 2015-09-01</p>
-                                                </Timeline.Item>
-                                            </Timeline>
-                                            <Divider orientation="right">圆圈颜色</Divider>
-                                            <Timeline>
-                                                <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-                                                <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-                                                <Timeline.Item dot={<ClockCircleOutlined className={styles["timeline-clock-icon"]} />} color="red">
-                                                    Technical testing 2015-09-01
-                                                </Timeline.Item>
-                                                <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-                                            </Timeline>
-                                            <Divider orientation="left">自定义时间节点</Divider>
-                                        </Card>
-                                    </div>
+                                                        <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
+                                                    </Timeline>
+                                                    <Divider orientation="left">自定义时间节点</Divider>
+                                                </Card>
+                                            </div>
                                 </div>
                             </Scrollbars>
                         </Content>
