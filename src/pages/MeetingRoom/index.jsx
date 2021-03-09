@@ -520,7 +520,7 @@ export default () => {
                                                 </Form.Item>
                                                 <Form.Item name="peoplenumber" label={"会议人数"} labelCol={{
                                                     span: 4
-                                                }} >
+                                                }} initialValue={0}>
                                                     <InputNumber style={{ width: `${formItemLen}px` }} />
                                                 </Form.Item>
                                                 <Form.Item name="meetingcontent" label={"会议内容"} labelCol={{

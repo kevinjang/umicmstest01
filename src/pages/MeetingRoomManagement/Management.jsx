@@ -1,69 +1,119 @@
-import { Card, Row, Col, PageHeader, Button, message, Space } from 'antd'
+import { Card, Row, Col, PageHeader, Button, message, Space, Form, Input, InputNumber, Select } from 'antd'
 import { PlusCircleTwoTone, ExpandAltOutlined, ExpandOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import DraggableModal from '../../components/DraggableModal/index'
+// import Form from 'antd/lib/form/Form'
 
 const { Meta } = Card
+const { TextArea } = Input
 
 
 export default () => {
     const [rooms, setRooms] = useState([
         {
             key: 'room1',
-            name: '1501',
+            roomno: 1,
+            roomname: '1501',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(1).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room2',
-            name: '1502',
+            roomno: 2,
+            roomname: '1502',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(2).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room3',
-            name: '1503',
+            roomno: 3,
+            roomname: '1503',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(3).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room4',
-            name: '1504',
+            roomno: 4,
+            roomname: '1504',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(4).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room5',
-            name: '1505',
+            roomno: 5,
+            roomname: '1505',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(5).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room6',
-            name: '1506',
+            roomno: 6,
+            roomname: '1506',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(6).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room7',
-            name: '1507',
+            roomno: 7,
+            roomname: '1507',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(7).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room8',
-            name: '1508',
+            roomno: 8,
+            roomname: '1508',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(8).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
         {
             key: 'room9',
-            name: '1509',
+            roomno: 9,
+            roomname: '1509',
+            roomsize: 20,
+            roompos: '15F(近人力资源办公区)',
+            projector: '0',
             backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(9).jpeg',
-            description: 'hahahahahahaha'
+            notes: '如需支持,请联系分机：7500/7501',
+            avail: 1
         },
     ]);
     const [visible, setVisible] = useState(false)
+    const [currentItem, setCurrentItem] = useState({
+
+    })
 
     return (
         <div >
@@ -74,7 +124,7 @@ export default () => {
                 roomsNew.push({
                     key: `room${max + 1}`,
                     name: max + 1 >= 10 ? `15${max + 1}` : `150${max + 1}`,
-                    description: 'hahahahahahaha'
+                    description: '如需支持,请联系分机：7500/7501'
                 });
                 setRooms(roomsNew);
             }} />}>
@@ -85,32 +135,16 @@ export default () => {
                                 <Card title={false}
                                     hoverable
                                     size={"small"}
-                                    key={item.key} style={{ width: 249, marginTop: '20px', marginBottom: '15px' }}//height: 200, 
+                                    key={item.key} style={{ width: 249, marginTop: '20px', marginBottom: '15px' }}
                                     cover={item.backgroundImageSrc ? <img src={item.backgroundImageSrc} /> : null}
-                                // extra={
-                                //     <div>
-                                //         test
-                                //     </div>
-                                // }
-                                // footer={
-                                //     <div>
-                                //         test footer
-                                //     </div>
-                                // }
                                 >
-                                    {/* <div>
-                                        {item.description}
-                                    </div>
-                                    <div style={{ position: 'absolute', bottom: '0px', width: '100%', left: 0, padding: '5px 10px' }}>
-                                        <ExpandAltOutlined style={{ float: 'right' }} onClick={() => {
-                                            // message.success("扩大显示");
-                                            setVisible(true);
-                                        }} />
-                                    </div> */}
-                                    <Meta title={item.name} description={
+                                    <Meta title={item.roomname} description={
                                         <div style={{ position: 'absolute', bottom: '0px', width: '100%', left: 0, padding: '5px 10px' }}>
-                                            <ExpandAltOutlined style={{ float: 'right' }} onClick={() => {
+                                            <ExpandAltOutlined style={{ float: 'right' }} onClick={(ev, it = { ...item }) => {
                                                 setVisible(true);
+                                                setCurrentItem({
+                                                    ...it
+                                                })
                                             }} />
                                         </div>
                                     }>
@@ -127,7 +161,64 @@ export default () => {
             }} onCancel={() => {
                 setVisible(false);
             }} centered >
+                <Form >
+                    <Form.Item label="会议室名称" name="roomname" required initialValue={currentItem.roomname} labelCol={{
+                        span: 6
+                    }} rules={[
+                        { required: true, message: '必填' }
+                    ]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="会议室容量" name="roomsize" required initialValue={currentItem.roomsize} labelCol={{
+                        span: 6
+                    }} rules={[
+                        { required: true, message: '必填' }
+                    ]}>
+                        <InputNumber />
+                    </Form.Item>
+                    <Form.Item label="会议室位置" name="roompos" required initialValue={currentItem.roompos} labelCol={{
+                        span: 6
+                    }} rules={[
+                        { required: true, message: '必填' }
+                    ]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="是否有投影" name="projector" required initialValue={currentItem.projector} labelCol={{
+                        span: 6
+                    }} rules={[
+                        { required: true, message: '必选' }
+                    ]}>
+                        <Select >
+                            <Select.Option value={'1'}>
+                                有
+                            </Select.Option>
+                            <Select.Option value={'0'}>
+                                无
+                            </Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="会议室状态" name="avail" required initialValue={currentItem.avail} labelCol={{
+                        span: 6
+                    }} rules={[
+                        { required: true, message: '必选' }
+                    ]} >
+                        <Select >
+                            <Select.Option value={1}>
+                                有效
+                            </Select.Option>
+                            <Select.Option value={0}>
+                                无效
+                            </Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="备注" initialValue={currentItem.avail} labelCol={{
+                        span: 6
+                    }} >
+                        <TextArea>
 
+                        </TextArea>
+                    </Form.Item>
+                </Form>
             </DraggableModal>
         </div>
     )
