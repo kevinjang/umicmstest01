@@ -25,7 +25,7 @@ export default {
             wrappers: ['@/pages/user/UrlPathGuard'],
             routes: [
                 { path: '/mainframe/dashboard', component: '@/pages/dashboard/dashboard' },
-                { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/bpm_rm/EmployeeBPMaintain', title: '员工BP号维护' },
+                { path: '/mainframe/EmployeeBPMaintain', component: '@/pages/BPM_RM/EmployeeBPMaintain', title: '员工BP号维护' },
                 { path: '/mainframe/newaladin', component: '@/pages/EditInModal/index' },
                 { path: '/mainframe/spnningTest', component: '@/pages/compoTests/spnningTest' },
                 { path: '/mainframe/aladin', component: '@/pages/treetest/Aladin' },

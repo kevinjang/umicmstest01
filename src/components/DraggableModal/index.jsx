@@ -29,7 +29,6 @@ export default (props) => {
     }
 
     return (<Modal
-
         visible={visible}
         onOk={() => {
             setVisible(false)

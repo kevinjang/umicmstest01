@@ -7,8 +7,8 @@ class EmployeeBPMaintainItemModal extends React.Component {
   constructor(props) {
     super(props);
 
-    const {editingRecord, updateParentState, updateOkButtonAvailable} = props
-
+    const { editingRecord, updateParentState, updateOkButtonAvailable } = props
+    console.log('editingRecord:', editingRecord)
     const {
       BPNo,
       EmployeeName,
@@ -84,7 +84,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
   }
 
-  handlePriDeptNameBlur = (e)=>{
+  handlePriDeptNameBlur = (e) => {
     let val = (e.target.value || '').toString();
     if (val !== '') {
       this.setState({
@@ -119,7 +119,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
     else {
       this.setoffValidation();
-    }    
+    }
   }
 
   handleBankAccountBlur = (e) => {
@@ -160,7 +160,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
   }
 
-  handleEmailBlur = (e)=>{    
+  handleEmailBlur = (e) => {
     let val = (e.target.value || '').toString();
     if (val !== '') {
       this.setState({
@@ -179,7 +179,7 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
   }
 
-  handleRemarkBlur =(e)=>{  
+  handleRemarkBlur = (e) => {
     let val = (e.target.value || '').toString();
     if (val !== '') {
       this.setState({
@@ -195,18 +195,18 @@ class EmployeeBPMaintainItemModal extends React.Component {
     }
     else {
       this.setoffValidation();
-    }    
+    }
   }
 
   /* NOTE: All Blurs End **************************************************************/
 
   setoffValidation = () => {
-    this.form.validateFields().then(values=>{
-      this.updateOkButtonAvailable(true);      
-    }).catch(info=>{
+    this.form.validateFields().then(values => {
+      this.updateOkButtonAvailable(true);
+    }).catch(info => {
       console.log('validateFields error info:', info)
       if (info && info.errorFields && info.errorFields.length > 0) {
-          this.updateOkButtonAvailable(false);
+        this.updateOkButtonAvailable(false);
       }
       else {
 

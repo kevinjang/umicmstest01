@@ -8,10 +8,10 @@ export async function queryMeetingRooms(){
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        params:{
-            username,
-            pwd
-        },
+        // params:{
+        //     username,
+        //     pwd
+        // },
         responseType: 'json'
     })
 }

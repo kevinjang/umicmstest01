@@ -23,7 +23,7 @@ class EmployeeBPMaintain extends React.Component {
       current: 1,
       operation: '',
       // 编辑项
-      editingRecord: null,
+      editingRecord: {},
       okBtnAvailable: false,
       // notificationModalShow: false,
       spinning: false
@@ -470,14 +470,18 @@ class EmployeeBPMaintain extends React.Component {
               modalShow: false
             })
           }
-        }>
-        <EmployeeBPMaintainItemModal
-          editingRecord={this.state.editingRecord}
-          operation={this.state.operation}
-          updateParentState={(record) => this.updateEditingRecordState(record)}
-          updateOkButtonAvailable={value => this.updateModalOKButtonsAvailablity(value)}>
+        }
+        modalRender={
+          () => (
+            <EmployeeBPMaintainItemModal
+              editingRecord={this.state.editingRecord}
+              operation={this.state.operation}
+              updateParentState={(record) => this.updateEditingRecordState(record)}
+              updateOkButtonAvailable={value => this.updateModalOKButtonsAvailablity(value)}>
 
-        </EmployeeBPMaintainItemModal>
+            </EmployeeBPMaintainItemModal>
+          )
+        }>
       </Modal>
     </Spin>
   }
