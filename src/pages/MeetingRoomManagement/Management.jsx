@@ -12,6 +12,8 @@ const { TextArea } = Input
 const Management = (props) => {
     const { meeting_room, dispatch, getRoomInfo } = props;
 
+    const form = Form.useForm();
+
     var rooms = [...props.rooms]
 
     useEffect(() => {
@@ -44,7 +46,11 @@ const Management = (props) => {
                 // const roomsNew = [...rooms];
                 const item = {
                     key: `room${max + 1}`,
-                    name: max + 1 >= 10 ? `15${max + 1}` : `150${max + 1}`,
+                    id: `${max}`,
+                    projector: '0',
+                    roomsize: 0,
+                    avail: 1,
+                    roomname: max + 1 >= 10 ? `15${max + 1}` : `150${max + 1}`,
                     description: '如需支持,请联系分机：7500/7501'
                 };
                 if (max - 1 < len) {
@@ -53,12 +59,14 @@ const Management = (props) => {
                     const repeat = Math.floor((max - 1) / len);
                     item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${max - (len * repeat)}).jpeg`
                 }
-                dispatch && dispatch({
-                    type: 'meeting_room/addItem',
-                    payload: {
-                        item
-                    }
-                })
+                // dispatch && dispatch({
+                //     type: 'meeting_room/addItem',
+                //     payload: {
+                //         item
+                //     }
+                // })
+                setVisible(true);
+                setCurrentItem(item)
                 // rooms.push(item);
                 // setRooms(roomsNew);
             }} />}>
@@ -91,11 +99,15 @@ const Management = (props) => {
             <DraggableModal title={"编辑会议室信息"} visible={visible} closable={true}
                 destroyOnClose={true}
                 onOk={() => {
-                    setVisible(false);
+                    form[0].validateFields().then(values=>{
+
+                    }).catch(err=>{
+
+                    })
                 }} onCancel={() => {
                     setVisible(false);
                 }} centered >
-                <Form >
+                <Form form={form}>
                     <Form.Item label="会议室名称" name="roomname" required initialValue={currentItem.roomname} labelCol={{
                         span: 6
                     }} rules={[
@@ -145,7 +157,7 @@ const Management = (props) => {
                             </Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="备注" initialValue={currentItem.avail} labelCol={{
+                    <Form.Item label="备注" name="notes" initialValue={currentItem.avail} labelCol={{
                         span: 6
                     }} >
                         <TextArea>
