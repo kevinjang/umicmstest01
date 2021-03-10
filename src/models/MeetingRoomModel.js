@@ -11,6 +11,16 @@ const MeetingRoomModel = {
                 ...state,
                 data: payload
             }
+        },
+        'addItem':(state, {payload})=>{
+            const newData = [...state.data];
+            newData.push({
+                ...payload
+            })
+            return {
+                ...state,
+                data: newData
+            }
         }
     },
     effects: {

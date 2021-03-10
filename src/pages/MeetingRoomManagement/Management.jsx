@@ -12,165 +12,55 @@ const { TextArea } = Input
 const Management = (props) => {
     const { meeting_room, dispatch, getRoomInfo } = props;
 
-    // const roomsOri = props.rooms || [];
-    // const [rooms, setRooms] = useState([
-    //     ...props.rooms
-    // ]);
     var rooms = [...props.rooms]
 
     useEffect(() => {
-        // getRoomInfo && getRoomInfo();
         dispatch && dispatch({
             type: 'meeting_room/getMeetingRoomInfo'
         });
-        // console.log('props.rooms:', props.rooms)
-        // setRooms(props.rooms);
     }, [])
 
-    const len = 10;
+    const len = 9;
     rooms = rooms.map((item, index) => {
         if (index < len) {
-            // Object.keys(item).push("backgroundImageSrc")
-            Object.assign(item, {
-                backgroundImageSrc: `http://localhost:8000/images/card-images/card-background-image%20(${index + 1}).jpeg`
-            })
-            // item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${index + 1}).jpeg`
+            item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${index + 1}).jpeg`
         } else {
-            const repeat = index / len;
-            // Object.keys(item).push("backgroundImageSrc")
-            Object.assign(item, {
-                backgroundImageSrc: `http://localhost:8000/images/card-images/card-background-image%20(${index  - (len * repeat) + 1}).jpeg`
-            })
-            // item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${index - (len * repeat) + 1}).jpeg`
+            const repeat = Math.floor(index / len);
+            item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${index - (len * repeat) + 1}).jpeg`
         }
+
+        return item;
     })
-    // getRoomInfo && getRoomInfo();
-
-    // dispatch && dispatch({
-    //     type: 'meeting_room/getMeetingRoomInfo'
-    // });
-
-    // console.log("roomsOri:", roomsOri)
-    // [
-    //     {
-    //         key: 'room1',
-    //         roomno: 1,
-    //         roomname: '1501',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(1).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room2',
-    //         roomno: 2,
-    //         roomname: '1502',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(2).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room3',
-    //         roomno: 3,
-    //         roomname: '1503',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(3).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room4',
-    //         roomno: 4,
-    //         roomname: '1504',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(4).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room5',
-    //         roomno: 5,
-    //         roomname: '1505',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(5).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room6',
-    //         roomno: 6,
-    //         roomname: '1506',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(6).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room7',
-    //         roomno: 7,
-    //         roomname: '1507',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(7).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room8',
-    //         roomno: 8,
-    //         roomname: '1508',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(8).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    //     {
-    //         key: 'room9',
-    //         roomno: 9,
-    //         roomname: '1509',
-    //         roomsize: 20,
-    //         roompos: '15F(近人力资源办公区)',
-    //         projector: '0',
-    //         backgroundImageSrc: 'http://localhost:8000/images/card-images/card-background-image%20(9).jpeg',
-    //         notes: '如需支持,请联系分机：7500/7501',
-    //         avail: 1
-    //     },
-    // ]
     const [visible, setVisible] = useState(false)
     const [currentItem, setCurrentItem] = useState({
 
     })
-
-
 
     return (
         <div >
             <PageHeader title="会议室管理" extra={<PlusCircleTwoTone style={{ fontSize: 24 }} onClick={() => {
                 // message.info("test")
                 const max = rooms.length;
-                const roomsNew = [...rooms];
-                roomsNew.push({
+                // const roomsNew = [...rooms];
+                const item = {
                     key: `room${max + 1}`,
                     name: max + 1 >= 10 ? `15${max + 1}` : `150${max + 1}`,
                     description: '如需支持,请联系分机：7500/7501'
-                });
-                setRooms(roomsNew);
+                };
+                if (max - 1 < len) {
+                    item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${max}).jpeg`
+                } else {
+                    const repeat = Math.floor((max - 1) / len);
+                    item['backgroundImageSrc'] = `http://localhost:8000/images/card-images/card-background-image%20(${max - (len * repeat)}).jpeg`
+                }
+                dispatch && dispatch({
+                    type: 'meeting_room/addItem',
+                    payload: {
+                        item
+                    }
+                })
+                // rooms.push(item);
+                // setRooms(roomsNew);
             }} />}>
                 <Row gutter={2}>
                     {rooms.map((item, index) => {
